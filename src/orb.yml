@@ -16,7 +16,7 @@ description: |
 
   The executors within this Orb provide run-time environments that contain the 
   necessary dependencies for executing the jobs and commands in this orb. 
-  Requires - docker.
+  Required dependencies - docker.
 
 orbs:
   aws-cli: ttrahan/aws-cli@dev:alpha
@@ -25,10 +25,6 @@ executors:
   default:
     docker:
       - image: circleci/python:3-stretch-browsers
-  # machine: 
-  #   machine:
-  #     enabled: true
-  #     image: circleci/classic:latest
 
 commands:
   ecr-login:

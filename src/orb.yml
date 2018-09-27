@@ -1,25 +1,34 @@
 version: 2.1
 
-description: "An orb for working with Amazon Elastic Container Registry (ECR)
-              Sample usage within config.yml:
+description: |
+  An orb for working with Amazon Elastic Container Registry (ECR)
+  Sample usage within config.yml:
 
-              workflows:
-                build_and_push_image:
-                  jobs:
-                    - aws-ecr/build_and_push_image:
-                        context: myContext
-                        region: us-west-2
-                        account-url: myAwsAccountNum.dkr.ecr.myRegion.amazonaws.com 
-                        repo: myRepo
-                        tag: latest "
+  workflows:
+    build_and_push_image:
+      jobs:
+        - aws-ecr/build_and_push_image:
+            context: myContext
+            region: us-west-2
+            account-url: myAwsAccountNum.dkr.ecr.myRegion.amazonaws.com 
+            repo: myRepo
+            tag: latest
+
+  The executors within this Orb provide run-time environments that contain the 
+  necessary dependencies for executing the jobs and commands in this orb. 
+  Requires - docker.
+
 orbs:
   aws-cli: ttrahan/aws-cli@dev:alpha
 
 executors:
   default:
-    machine:
-      enabled: true
-      image: circleci/classic:latest
+    docker:
+      - image: circleci/python:3-stretch-browsers
+  # machine: 
+  #   machine:
+  #     enabled: true
+  #     image: circleci/classic:latest
 
 commands:
   ecr-login:
@@ -111,9 +120,10 @@ jobs:
           aws-access-key-id: << parameters.aws-access-key-id >>
           aws-secret-access-key: << parameters.aws-secret-access-key >>
           region: << parameters.region >>
+      - checkout
+      - setup_remote_docker
       - ecr-login:
           region: << parameters.region >>
-      - checkout
       - build-image:
           account-url: << parameters.account-url >>
           repo: << parameters.repo >>

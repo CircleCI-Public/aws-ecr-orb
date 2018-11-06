@@ -1,7 +1,27 @@
 version: 2.1
 
 description: |
-  An orb for working with Amazon Elastic Container Registry (ECR)
+  Orb for interacting with Amazon Elastic Container Registry (ECR) from within
+  a CircleCI build job.
+
+  The executors within this Orb provide run-time environments that contain the
+  necessary dependencies for executing the jobs and commands in this orb,
+  except for the following required dependencies that must be configured in
+  CircleCI in order to use this orb
+    * AWS_ACCESS_KEY_ID - environment variable for AWS login
+    * AWS_SECRET_ACCESS_KEY - environment variable for AWS login
+
+  See CircleCI documentation for instructions on storing environment variables
+  in either your Project settings or in a Context
+    * https://circleci.com/docs/2.0/env-vars
+
+  If set, the following optional environment variables will serve as default 
+  values
+    * AWS_ECR_ACCOUNT_URL
+
+  The source repo for this Orb can be found here:
+  https://github.com/CircleCI-Public/circleci-orbs/aws-ecr-orb
+
   Sample usage within config.yml:
 
   workflows:
@@ -14,12 +34,8 @@ description: |
             repo: myRepo
             tag: latest
 
-  The executors within this Orb provide run-time environments that contain the 
-  necessary dependencies for executing the jobs and commands in this orb. 
-  Required dependencies - docker.
-
 orbs:
-  aws-cli: ttrahan/aws-cli@dev:alpha
+  aws-cli: circleci/aws-cli@0.0.1
 
 executors:
   default:
@@ -42,29 +58,16 @@ commands:
     parameters:
       account-url:
         type: string
-        description: A directory path local to the job to deploy to S3
+        description: The Amazon ECR account URL that maps to an AWS account,
+                     e.g. {awsAccountNum}.dkr-ecr.us-west-2.amazonaws.com
+        default: $AWS_ECR_ACCOUNT_URL
       repo:
         type: string
-        description: A URI to an Amazon ECR repository
+        description: Name of an Amazon ECR repository
       tag:
+        description: A docker image tag (default = latest)
+        type: string
         default: "latest"
-        type: string
-    steps:
-      - run:
-          name: Build docker image
-          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> ."
-  push-image:
-    description: "Push a container image to the Amazon ECR registry"
-    parameters:
-      account-url:
-        type: string
-        description: A directory path local to the job to deploy to S3
-      repo:
-        type: string
-        description: A URI to an Amazon ECR repository
-      tag:
-        default: "latest"
-        type: string
     steps:
       - run:
           name: Push image to Amazon ECR
@@ -73,10 +76,7 @@ commands:
 jobs:
   build_and_push_image:
     description: Install AWS CLI, if needed, and configure. Log into Amazon ECR
-                 and push image to repository. Requires environment variables 
-                 for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
-                 these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project) or in 
-                 Contexts (https://circleci.com/docs/2.0/contexts/).
+                 and push image to repository.
     executor: default
     parameters: 
       profile-name:
@@ -101,13 +101,15 @@ jobs:
         default: "us-east-1"
       account-url:
         type: string
-        description: A directory path local to the job to deploy to S3
+        description: The Amazon ECR account URL that maps to an AWS account,
+                     e.g. {awsAccountNum}.dkr-ecr.us-west-2.amazonaws.com
+        default: $AWS_ECR_ACCOUNT_URL
       repo:
         type: string
-        description: A URI to an Amazon ECR repository
+        description: Name of an Amazon ECR repository
       tag:
+        description: A docker image tag (default = latest)
         type: string
-        description: Docker tag (default = latest)
         default: "latest"
     steps:
       - aws-cli/install

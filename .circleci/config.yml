@@ -1,0 +1,17 @@
+# CircleCI build config to test the Amazon ECR orb
+# published by CircleCI
+
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@1.0.0
+
+workflows:
+  build_and_push_image:
+    jobs:
+      - aws-ecr/build_and_push_image:
+          context: myContext
+          region: us-west-2
+          account-url: 999999999999.dkr.ecr.us-west-2.amazonaws.com 
+          repo: myrepo
+          tag: latest

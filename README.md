@@ -12,16 +12,16 @@ The following **required** dependencies must be configured in CircleCI in order 
 * AWS_ACCESS_KEY_ID - environment variable for AWS login
 * AWS_SECRET_ACCESS_KEY - environment variable for AWS login
 
-If set, the following **optional** environment variables will serve as default 
+If set, the following **optional** environment variables will serve as default
 parameter values:
-* AWS_ECR_ACCOUNT_URL 
+* AWS_ECR_ACCOUNT_URL
 
 See CircleCI documentation for instructions on storing environment variables
 in either your Project settings or a Context:
 * [Setting environment variables in CircleCI](https://circleci.com/docs/2.0/env-vars)
 
 ## Sample use in CircleCI config.yml
-This example uses the `circleci/aws-ecr` orb to build a docker image based on 
+This example uses the `circleci/aws-ecr` orb to build a docker image based on
 a Dockerfile in the root directory and push it to Amazon ECR,
 based on the parameters provided to the `aws-ecr/build_and_push_image` job:
 

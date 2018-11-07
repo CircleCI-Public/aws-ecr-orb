@@ -41,8 +41,29 @@ commands:
       - run:
           name: Log into Amazon ECR
           command: "$(aws ecr get-login --no-include-email --region <<parameters.region>> )"
+
   build-image:
     description: "Build a docker image"
+    parameters:
+      account-url:
+        type: string
+        description: The Amazon ECR account URL that maps to an AWS account,
+                     e.g. {awsAccountNum}.dkr-ecr.us-west-2.amazonaws.com
+        default: $AWS_ECR_ACCOUNT_URL
+      repo:
+        type: string
+        description: Name of an Amazon ECR repository
+      tag:
+        description: A docker image tag (default = latest)
+        type: string
+        default: "latest"
+    steps:
+      - run:
+          name: Build docker image
+          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> ."
+
+  push-image:
+    description: "Push a container image to the Amazon ECR registry"
     parameters:
       account-url:
         type: string
@@ -64,7 +85,10 @@ commands:
 jobs:
   build_and_push_image:
     description: Install AWS CLI, if needed, and configure. Log into Amazon ECR
-                 and push image to repository.
+                 and push image to repository. Requires environment variables
+                 for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
+                 these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project) or in
+                 Contexts (https://circleci.com/docs/2.0/contexts/).
     executor: default
     parameters:
       profile-name:
@@ -89,15 +113,13 @@ jobs:
         default: "us-east-1"
       account-url:
         type: string
-        description: The Amazon ECR account URL that maps to an AWS account,
-                     e.g. {awsAccountNum}.dkr-ecr.us-west-2.amazonaws.com
-        default: $AWS_ECR_ACCOUNT_URL
+        description: A directory path local to the job to deploy to S3
       repo:
         type: string
-        description: Name of an Amazon ECR repository
+        description: A URI to an Amazon ECR repository
       tag:
-        description: A docker image tag (default = latest)
         type: string
+        description: Docker tag (default = latest)
         default: "latest"
     steps:
       - aws-cli/install

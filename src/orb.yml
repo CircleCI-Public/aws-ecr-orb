@@ -40,7 +40,7 @@ commands:
     steps:
       - run:
           name: Log into Amazon ECR
-          command: "$(aws ecr get-login --no-include-email --region <<parameters.region>> )"
+          command: "$(aws ecr get-login --no-include-email --region << parameters.region >> )"
 
   build-image:
     description: "Build a docker image"
@@ -64,7 +64,7 @@ commands:
     steps:
       - run:
           name: Build docker image
-          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> <<parameters.path>>"
+          command: "docker build -t << parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >> << parameters.path >>"
 
   push-image:
     description: "Push a container image to the Amazon ECR registry"
@@ -84,7 +84,7 @@ commands:
     steps:
       - run:
           name: Push image to Amazon ECR
-          command: "docker push <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>"
+          command: "docker push << parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >>"
 
 jobs:
   build_and_push_image:

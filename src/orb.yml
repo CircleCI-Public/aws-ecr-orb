@@ -57,10 +57,14 @@ commands:
         description: A docker image tag (default = latest)
         type: string
         default: "latest"
+      folder:
+        description: Where the Dockerfile is located (default = current directory)
+        type: string
+        default: .
     steps:
       - run:
           name: Build docker image
-          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> ."
+          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> <<parameters.folder>>"
 
   push-image:
     description: "Push a container image to the Amazon ECR registry"

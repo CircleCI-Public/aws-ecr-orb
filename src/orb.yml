@@ -40,7 +40,7 @@ commands:
     steps:
       - run:
           name: Log into Amazon ECR
-          command: "$(aws ecr get-login --no-include-email --region <<parameters.region>> )"
+          command: "$(aws ecr get-login --no-include-email --region << parameters.region >> )"
 
   build-image:
     description: "Build a docker image"
@@ -57,10 +57,18 @@ commands:
         description: A docker image tag (default = latest)
         type: string
         default: "latest"
+      dockerfile:
+        description: Name of dockerfile to use. Defaults to Dockerfile.
+        type: string
+        default: Dockerfile
+      path:
+        description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
+        type: string
+        default: .
     steps:
       - run:
           name: Build docker image
-          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> ."
+          command: "docker build -f << parameters.dockerfile >> -t << parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >> << parameters.path >>"
 
   push-image:
     description: "Push a container image to the Amazon ECR registry"
@@ -80,7 +88,7 @@ commands:
     steps:
       - run:
           name: Push image to Amazon ECR
-          command: "docker push <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>"
+          command: "docker push << parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >>"
 
 jobs:
   build_and_push_image:

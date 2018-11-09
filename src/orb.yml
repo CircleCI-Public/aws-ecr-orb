@@ -57,8 +57,8 @@ commands:
         description: A docker image tag (default = latest)
         type: string
         default: "latest"
-      folder:
-        description: Where the Dockerfile is located (default = current directory)
+      path:
+        description: path to the directory containing your Dockerfile and build context
         type: string
         default: .
     steps:

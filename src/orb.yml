@@ -64,7 +64,7 @@ commands:
     steps:
       - run:
           name: Build docker image
-          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> <<parameters.folder>>"
+          command: "docker build -t <<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> <<parameters.path>>"
 
   push-image:
     description: "Push a container image to the Amazon ECR registry"

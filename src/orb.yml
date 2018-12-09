@@ -21,6 +21,8 @@ examples:
                 account-url: myAwsAccountId.dkr.ecr.myAwsRegion.amazonaws.com
                 repo: myRepo # your Amazon ECR repository
                 tag: latest
+                dockerfile: Dockerfile
+                path: .
 
 orbs:
   aws-cli: circleci/aws-cli@0.0.1
@@ -129,6 +131,14 @@ jobs:
         type: string
         description: Docker tag (default = latest)
         default: "latest"
+      dockerfile:
+        description: Name of dockerfile to use. Defaults to Dockerfile.
+        type: string
+        default: Dockerfile
+      path:
+        description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
+        type: string
+        default: .
     steps:
       - aws-cli/install
       - aws-cli/configure:
@@ -144,6 +154,8 @@ jobs:
           account-url: << parameters.account-url >>
           repo: << parameters.repo >>
           tag: << parameters.tag >>
+          dockerfile: << parameters.dockerfile >>
+          path: << parameters.path >>
       - push-image:
           account-url: << parameters.account-url >>
           repo: << parameters.repo >>

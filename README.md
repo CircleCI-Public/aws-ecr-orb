@@ -37,9 +37,10 @@ workflows:
       # build and push image to ECR
       - aws-ecr/build_and_push_image:
           context: myContext
-		  region: us-east-1
+          region: us-east-1
           account-url: 999999999999.dkr-ecr.us-west-2.amazonaws.com
           repo: myrepo
           tag: latest
+          dockerfile: Dockerfile
+          path: .
 ```
-

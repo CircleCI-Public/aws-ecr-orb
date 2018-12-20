@@ -1,17 +1,146 @@
-# CircleCI build config to test the Amazon ECR orb
-# published by CircleCI
-
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@1.0.0
+  aws-ecr: circleci/aws-ecr@dev:alpha
+
+executors:
+  ci-base:
+    resource_class: small
+    docker:
+      - image: cibuilds/base
+
+  cli:
+    resource_class: small
+    docker:
+      - image: circleci/circleci-cli:0.1.2709
+
+  lint-condo:
+    resource_class: small
+    docker:
+      - image: singapore/lint-condo
+
+jobs:
+  lint:
+    executor: lint-condo
+    steps:
+      - checkout
+      - run: yamllint .
+
+  validate:
+    executor: cli
+    steps:
+      - checkout
+      - run: circleci orb validate src/orb.yml
+
+  publish-dev:
+    executor: cli
+    steps:
+      - checkout
+
+      - run:
+          name: always publish w/branch & sha (for transparency)
+          command: circleci orb publish src/orb.yml circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+
+      - run:
+          name: always publish alpha (for immediate integration testing)
+          command: circleci orb publish src/orb.yml circleci/aws-ecr@dev:alpha --token $CIRCLE_TOKEN
+
+      - store_artifacts:
+          path: src/orb.yml
+
+  trigger-integration:
+    executor: ci-base
+    parameters:
+      tag:
+        type: enum
+        default: "integration"
+        enum: ["integration", master]
+    steps:
+      - checkout
+
+      - add_ssh_keys:
+          fingerprints:
+            - "54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"
+
+      - run:
+          name: git config
+          command: |
+            git config --global user.email "$CIRCLE_USERNAME@users.noreply.github.com"
+            git config --global user.name "$CIRCLE_USERNAME"
+
+      - run: |
+          INTEGRATION_TAG=<<parameters.tag>>-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
+          git tag $INTEGRATION_TAG
+          git push origin $INTEGRATION_TAG
+
+  dev-promote-prod:
+    executor: cli
+    steps:
+      - checkout
+      - run: circleci orb publish promote circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} patch --token $CIRCLE_TOKEN
 
 workflows:
-  build_and_push_image:
+  validate_test_deploy:
+    jobs:
+      - lint
+
+      - validate:
+          requires:
+            - lint
+
+      - publish-dev:
+          requires:
+            - validate
+          context: orb-publishing
+
+      - trigger-integration:
+          name: trigger-integration-dev
+          requires:
+            - publish-dev
+
+      - trigger-integration:
+          name: trigger-integration-master
+          tag: master
+          requires:
+            - publish-dev
+          filters:
+            branches:
+              only: master
+
+  integration-test_prod-deploy:
     jobs:
       - aws-ecr/build_and_push_image:
+          name: integration-test-dev
           context: myContext
           region: us-west-2
-          account-url: 999999999999.dkr.ecr.us-west-2.amazonaws.com 
+          account-url: 999999999999.dkr.ecr.us-west-2.amazonaws.com
           repo: myrepo
           tag: latest
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /integration-.*/
+
+      - aws-ecr/build_and_push_image:
+          name: integration-test-master
+          context: myContext
+          region: us-west-2
+          account-url: 999999999999.dkr.ecr.us-west-2.amazonaws.com
+          repo: myrepo
+          tag: latest
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-.*/
+
+      - dev-promote-prod:
+          requires:
+            - integration-test-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-.*/
+          context: orb-publishing

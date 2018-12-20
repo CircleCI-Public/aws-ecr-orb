@@ -1,6 +1,5 @@
 # aws-ecr-orb
-Orb for interacting with Amazon Elastic Container Registry (ECR) from within a
-CircleCI build job.
+Orb for interacting with Amazon Elastic Container Registry (ECR) from within a CircleCI build job.
 
 ## View in the orb registry
 See the [aws-ecr-orb in the registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr)

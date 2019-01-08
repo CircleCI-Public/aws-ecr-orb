@@ -94,7 +94,7 @@ jobs:
       - checkout
       - run: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} patch --token $CIRCLE_TOKEN
 
-# yaml anchor filters
+# yaml anchors
 integration-dev_filters: &integration-dev_filters
   branches:
     ignore: /.*/

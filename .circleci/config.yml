@@ -107,6 +107,9 @@ integration-master_filters: &integration-master_filters
   tags:
     only: /master-.*/
 
+integration-post-steps: &integration-post-steps
+  [run: aws ecr delete-repository --repository-name aws-ecr-orb --force]
+
 workflows:
   lint_validate_deploy-dev:
     jobs:
@@ -138,32 +141,24 @@ workflows:
   integration-tests_deploy-prod:
     jobs:
       # triggered by non-master branch commits
-      # - setup-infrastructure:
-      #     name: setup-infra-dev
-      #     context: orb-publishing
-
       - aws-ecr/build_and_push_image:
           name: integration-tests-dev
           context: orb-publishing
-          repo: myrepo
-          tag: latest
+          repo: aws-ecr-orb
+          create-repo: true
+          tag: integration-dev
           filters: *integration-dev_filters
-          # requires:
-          #   - setup-infra-dev
+          post-steps: *integration-post-steps
 
       # triggered by master branch commits
-      # - setup-infrastructure:
-      #     name: setup-infra-master
-      #     context: orb-publishing
-
       - aws-ecr/build_and_push_image:
           name: integration-tests-master
           context: orb-publishing
-          repo: myrepo
-          tag: latest
+          repo: aws-ecr-orb
+          create-repo: true
+          tag: integration-master
           filters: *integration-master_filters
-          # requires:
-          #   - setup-infra-master
+          post-steps: *integration-post-steps
 
       - dev-promote-prod:
           context: orb-publishing

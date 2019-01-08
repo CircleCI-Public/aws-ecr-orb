@@ -158,6 +158,11 @@ jobs:
         type: string
         description: A URI to an Amazon ECR repository
 
+      create-repo:
+        type: boolean
+        description: Should the repo be created if it does not exist?
+        default: false
+
       tag:
         type: string
         description: Docker tag (default = latest)
@@ -183,6 +188,11 @@ jobs:
           account-url: << parameters.account-url >>
           repo: << parameters.repo >>
           tag: << parameters.tag >>
+
+      - when:
+          condition: <<parameters.create-repo>>
+          steps:
+            - run: aws --region <<parameters.region>> ecr create-repository --repository-name <<parameters.repo>> --profile <<parameters.profile-name>>
 
       - push-image:
           account-url: << parameters.account-url >>

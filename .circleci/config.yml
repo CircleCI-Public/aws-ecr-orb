@@ -166,7 +166,7 @@ workflows:
           #   - setup-infra-master
 
       - dev-promote-prod:
-        context: orb-publishing
+          context: orb-publishing
           filters: *integration-master_filters
           requires:
             - integration-tests-master

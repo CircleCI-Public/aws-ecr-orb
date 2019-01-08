@@ -192,7 +192,7 @@ jobs:
       - when:
           condition: <<parameters.create-repo>>
           steps:
-            - run: aws --region <<parameters.region>> ecr create-repository --repository-name <<parameters.repo>> --profile <<parameters.profile-name>>
+            - run: aws --region $<<parameters.region>> ecr create-repository --repository-name <<parameters.repo>> --profile <<parameters.profile-name>>
 
       - push-image:
           account-url: << parameters.account-url >>

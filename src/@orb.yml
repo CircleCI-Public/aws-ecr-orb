@@ -17,8 +17,7 @@ examples:
         build_and_push_image:
           jobs:
             - aws-ecr/build_and_push_image:
-                context: myContext # your context containing AWS login variables
-                account-url: myAwsAccountId.dkr.ecr.myAwsRegion.amazonaws.com
+                context: myContext # your context containing AWS variables
                 repo: myRepo # your Amazon ECR repository
                 tag: latest
 

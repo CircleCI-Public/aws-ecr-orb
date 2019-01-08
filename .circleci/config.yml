@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  aws-cli: circleci/aws-cli@0.1.6
   aws-ecr: circleci/aws-ecr@dev:alpha
 
 executors:
@@ -12,7 +13,7 @@ executors:
   cli:
     resource_class: small
     docker:
-      - image: circleci/circleci-cli:0.1.2709
+      - image: circleci/circleci-cli
 
   lint-condo:
     resource_class: small
@@ -30,7 +31,7 @@ jobs:
     executor: cli
     steps:
       - checkout
-      - run: circleci orb validate src/orb.yml
+      - run: circleci orb validate src/@orb.yml
 
   publish-dev:
     executor: cli
@@ -38,15 +39,19 @@ jobs:
       - checkout
 
       - run:
-          name: always publish w/branch & sha (for transparency)
-          command: circleci orb publish src/orb.yml circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+          name: publish dev versions
+          command: |
+            # for integration testing
+            circleci orb publish src/@orb.yml circleci/aws-ecr@dev:alpha --token $CIRCLE_TOKEN
 
-      - run:
-          name: always publish alpha (for immediate integration testing)
-          command: circleci orb publish src/orb.yml circleci/aws-ecr@dev:alpha --token $CIRCLE_TOKEN
+            # for transparency
+            circleci orb publish src/@orb.yml circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+
+            # for potentially promoting to prod
+            circleci orb publish src/@orb.yml circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
 
       - store_artifacts:
-          path: src/orb.yml
+          path: src/@orb.yml
 
   trigger-integration:
     executor: ci-base
@@ -73,14 +78,37 @@ jobs:
           git tag $INTEGRATION_TAG
           git push origin $INTEGRATION_TAG
 
+  # setup-infrastructure:
+  #   executor: aws-cli/default
+  #   steps:
+  #     - aws-cli/install
+
+  #     - aws-cli/configure:
+  #         aws-region: AWS_REGION
+
+  #     -
+
   dev-promote-prod:
     executor: cli
     steps:
       - checkout
-      - run: circleci orb publish promote circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} patch --token $CIRCLE_TOKEN
+      - run: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} patch --token $CIRCLE_TOKEN
+
+# yaml anchor filters
+integration-dev_filters: &integration-dev_filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /integration-.*/
+
+integration-master_filters: &integration-master_filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /master-.*/
 
 workflows:
-  validate_test_deploy:
+  lint_validate_deploy-dev:
     jobs:
       - lint
 
@@ -89,9 +117,9 @@ workflows:
             - lint
 
       - publish-dev:
+          context: orb-publishing
           requires:
             - validate
-          context: orb-publishing
 
       - trigger-integration:
           name: trigger-integration-dev
@@ -107,40 +135,38 @@ workflows:
             branches:
               only: master
 
-  integration-test_prod-deploy:
+  integration-tests_deploy-prod:
     jobs:
-      - aws-ecr/build_and_push_image:
-          name: integration-test-dev
-          context: myContext
-          region: us-west-2
-          account-url: 999999999999.dkr.ecr.us-west-2.amazonaws.com
-          repo: myrepo
-          tag: latest
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /integration-.*/
+      # triggered by non-master branch commits
+      # - setup-infrastructure:
+      #     name: setup-infra-dev
+      #     context: orb-publishing
 
       - aws-ecr/build_and_push_image:
-          name: integration-test-master
-          context: myContext
-          region: us-west-2
-          account-url: 999999999999.dkr.ecr.us-west-2.amazonaws.com
+          name: integration-tests-dev
+          context: orb-publishing
           repo: myrepo
           tag: latest
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-.*/
+          filters: *integration-dev_filters
+          # requires:
+          #   - setup-infra-dev
+
+      # triggered by master branch commits
+      # - setup-infrastructure:
+      #     name: setup-infra-master
+      #     context: orb-publishing
+
+      - aws-ecr/build_and_push_image:
+          name: integration-tests-master
+          context: orb-publishing
+          repo: myrepo
+          tag: latest
+          filters: *integration-master_filters
+          # requires:
+          #   - setup-infra-master
 
       - dev-promote-prod:
+        context: orb-publishing
+          filters: *integration-master_filters
           requires:
-            - integration-test-master
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-.*/
-          context: orb-publishing
+            - integration-tests-master

@@ -93,7 +93,6 @@ jobs:
 
             git tag $INTEGRATION_TAG
             git push origin $INTEGRATION_TAG
-            git push --delete origin $INTEGRATION_TAG
 
   dev-promote-prod:
     executor: cli
@@ -121,7 +120,7 @@ integration-master_filters: &integration-master_filters
     only: /master-.*/
 
 integration-post-steps: &integration-post-steps
-  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force"]
+  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}, run: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME", run: "git push --delete origin $CIRCLE_TAG"]
 
 workflows:
   lint_validate_deploy-dev:

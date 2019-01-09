@@ -49,3 +49,6 @@ workflows:
           # path to Dockerfile, defaults to . (working directory)
           path: pathToMyDockerfile
 ```
+
+## Contributing
+We welcome [issues](https://github.com/CircleCI-Public/aws-ecr-orb/issues) to and [pull requests](https://github.com/CircleCI-Public/aws-ecr-orb/pulls) against this repository! For further questions/comments about this or other orbs, visit [CircleCI's Orbs discussion forum](https://discuss.circleci.com/c/orbs).

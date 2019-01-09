@@ -180,7 +180,7 @@ workflows:
           name: dev-promote-patch
           context: orb-publishing
           requires:
-          	- integration-tests-master
+            - integration-tests-master
           filters:
             branches:
               ignore: /.*/
@@ -192,7 +192,7 @@ workflows:
           release: minor
           context: orb-publishing
           requires:
-          	- integration-tests-master
+            - integration-tests-master
           filters:
             branches:
               ignore: /.*/

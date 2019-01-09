@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@0.1.7
   aws-ecr: circleci/aws-ecr@dev:alpha
+  circle-compare-url: iynere/compare-url@0.4.5
 
 executors:
   ci-base:
@@ -73,26 +74,37 @@ jobs:
             git config --global user.email "$CIRCLE_USERNAME@users.noreply.github.com"
             git config --global user.name "$CIRCLE_USERNAME"
 
-      - run: |
-          INTEGRATION_TAG=<<parameters.tag>>-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
-          git tag $INTEGRATION_TAG
-          git push origin $INTEGRATION_TAG
+      - circle-compare-url/reconstruct
 
-  # setup-infrastructure:
-  #   executor: aws-cli/default
-  #   steps:
-  #     - aws-cli/install
+      - run:
+          name: trigger integration workflow, possible patch / minor / major release
+          command: |
+            CIRCLE_COMPARE_URL=$(cat CIRCLE_COMPARE_URL.txt)
 
-  #     - aws-cli/configure:
-  #         aws-region: AWS_REGION
+            COMMIT_RANGE=$(echo $CIRCLE_COMPARE_URL | sed 's:^.*/compare/::g')
 
-  #     -
+            echo "Commit range: $COMMIT_RANGE"
+
+            if [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/@orb.yml") ]]; then
+              INTEGRATION_TAG=<<parameters.tag>>-minor-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
+            else
+              INTEGRATION_TAG=<<parameters.tag>>-patch-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
+            fi
+
+            git tag $INTEGRATION_TAG
+            git push origin $INTEGRATION_TAG
 
   dev-promote-prod:
     executor: cli
+    parameters:
+      release:
+        type: enum
+        default: "patch"
+        enum: ["patch", "minor", "major"]
     steps:
-      - checkout
-      - run: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} patch --token $CIRCLE_TOKEN
+      - run:
+          name: minor release if changes to src/@orb.yml, otherwise patch
+          command: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} <<parameters.release>> --token $CIRCLE_TOKEN
 
 # yaml anchors
 integration-dev_filters: &integration-dev_filters
@@ -163,8 +175,26 @@ workflows:
           filters: *integration-master_filters
           post-steps: *integration-post-steps
 
+      # patch, minor, or major publishing
       - dev-promote-prod:
+          name: dev-promote-patch
           context: orb-publishing
-          filters: *integration-master_filters
           requires:
-            - integration-tests-master
+          	- integration-tests-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-patch.*/
+
+      - dev-promote-prod:
+          name: dev-promote-minor
+          release: minor
+          context: orb-publishing
+          requires:
+          	- integration-tests-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-minor.*/

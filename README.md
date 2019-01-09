@@ -40,10 +40,10 @@ workflows:
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
 
-          # tag for your ECR repository, defaults to "latest"
+          # ECR image tag, defaults to "latest"
           tag: myECRRepoTag
 
-          # name of Dockerfile to use, defaults to Dockerfile
+          # name of Dockerfile to use, defaults to "Dockerfile"
           dockerfile: myDockerfile
 
           # path to Dockerfile, defaults to . (working directory)

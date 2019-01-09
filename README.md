@@ -31,7 +31,8 @@ orbs:
 workflows:
   simple_build_and_push:
     jobs:
-      # if all parameters are kept as defaults, the following would be all that is needed to build and push an image to ECR
+      # if default parameter values are used,
+      # the following would be sufficient to build and push an image to ECR
       - aws-ecr/build_and_push_image:
           repo: myECRRepository
 

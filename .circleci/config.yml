@@ -93,6 +93,7 @@ jobs:
 
             git tag $INTEGRATION_TAG
             git push origin $INTEGRATION_TAG
+            git push --delete origin $INTEGRATION_TAG
 
   dev-promote-prod:
     executor: cli

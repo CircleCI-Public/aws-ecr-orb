@@ -108,7 +108,7 @@ integration-master_filters: &integration-master_filters
     only: /master-.*/
 
 integration-post-steps: &integration-post-steps
-  [run: aws ecr delete-repository --repository-name aws-ecr-orb-$\{CIRCLE_SHA1:0:7\} --force]
+  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force"]
 
 workflows:
   lint_validate_deploy-dev:

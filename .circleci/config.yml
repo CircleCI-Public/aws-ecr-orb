@@ -128,6 +128,9 @@ workflows:
           name: trigger-integration-dev
           requires:
             - publish-dev
+          filters:
+            branches:
+              ignore: master
 
       - trigger-integration:
           name: trigger-integration-master

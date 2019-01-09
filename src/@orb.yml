@@ -183,8 +183,6 @@ jobs:
 
       - checkout
 
-      - setup_remote_docker
-
       - ecr-login:
           region: << parameters.region >>
 

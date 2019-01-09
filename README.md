@@ -33,7 +33,7 @@ workflows:
     jobs:
       # with default parameter values, the following would be sufficient to build and push an image to ECR
       - aws-ecr/build_and_push_image:
-          repo: myECRRepository
+          repo: myRepositoryName
 
 ```
 

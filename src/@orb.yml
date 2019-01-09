@@ -118,7 +118,7 @@ jobs:
       and push image to repository. Requires environment variables
       for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
       these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
-      or in Contexts (https://circleci.com/docs/2.0/contexts/).
+      or in Contexts (https://circleci.com/docs/2.0/contexts).
     executor: <<parameters.executor>>
 
     parameters:
@@ -177,6 +177,16 @@ jobs:
         description: Docker tag (default = latest)
         default: "latest"
 
+      dockerfile:
+        description: Name of dockerfile to use. Defaults to Dockerfile.
+        type: string
+        default: Dockerfile
+
+      path:
+        description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
+        type: string
+        default: .
+
     steps:
       - aws-cli/install
 
@@ -195,6 +205,8 @@ jobs:
           account-url: << parameters.account-url >>
           repo: << parameters.repo >>
           tag: << parameters.tag >>
+          dockerfile: << parameters.dockerfile >>
+          path: << parameters.path >>
 
       - when:
           condition: <<parameters.create-repo>>

@@ -1,28 +1,8 @@
-# aws-ecr-orb
-Orb for interacting with Amazon Elastic Container Registry (ECR) from within a CircleCI build job.
+# AWS ECR Orb [![CircleCI status](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb.svg "CircleCI status")](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb)
+CircleCI orb for interacting with Amazon's Elastic Container Registry (ECR).
 
-## View in the orb registry
-See the [aws-ecr-orb in the registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr)
-for more the full details of jobs, commands, and executors available in this
-orb.
-
-## Setup required to use this orb
-The following **required** dependencies must be configured in CircleCI in order to use this orb:
-* AWS_ACCESS_KEY_ID - environment variable for AWS login
-* AWS_SECRET_ACCESS_KEY - environment variable for AWS login
-
-If set, the following **optional** environment variables will serve as default
-parameter values:
-* AWS_ECR_ACCOUNT_URL
-
-See CircleCI documentation for instructions on storing environment variables
-in either your Project settings or a Context:
-* [Setting environment variables in CircleCI](https://circleci.com/docs/2.0/env-vars)
-
-## Sample use in CircleCI config.yml
-This example uses the `circleci/aws-ecr` orb to build a docker image based on
-a Dockerfile in the root directory and push it to Amazon ECR,
-based on the parameters provided to the `aws-ecr/build_and_push_image` job:
+## Usage
+See below for a complete example of this orb's `build_and_push_image` job. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
 
 ```yaml
 version: 2.1
@@ -35,11 +15,37 @@ workflows:
     jobs:
       # build and push image to ECR
       - aws-ecr/build_and_push_image:
+
+          # required if any necessary secrets are stored via [Contexts](https://circleci.com/docs/2.0/contexts)
           context: myContext
-          region: us-east-1
-          account-url: 999999999999.dkr-ecr.us-west-2.amazonaws.com
-          repo: myrepo
-          tag: latest
-          dockerfile: Dockerfile
-          path: .
+
+          # defaults to "default"
+          profile-name: myProfileName
+
+          # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID
+          aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
+
+          # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
+          aws-access-key-id: SECRET_ACCESS_KEY_ENV_VAR_NAME
+
+          # name of env var storing your AWS region, defaults to AWS_REGION
+          region: AWS_REGION_ENV_VAR_NAME
+
+          # name of env var storing your ECR account URL, defaults to AWS_ECR_ACCOUNT_URL
+          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+
+          # name of your ECR repository
+          repo: myECRRepository
+
+          # set this to true to create the repository if it does not already exist, defaults to "false"
+          create-repo: true
+
+          # tag for your ECR repository, defaults to "latest"
+          tag: myECRRepoTag
+
+          # name of Dockerfile to use, defaults to Dockerfile
+          dockerfile: myDockerfile
+
+          # path to Dockerfile, defaults to . (working directory)
+          path: pathToMyDockerfile
 ```

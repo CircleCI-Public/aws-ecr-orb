@@ -119,8 +119,11 @@ integration-master_filters: &integration-master_filters
   tags:
     only: /master-.*/
 
+integration-pre-steps: &integration-pre-steps
+  [add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}]
+
 integration-post-steps: &integration-post-steps
-  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}, run: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME", run: "git push --delete origin $CIRCLE_TAG"]
+  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", run: {when: "always"}, {name: "cleanup tag"}, {command: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME && git push --delete origin $CIRCLE_TAG"}]
 
 workflows:
   lint_validate_deploy-dev:
@@ -159,6 +162,7 @@ workflows:
       - aws-ecr/build_and_push_image:
           name: integration-tests-dev
           context: orb-publishing
+          pre-steps: *integration-pre-steps
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-dev
@@ -170,6 +174,7 @@ workflows:
       - aws-ecr/build_and_push_image:
           name: integration-tests-master
           context: orb-publishing
+          pre-steps: *integration-pre-steps
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master

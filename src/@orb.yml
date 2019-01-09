@@ -16,10 +16,41 @@ examples:
       workflows:
         build_and_push_image:
           jobs:
+            # build and push image to ECR
             - aws-ecr/build_and_push_image:
-                context: myContext # your context containing AWS variables
-                repo: myRepo # your Amazon ECR repository
-                tag: latest
+
+                # required if any necessary secrets are stored via Contexts
+                context: myContext
+
+                # AWS profile name, defaults to "default"
+                profile-name: myProfileName
+
+                # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID
+                aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
+
+                # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
+                aws-access-key-id: SECRET_ACCESS_KEY_ENV_VAR_NAME
+
+                # name of env var storing your AWS region, defaults to AWS_REGION
+                region: AWS_REGION_ENV_VAR_NAME
+
+                # name of env var storing your ECR account URL, defaults to AWS_ECR_ACCOUNT_URL
+                account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+
+                # name of your ECR repository
+                repo: myECRRepository
+
+                # set this to true to create the repository if it does not already exist, defaults to "false"
+                create-repo: true
+
+                # tag for your ECR repository, defaults to "latest"
+                tag: myECRRepoTag
+
+                # name of Dockerfile to use, defaults to Dockerfile
+                dockerfile: myDockerfile
+
+                # path to Dockerfile, defaults to . (working directory)
+                path: pathToMyDockerfile
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.7

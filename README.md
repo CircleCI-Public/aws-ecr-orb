@@ -19,7 +19,7 @@ workflows:
           # required if any necessary secrets are stored via Contexts
           context: myContext
 
-          # defaults to "default"
+          # AWS profile name, defaults to "default"
           profile-name: myProfileName
 
           # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID

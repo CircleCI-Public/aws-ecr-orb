@@ -111,10 +111,22 @@ commands:
         type: string
         default: .
 
+      extra-build-args:
+        description: >
+          Extra flags to pass to docker build. For examples, see
+          https://docs.docker.com/engine/reference/commandline/build
+        type: string
+        default: ""
+
     steps:
       - run:
           name: Build docker image
-          command: docker build -f << parameters.dockerfile >> -t $<< parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >> << parameters.path >>
+          command: |
+            docker build \
+              <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
+              -f << parameters.dockerfile >> \
+              -t $<< parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >> \
+              << parameters.path >>
 
   push-image:
     description: "Push a container image to the Amazon ECR registry"
@@ -218,6 +230,13 @@ jobs:
         type: string
         default: .
 
+      extra-build-args:
+        description: >
+          Extra flags to pass to docker build. For examples, see
+          https://docs.docker.com/engine/reference/commandline/build
+        type: string
+        default: ""
+
     steps:
       - aws-cli/install
 
@@ -238,6 +257,7 @@ jobs:
           tag: << parameters.tag >>
           dockerfile: << parameters.dockerfile >>
           path: << parameters.path >>
+          extra-build-args: << parameters.extra-build-args >>
 
       - when:
           condition: <<parameters.create-repo>>

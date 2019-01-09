@@ -12,6 +12,7 @@ Following is the full list of parameters required by this orb's various commands
 | `create-repo` | `boolean` | `false` | set this to true to create the repository if it does not already exist |
 | `dockerfile` | `string` | `Dockerfile` | name of Dockerfile to use |
 | `executor` | `executor` | `default` | name of any custom executor (default is `machine: true`) |
+| `extra-build-args` | `string` | `""` | Extra flags to pass to `docker build` (see [docs.docker.com/engine/reference/commandline/build](https://docs.docker.com/engine/reference/commandline/build)) |
 | `path` | `string` | `.` | path to Dockerfile, defaults to the working directory |
 | `profile-name` | `string` | `default` | AWS profile name |
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |

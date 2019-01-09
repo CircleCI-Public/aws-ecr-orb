@@ -15,7 +15,7 @@ Following is the full list of parameters required by this orb's various commands
 | `path` | `string` | `.` | path to Dockerfile, defaults to the working directory |
 | `profile-name` | `string` | `default` | AWS profile name |
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
-| `repo` | `string` |  none | name of your ECR repository |
+| `repo` | `string` |  N/A | name of your ECR repository |
 | `tag` | `string` |  `latest` | ECR image tag |
 
 ## Usage

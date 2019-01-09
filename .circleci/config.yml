@@ -162,7 +162,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-dev
-          extra-build-args: --progress=plain
+          extra-build-args: --compress --iidfile
           filters: *integration-dev_filters
           post-steps: *integration-post-steps
 
@@ -173,7 +173,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master
-          extra-build-args: --progress=plain
+          extra-build-args: --compress --iidfile
           filters: *integration-master_filters
           post-steps: *integration-post-steps
 

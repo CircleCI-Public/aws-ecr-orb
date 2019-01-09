@@ -26,10 +26,6 @@ orbs:
 
 executors:
   default:
-    docker:
-      - image: circleci/python:3-stretch-browsers
-
-  machine:
     machine: true
 
 commands:
@@ -123,8 +119,8 @@ jobs:
     parameters:
       executor:
         description: executor to use for this job
-        type: string
-        default: machine
+        type: executor
+        default: default
 
       profile-name:
         description: AWS profile name to be configured.

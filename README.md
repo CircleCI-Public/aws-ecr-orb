@@ -16,7 +16,7 @@ workflows:
       # build and push image to ECR
       - aws-ecr/build_and_push_image:
 
-          # required if any necessary secrets are stored via [Contexts](https://circleci.com/docs/2.0/contexts)
+          # required if any necessary secrets are stored via Contexts
           context: myContext
 
           # defaults to "default"

@@ -26,7 +26,7 @@ workflows:
           aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
 
           # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
-          aws-access-key-id: SECRET_ACCESS_KEY_ENV_VAR_NAME
+          aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
 
           # name of env var storing your AWS region, defaults to AWS_REGION
           region: AWS_REGION_ENV_VAR_NAME

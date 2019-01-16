@@ -168,6 +168,7 @@ workflows:
           name: integration-tests-dev
           context: orb-publishing
           pre-steps: *integration-pre-steps
+          profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-dev
@@ -180,6 +181,7 @@ workflows:
           name: integration-tests-master
           context: orb-publishing
           pre-steps: *integration-pre-steps
+          profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master

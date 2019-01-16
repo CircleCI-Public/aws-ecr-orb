@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@3.0.0
-  aws-cli: circleci/aws-cli@0.1.7
+  aws-cli: circleci/aws-cli@0.1.8
   aws-ecr: circleci/aws-ecr@dev:alpha
   circle-compare-url: iynere/compare-url@0.4.5
 

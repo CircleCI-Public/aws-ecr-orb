@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  orb-tools: circleci/orb-tools@3.0.0
   aws-cli: circleci/aws-cli@0.1.7
   aws-ecr: circleci/aws-ecr@dev:alpha
   circle-compare-url: iynere/compare-url@0.4.5
@@ -28,16 +29,15 @@ jobs:
       - checkout
       - run: yamllint .
 
-  validate:
-    executor: cli
-    steps:
-      - checkout
-      - run: circleci orb validate src/@orb.yml
+  # validate goes here: see workflow
 
   publish-dev:
     executor: cli
     steps:
       - checkout
+
+      - attach_workspace:
+          at: workspace
 
       - run:
           name: publish dev versions
@@ -52,7 +52,7 @@ jobs:
             circleci orb publish src/@orb.yml circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
 
       - store_artifacts:
-          path: src/@orb.yml
+          path: workspace/orb.yml
 
   trigger-integration:
     executor: ci-base
@@ -85,7 +85,9 @@ jobs:
 
             echo "Commit range: $COMMIT_RANGE"
 
-            if [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/@orb.yml") ]]; then
+            if [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/commands" -e "src/jobs") ]]; then
+              INTEGRATION_TAG=<<parameters.tag>>-major-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
+            elif [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/examples" -e "src/@orb.yml") ]]; then
               INTEGRATION_TAG=<<parameters.tag>>-minor-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
             else
               INTEGRATION_TAG=<<parameters.tag>>-patch-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
@@ -126,18 +128,21 @@ integration-post-steps: &integration-post-steps
   [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", run: {when: "always", name: "cleanup tag", command: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME && git push --delete origin $CIRCLE_TAG"}]
 
 workflows:
-  lint_validate_deploy-dev:
+  lint-pack_validate_deploy-dev:
     jobs:
       - lint
 
-      - validate:
+      - orb-tools/pack:
+          name: pack-validate
+          workspace-path: orb.yml
+          artifact-path: orb.yml
           requires:
             - lint
 
       - publish-dev:
           context: orb-publishing
           requires:
-            - validate
+            - pack-validate
 
       - trigger-integration:
           name: trigger-integration-dev
@@ -205,3 +210,15 @@ workflows:
               ignore: /.*/
             tags:
               only: /master-minor.*/
+
+      - dev-promote-prod:
+          name: dev-promote-major
+          release: major
+          context: orb-publishing
+          requires:
+            - integration-tests-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-major.*/

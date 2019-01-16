@@ -1,0 +1,19 @@
+description: "Authenticate into the Amazon ECR service"
+
+parameters:
+  region:
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_REGION
+    type: env_var_name
+    default: AWS_REGION
+
+steps:
+  - run:
+      name: Log into Amazon ECR
+      command: |
+        # aws ecr get-login returns a login command w/ a temp token
+        LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $<< parameters.region >>)
+
+        # save it to an env var & use that env var to login
+        $LOGIN_COMMAND

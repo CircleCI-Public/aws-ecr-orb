@@ -1,0 +1,45 @@
+description: "Build a docker image"
+
+parameters:
+  account-url:
+    type: env_var_name
+    description: >
+      The Amazon ECR account URL that maps to an AWS account,
+      e.g. {awsAccountNum}.dkr-ecr.us-west-2.amazonaws.com
+    default: AWS_ECR_ACCOUNT_URL
+
+  repo:
+    type: string
+    description: Name of an Amazon ECR repository
+
+  tag:
+    description: A docker image tag (default = latest)
+    type: string
+    default: "latest"
+
+  dockerfile:
+    description: Name of dockerfile to use. Defaults to Dockerfile.
+    type: string
+    default: Dockerfile
+
+  path:
+    description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
+    type: string
+    default: .
+
+  extra-build-args:
+    description: >
+      Extra flags to pass to docker build. For examples, see
+      https://docs.docker.com/engine/reference/commandline/build
+    type: string
+    default: ""
+
+steps:
+  - run:
+      name: Build docker image
+      command: |
+        docker build \
+          <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
+          -f << parameters.dockerfile >> \
+          -t $<< parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >> \
+          << parameters.path >>

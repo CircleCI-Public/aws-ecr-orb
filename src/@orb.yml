@@ -237,6 +237,21 @@ jobs:
         type: string
         default: ""
 
+      after-checkout:
+        description: Optional steps to run after checking out the code.
+        type: steps
+        default: []
+
+      before-build:
+        description: Optional steps to run before building the docker image.
+        type: steps
+        default: []
+
+      after-build:
+        description: Optional steps to run after building the docker image.
+        type: steps
+        default: []
+
     steps:
       - aws-cli/install
 
@@ -248,8 +263,18 @@ jobs:
 
       - checkout
 
+      - when:
+          name: Run after-checkout lifecycle hook steps.
+          condition: << parameters.after-checkout >>
+          steps: << parameters.after-checkout >>
+
       - ecr-login:
           region: << parameters.region >>
+
+      - when:
+          name: Run before-build lifecycle hook steps.
+          condition: << parameters.before-build >>
+          steps: << parameters.before-build >>
 
       - build-image:
           account-url: << parameters.account-url >>
@@ -258,6 +283,11 @@ jobs:
           dockerfile: << parameters.dockerfile >>
           path: << parameters.path >>
           extra-build-args: << parameters.extra-build-args >>
+
+      - when:
+          name: Run after-build lifecycle hook steps.
+          condition: << parameters.after-build >>
+          steps: << parameters.after-build >>
 
       - when:
           condition: <<parameters.create-repo>>

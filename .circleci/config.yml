@@ -89,8 +89,10 @@ jobs:
               INTEGRATION_TAG=<<parameters.tag>>-major-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
             elif [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/examples" -e "src/@orb.yml") ]]; then
               INTEGRATION_TAG=<<parameters.tag>>-minor-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
-            else
+            elif [[ $(git diff $COMMIT_RANGE --name-status | grep -e "config.yml") ]]; then
               INTEGRATION_TAG=<<parameters.tag>>-patch-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
+            else
+              INTEGRATION_TAG=<<parameters.tag>>-skip-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
             fi
 
             git tag $INTEGRATION_TAG

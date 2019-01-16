@@ -43,13 +43,13 @@ jobs:
           name: publish dev versions
           command: |
             # for integration testing
-            circleci orb publish src/@orb.yml circleci/aws-ecr@dev:alpha --token $CIRCLE_TOKEN
+            circleci orb publish workspace/orb.yml circleci/aws-ecr@dev:alpha --token $CIRCLE_TOKEN
 
             # for transparency
-            circleci orb publish src/@orb.yml circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+            circleci orb publish workspace/orb.yml circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
 
             # for potentially promoting to prod
-            circleci orb publish src/@orb.yml circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+            circleci orb publish workspace/orb.yml circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
 
       - store_artifacts:
           path: workspace/orb.yml
@@ -105,7 +105,7 @@ jobs:
         enum: ["patch", "minor", "major"]
     steps:
       - run:
-          name: minor release if changes to src/@orb.yml, otherwise patch
+          name: major release if changes to commands/jobs, minor if to examples or @orb.yml, otherwise patch
           command: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} <<parameters.release>> --token $CIRCLE_TOKEN
 
 # yaml anchors

@@ -18,6 +18,9 @@ Following is the full list of parameters required by this orb's various commands
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
 | `repo` | `string` |  N/A | name of your ECR repository |
 | `tag` | `string` |  `latest` | ECR image tag |
+| `after_checkout` | `steps` |  `[]` | Optional steps to run after checking out the code. |
+| `before_build` | `steps` |  `[]` | Optional steps to run before building the docker image. |
+| `after_build` | `steps` |  `[]` | Optional steps to run after building the docker image. |
 
 ## Usage
 See below for both simple and complete examples of this orb's `build_and_push_image` job. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
@@ -83,6 +86,24 @@ workflows:
 
           # path to Dockerfile, defaults to . (working directory)
           path: pathToMyDockerfile
+
+          # Optional steps to run after checking out the code, defaults to []
+          after_checkout:
+            - run:
+                name: Do this after checkout.
+                command: echo "Did this after checkout"
+
+          # Optional steps to run before building the docker image, defaults to []
+          before_build:
+            - run:
+                name: Do this before the build.
+                command: echo "Did this before the build"
+
+          # Optional steps to run after building the docker image, default to []
+          after_build:
+            - run:
+                name: Do this after the build.
+                command: echo "Did this after the build"
 ```
 
 ## Contributing

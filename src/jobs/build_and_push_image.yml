@@ -79,6 +79,21 @@ parameters:
     type: string
     default: ""
 
+  after_checkout:
+    description: Optional steps to run after checking out the code.
+    type: steps
+    default: []
+
+  before_build:
+    description: Optional steps to run before building the docker image.
+    type: steps
+    default: []
+
+  after_build:
+    description: Optional steps to run after building the docker image.
+    type: steps
+    default: []
+
 steps:
   - aws-cli/install
 
@@ -90,8 +105,18 @@ steps:
 
   - checkout
 
+  - when:
+      name: Run after_checkout lifecycle hook steps.
+      condition: << parameters.after_checkout >>
+      steps: << parameters.after_checkout >>
+
   - ecr-login:
       region: << parameters.region >>
+
+  - when:
+      name: Run before_build lifecycle hook steps.
+      condition: << parameters.before_build >>
+      steps: << parameters.before_build >>
 
   - build-image:
       account-url: << parameters.account-url >>
@@ -100,6 +125,11 @@ steps:
       dockerfile: << parameters.dockerfile >>
       path: << parameters.path >>
       extra-build-args: << parameters.extra-build-args >>
+
+  - when:
+      name: Run after_build lifecycle hook steps.
+      condition: << parameters.after_build >>
+      steps: << parameters.after_build >>
 
   - when:
       condition: <<parameters.create-repo>>

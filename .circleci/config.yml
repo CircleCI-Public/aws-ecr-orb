@@ -110,6 +110,15 @@ jobs:
           name: major release if changes to commands/jobs, minor if to examples or @orb.yml, otherwise patch
           command: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} <<parameters.release>> --token $CIRCLE_TOKEN
 
+  pre-integration-checkout-workspace-job:
+    executor: ci-base
+    steps:
+      - checkout
+
+      - persist_to_workspace:
+          root: .
+          paths: Dockerfile
+
 # yaml anchors
 integration-dev_filters: &integration-dev_filters
   branches:
@@ -124,7 +133,7 @@ integration-master_filters: &integration-master_filters
     only: /master-.*/
 
 integration-pre-steps: &integration-pre-steps
-  [add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}]
+  [add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}, run: "rm -rf Dockerfile"]
 
 integration-post-steps: &integration-post-steps
   [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", run: {when: "always", name: "cleanup tag", command: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME && git push --delete origin $CIRCLE_TAG"}]
@@ -166,30 +175,50 @@ workflows:
   integration-tests_deploy-prod:
     jobs:
       # triggered by non-master branch commits
+      - pre-integration-checkout-workspace-job:
+          name: pre-integration-dev
+          filters: *integration-dev_filters
+
       - aws-ecr/build_and_push_image:
           name: integration-tests-dev
           context: orb-publishing
           pre-steps: *integration-pre-steps
+          attach-workspace: true
+          workspace-root: workspace
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-dev
+          dockerfile: workspace/Dockerfile
+          path: workspace
           extra-build-args: --compress
           filters: *integration-dev_filters
           post-steps: *integration-post-steps
+          requires:
+            - pre-integration-dev
 
       # triggered by master branch commits
+      - pre-integration-checkout-workspace-job:
+          name: pre-integration-master
+          filters: *integration-master_filters
+
       - aws-ecr/build_and_push_image:
           name: integration-tests-master
           context: orb-publishing
           pre-steps: *integration-pre-steps
+          checkout: false
+          attach-workspace: true
+          workspace-root: workspace
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master
+          path: workspace
           extra-build-args: --compress
           filters: *integration-master_filters
           post-steps: *integration-post-steps
+          requires:
+            - pre-integration-master
 
       # patch, minor, or major publishing
       - dev-promote-prod:

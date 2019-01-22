@@ -213,6 +213,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master
+          dockerfile: workspace/Dockerfile
           path: workspace
           extra-build-args: --compress
           filters: *integration-master_filters

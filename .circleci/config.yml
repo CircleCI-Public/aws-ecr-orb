@@ -206,7 +206,6 @@ workflows:
           name: integration-tests-master
           context: orb-publishing
           pre-steps: *integration-pre-steps
-          checkout: false
           attach-workspace: true
           workspace-root: workspace
           profile-name: testing

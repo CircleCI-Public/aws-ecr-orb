@@ -136,7 +136,7 @@ integration-pre-steps: &integration-pre-steps
   [add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}]
 
 integration-post-steps: &integration-post-steps
-  [checkout, run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", run: {when: "always", name: "cleanup tag", command: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME && git push --delete origin $CIRCLE_TAG"}]
+  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", run: {when: "always", name: "cleanup tag", command: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME && git push --delete origin $CIRCLE_TAG"}]
 
 workflows:
   lint-pack_validate_deploy-dev:
@@ -183,12 +183,13 @@ workflows:
           name: integration-tests-dev
           context: orb-publishing
           pre-steps: *integration-pre-steps
-          checkout: false
           attach-workspace: true
+          workspace-root: workspace
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-dev
+          path: workspace
           extra-build-args: --compress
           filters: *integration-dev_filters
           post-steps: *integration-post-steps
@@ -206,10 +207,12 @@ workflows:
           pre-steps: *integration-pre-steps
           checkout: false
           attach-workspace: true
+          workspace-root: workspace
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master
+          path: workspace
           extra-build-args: --compress
           filters: *integration-master_filters
           post-steps: *integration-post-steps

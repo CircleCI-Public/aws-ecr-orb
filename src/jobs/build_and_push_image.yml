@@ -100,6 +100,11 @@ parameters:
     default: ""
 
 steps:
+  - when:
+      condition: << parameters.checkout >>
+      steps:
+        - checkout
+
   - aws-cli/install
 
   - aws-cli/configure:
@@ -107,11 +112,6 @@ steps:
       aws-access-key-id: << parameters.aws-access-key-id >>
       aws-secret-access-key: << parameters.aws-secret-access-key >>
       aws-region: << parameters.region >>
-
-  - when:
-      condition: << parameters.checkout >>
-      steps:
-        - checkout
 
   - when:
       condition: << parameters.attach-workspace >>

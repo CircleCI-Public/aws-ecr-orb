@@ -114,7 +114,9 @@ jobs:
     executor: ci-base
     steps:
       - checkout
+
       - persist_to_workspace:
+          root: .
           paths: Dockerfile
 
 # yaml anchors

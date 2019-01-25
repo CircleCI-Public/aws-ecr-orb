@@ -4,7 +4,6 @@ description: >
   for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
   these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
   or in Contexts (https://circleci.com/docs/2.0/contexts).
-executor: <<parameters.executor>>
 
 parameters:
   executor:
@@ -100,18 +99,42 @@ parameters:
     default: ""
 
 steps:
-  - build-and-push-image:
+  - when:
+      condition: << parameters.checkout >>
+      steps:
+        - checkout
+
+  - aws-cli/install
+
+  - aws-cli/configure:
       profile-name: << parameters.profile-name >>
       aws-access-key-id: << parameters.aws-access-key-id >>
       aws-secret-access-key: << parameters.aws-secret-access-key >>
+      aws-region: << parameters.region >>
+
+  - when:
+      condition: << parameters.attach-workspace >>
+      steps:
+        - attach_workspace:
+            at: << parameters.workspace-root >>
+
+  - ecr-login:
       region: << parameters.region >>
+
+  - build-image:
       account-url: << parameters.account-url >>
       repo: << parameters.repo >>
-      create-repo: << parameters.create-repo >>
       tag: << parameters.tag >>
-      checkout: << parameters.checkout >>
-      attach-workspace: << parameters.attach-workspace >>
-      workspace-root: << parameters.workspace-root >>
       dockerfile: << parameters.dockerfile >>
       path: << parameters.path >>
       extra-build-args: << parameters.extra-build-args >>
+
+  - when:
+      condition: <<parameters.create-repo>>
+      steps:
+        - run: aws --region $<<parameters.region>> ecr create-repository --repository-name <<parameters.repo>> --profile <<parameters.profile-name>>
+
+  - push-image:
+      account-url: << parameters.account-url >>
+      repo: << parameters.repo >>
+      tag: << parameters.tag >>

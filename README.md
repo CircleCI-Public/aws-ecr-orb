@@ -27,7 +27,7 @@ See below for both simple and complete examples of this orb's `build_and_push_im
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@1.0.0
+  aws-ecr: circleci/aws-ecr@3.0.0
 
 workflows:
   simple_build_and_push:
@@ -43,7 +43,7 @@ workflows:
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@1.0.0
+  aws-ecr: circleci/aws-ecr@@3.0.0
 
 workflows:
   complete_build_and_push:
@@ -83,6 +83,10 @@ workflows:
 
           # path to Dockerfile, defaults to . (working directory)
           path: pathToMyDockerfile
+          
+          # extra flags to pass to docker build, defaults to ""
+          extra-build-args: myExtraBuildArgs
+          
 ```
 
 ## Contributing

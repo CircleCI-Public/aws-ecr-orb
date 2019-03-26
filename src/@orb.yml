@@ -1,7 +1,8 @@
 version: 2.1
 
 description: >
-  Build images and push them to the Amazon Elastic Container Registry
+  Build images and push them to the Amazon Elastic Container Registry.
+  See this orb's source: https://github.com/circleci-public/aws-ecr-orb
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.7

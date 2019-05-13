@@ -49,7 +49,7 @@ parameters:
 
   repo:
     type: string
-    description: A URI to an Amazon ECR repository
+    description: Name of the Amazon ECR repository.
 
   create-repo:
     type: boolean

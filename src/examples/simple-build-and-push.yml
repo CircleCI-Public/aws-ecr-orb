@@ -4,13 +4,13 @@ usage:
   version: 2.1
 
   orbs:
-    aws-ecr: circleci/aws-ecr@1.0.0
+    aws-ecr: circleci/aws-ecr@x.y.z
 
   workflows:
     build_and_push_image:
       jobs:
         # build and push image to ECR
-        - aws-ecr/build_and_push_image:
+        - aws-ecr/build-and-push-image:
 
             # required if any necessary secrets are stored via Contexts
             context: myContext

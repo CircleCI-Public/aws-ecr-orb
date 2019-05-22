@@ -27,13 +27,13 @@ See below for both simple and complete examples of this orb's `build_and_push_im
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@1.0.0
+  aws-ecr: circleci/aws-ecr@x.y.z
 
 workflows:
   simple_build_and_push:
     jobs:
       # with default parameter values, the following would be sufficient to build and push an image to ECR
-      - aws-ecr/build_and_push_image:
+      - aws-ecr/build-and-push-image:
           repo: myRepositoryName
 
 ```
@@ -43,13 +43,13 @@ workflows:
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@1.0.0
+  aws-ecr: circleci/aws-ecr@x.y.z
 
 workflows:
   complete_build_and_push:
     jobs:
       # build and push image to ECR
-      - aws-ecr/build_and_push_image:
+      - aws-ecr/build-and-push-image:
 
           # required if any necessary secrets are stored via Contexts
           context: myContext

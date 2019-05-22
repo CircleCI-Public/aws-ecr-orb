@@ -141,14 +141,14 @@ integration-post-steps: &integration-post-steps
 workflows:
   lint-pack_validate_deploy-dev:
     jobs:
-      - lint
+      - orb-tools/lint
 
       - orb-tools/pack:
           name: pack-validate
           workspace-path: orb.yml
           artifact-path: orb.yml
           requires:
-            - lint
+            - orb-tools/lint
 
       - publish-dev:
           context: orb-publishing

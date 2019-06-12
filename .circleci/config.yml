@@ -1,117 +1,14 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@8.9.1
-  aws-cli: circleci/aws-cli@0.1.8
+  orb-tools: circleci/orb-tools@8.20.0
   aws-ecr: circleci/aws-ecr@dev:alpha
-  circle-compare-url: iynere/compare-url@1.0.0
-
-executors:
-  ci-base:
-    resource_class: small
-    docker:
-      - image: cibuilds/base
-
-  cli:
-    resource_class: small
-    docker:
-      - image: circleci/circleci-cli
-
-  lint-condo:
-    resource_class: small
-    docker:
-      - image: singapore/lint-condo
 
 jobs:
-  lint:
-    executor: lint-condo
-    steps:
-      - checkout
-      - run: yamllint .
-
-  # validate goes here: see workflow
-
-  publish-dev:
-    executor: cli
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: workspace
-
-      - run:
-          name: publish dev versions
-          command: |
-            # for integration testing
-            circleci orb publish workspace/orb.yml circleci/aws-ecr@dev:alpha --token $CIRCLE_TOKEN
-
-            # for transparency
-            circleci orb publish workspace/orb.yml circleci/aws-ecr@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-
-            # for potentially promoting to prod
-            circleci orb publish workspace/orb.yml circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-
-      - store_artifacts:
-          path: workspace/orb.yml
-
-  trigger-integration:
-    executor: ci-base
-    parameters:
-      tag:
-        type: enum
-        default: "integration"
-        enum: ["integration", master]
-    steps:
-      - checkout
-
-      - add_ssh_keys:
-          fingerprints:
-            - "54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"
-
-      - run:
-          name: git config
-          command: |
-            git config --global user.email "$CIRCLE_USERNAME@users.noreply.github.com"
-            git config --global user.name "$CIRCLE_USERNAME"
-
-      - circle-compare-url/reconstruct
-
-      - run:
-          name: trigger integration workflow, possible patch / minor / major release
-          command: |
-            CIRCLE_COMPARE_URL=$(cat CIRCLE_COMPARE_URL.txt)
-
-            COMMIT_RANGE=$(echo $CIRCLE_COMPARE_URL | sed 's:^.*/compare/::g')
-
-            echo "Commit range: $COMMIT_RANGE"
-
-            if [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/commands" -e "src/jobs") ]]; then
-              INTEGRATION_TAG=<<parameters.tag>>-major-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
-            elif [[ $(git diff $COMMIT_RANGE --name-status | grep -e "src/examples" -e "src/@orb.yml") ]]; then
-              INTEGRATION_TAG=<<parameters.tag>>-minor-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
-            elif [[ $(git diff $COMMIT_RANGE --name-status | grep -e "config.yml") ]]; then
-              INTEGRATION_TAG=<<parameters.tag>>-patch-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
-            else
-              INTEGRATION_TAG=<<parameters.tag>>-skip-$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}
-            fi
-
-            git tag $INTEGRATION_TAG
-            git push origin $INTEGRATION_TAG
-
-  dev-promote-prod:
-    executor: cli
-    parameters:
-      release:
-        type: enum
-        default: "patch"
-        enum: ["patch", "minor", "major"]
-    steps:
-      - run:
-          name: major release if changes to commands/jobs, minor if to examples or @orb.yml, otherwise patch
-          command: circleci orb publish promote circleci/aws-ecr@dev:${CIRCLE_SHA1:0:7} <<parameters.release>> --token $CIRCLE_TOKEN
-
   pre-integration-checkout-workspace-job:
-    executor: ci-base
+    executor:
+      name: orb-tools/alpine
+      resource-class: small
     steps:
       - checkout
 
@@ -132,9 +29,6 @@ integration-master_filters: &integration-master_filters
   tags:
     only: /master-.*/
 
-integration-pre-steps: &integration-pre-steps
-  [add_ssh_keys: {fingerprints: ["54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2"]}, run: "rm -rf Dockerfile"]
-
 integration-post-steps: &integration-post-steps
   [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force", run: {when: "always", name: "cleanup tag", command: "git config --global user.email $CIRCLE_USERNAME@users.noreply.github.com && git config --global user.name $CIRCLE_USERNAME && git push --delete origin $CIRCLE_TAG"}]
 
@@ -144,30 +38,28 @@ workflows:
       - orb-tools/lint
 
       - orb-tools/pack:
-          name: pack-validate
-          workspace-path: orb.yml
-          artifact-path: orb.yml
-          requires:
-            - orb-tools/lint
+          requires: [orb-tools/lint]
 
-      - publish-dev:
+      - orb-tools/publish-dev:
           context: orb-publishing
-          requires:
-            - pack-validate
+          orb-name: circleci/aws-ecr
+          requires: [orb-tools/pack]
 
-      - trigger-integration:
+      - orb-tools/trigger-integration-workflow:
           name: trigger-integration-dev
-          requires:
-            - publish-dev
+          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
+          cleanup-tags: true
+          requires: [orb-tools/publish-dev]
           filters:
             branches:
               ignore: master
 
-      - trigger-integration:
+      - orb-tools/trigger-integration-workflow:
           name: trigger-integration-master
+          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
+          cleanup-tags: true
           tag: master
-          requires:
-            - publish-dev
+          requires: [orb-tools/publish-dev]
           filters:
             branches:
               only: master
@@ -194,8 +86,7 @@ workflows:
           extra-build-args: --compress
           filters: *integration-dev_filters
           post-steps: *integration-post-steps
-          requires:
-            - pre-integration-dev
+          requires: [pre-integration-dev]
 
       # triggered by master branch commits
       - pre-integration-checkout-workspace-job:
@@ -217,15 +108,15 @@ workflows:
           extra-build-args: --compress
           filters: *integration-master_filters
           post-steps: *integration-post-steps
-          requires:
-            - pre-integration-master
+          requires: [pre-integration-master]
 
       # patch, minor, or major publishing
       - dev-promote-prod:
           name: dev-promote-patch
           context: orb-publishing
-          requires:
-            - integration-tests-master
+          orb-name: circleci/aws-ecr
+          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
+          requires: [integration-tests-master]
           filters:
             branches:
               ignore: /.*/
@@ -236,8 +127,9 @@ workflows:
           name: dev-promote-minor
           release: minor
           context: orb-publishing
-          requires:
-            - integration-tests-master
+          orb-name: circleci/aws-ecr
+          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
+          requires: [integration-tests-master]
           filters:
             branches:
               ignore: /.*/
@@ -248,8 +140,9 @@ workflows:
           name: dev-promote-major
           release: major
           context: orb-publishing
-          requires:
-            - integration-tests-master
+          orb-name: circleci/aws-ecr
+          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
+          requires: [integration-tests-master]
           filters:
             branches:
               ignore: /.*/

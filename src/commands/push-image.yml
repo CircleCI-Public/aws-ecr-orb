@@ -1,4 +1,4 @@
-description: "Push a container image to the Amazon ECR registry"
+description: Push a container image to the Amazon ECR registry
 
 parameters:
   account-url:
@@ -21,4 +21,4 @@ parameters:
 steps:
   - run:
       name: Push image to Amazon ECR
-      command: "docker push $<< parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >>"
+      command: "docker push $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>"

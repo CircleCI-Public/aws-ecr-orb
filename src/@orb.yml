@@ -5,4 +5,4 @@ description: >
   See this orb's source: https://github.com/circleci-public/aws-ecr-orb
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.7
+  aws-cli: circleci/aws-cli@0.1.13

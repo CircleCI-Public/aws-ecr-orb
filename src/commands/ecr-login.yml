@@ -13,7 +13,7 @@ steps:
       name: Log into Amazon ECR
       command: |
         # aws ecr get-login returns a login command w/ a temp token
-        LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $<< parameters.region >>)
+        LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $<<parameters.region>>)
 
         # save it to an env var & use that env var to login
         $LOGIN_COMMAND

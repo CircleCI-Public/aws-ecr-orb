@@ -40,6 +40,6 @@ steps:
       command: |
         docker build \
           <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
-          -f << parameters.dockerfile >> \
-          -t $<< parameters.account-url >>/<< parameters.repo >>:<< parameters.tag >> \
-          << parameters.path >>
+          -f <<parameters.dockerfile>> \
+          -t $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> \
+          <<parameters.path>>

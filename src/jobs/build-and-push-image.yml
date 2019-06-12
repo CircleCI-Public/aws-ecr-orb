@@ -83,6 +83,13 @@ parameters:
     type: string
     default: "."
 
+  setup-remote-docker:
+    type: boolean
+    default: false
+    description: >
+      Setup and use CircleCI's remote Docker environment for Docker and
+      docker-compose commands? Not required if using the default executor
+
   dockerfile:
     description: Name of dockerfile to use. Defaults to Dockerfile.
     type: string
@@ -102,17 +109,18 @@ parameters:
 
 steps:
   - build-and-push-image:
-      profile-name: << parameters.profile-name >>
-      aws-access-key-id: << parameters.aws-access-key-id >>
-      aws-secret-access-key: << parameters.aws-secret-access-key >>
-      region: << parameters.region >>
-      account-url: << parameters.account-url >>
-      repo: << parameters.repo >>
-      create-repo: << parameters.create-repo >>
-      tag: << parameters.tag >>
-      checkout: << parameters.checkout >>
-      attach-workspace: << parameters.attach-workspace >>
-      workspace-root: << parameters.workspace-root >>
-      dockerfile: << parameters.dockerfile >>
-      path: << parameters.path >>
-      extra-build-args: << parameters.extra-build-args >>
+      profile-name: <<parameters.profile-name>>
+      setup-remote-docker: <<parameters.setup-remote-docker>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      region: <<parameters.region>>
+      account-url: <<parameters.account-url>>
+      repo: <<parameters.repo>>
+      create-repo: <<parameters.create-repo>>
+      tag: <<parameters.tag>>
+      checkout: <<parameters.checkout>>
+      attach-workspace: <<parameters.attach-workspace>>
+      workspace-root: <<parameters.workspace-root>>
+      dockerfile: <<parameters.dockerfile>>
+      path: <<parameters.path>>
+      extra-build-args: <<parameters.extra-build-args>>

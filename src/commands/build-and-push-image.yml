@@ -11,6 +11,13 @@ parameters:
     type: executor
     default: default
 
+  setup-remote-docker:
+    type: boolean
+    default: false
+    description: >
+      Setup and use CircleCI's remote Docker environment for Docker and
+      docker-compose commands? Not required if using the default executor
+
   profile-name:
     description: AWS profile name to be configured.
     type: string
@@ -49,7 +56,7 @@ parameters:
 
   repo:
     type: string
-    description: A URI to an Amazon ECR repository
+    description: Name of an Amazon ECR repository
 
   create-repo:
     type: boolean
@@ -100,34 +107,39 @@ parameters:
 
 steps:
   - when:
-      condition: << parameters.checkout >>
+      condition: <<parameters.checkout>>
       steps:
         - checkout
 
   - aws-cli/install
 
   - aws-cli/configure:
-      profile-name: << parameters.profile-name >>
-      aws-access-key-id: << parameters.aws-access-key-id >>
-      aws-secret-access-key: << parameters.aws-secret-access-key >>
-      aws-region: << parameters.region >>
+      profile-name: <<parameters.profile-name>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-region: <<parameters.region>>
 
   - when:
-      condition: << parameters.attach-workspace >>
+      condition: <<parameters.attach-workspace>>
       steps:
         - attach_workspace:
-            at: << parameters.workspace-root >>
+            at: <<parameters.workspace-root>>
+
+  - when:
+      condition: <<parameters.setup-remote-docker>>
+      steps:
+        - setup_remote_docker
 
   - ecr-login:
-      region: << parameters.region >>
+      region: <<parameters.region>>
 
   - build-image:
-      account-url: << parameters.account-url >>
-      repo: << parameters.repo >>
-      tag: << parameters.tag >>
-      dockerfile: << parameters.dockerfile >>
-      path: << parameters.path >>
-      extra-build-args: << parameters.extra-build-args >>
+      account-url: <<parameters.account-url>>
+      repo: <<parameters.repo>>
+      tag: <<parameters.tag>>
+      dockerfile: <<parameters.dockerfile>>
+      path: <<parameters.path>>
+      extra-build-args: <<parameters.extra-build-args>>
 
   - when:
       condition: <<parameters.create-repo>>
@@ -137,6 +149,6 @@ steps:
             aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>>
 
   - push-image:
-      account-url: << parameters.account-url >>
-      repo: << parameters.repo >>
-      tag: << parameters.tag >>
+      account-url: <<parameters.account-url>>
+      repo: <<parameters.repo>>
+      tag: <<parameters.tag>>

@@ -4,6 +4,7 @@ description: >
   for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
   these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
   or in Contexts (https://circleci.com/docs/2.0/contexts).
+
 executor: <<parameters.executor>>
 
 parameters:
@@ -82,6 +83,13 @@ parameters:
     type: string
     default: "."
 
+  setup-remote-docker:
+    type: boolean
+    default: false
+    description: >
+      Setup and use CircleCI's remote Docker environment for Docker and
+      docker-compose commands? Not required if using the default executor
+
   dockerfile:
     description: Name of dockerfile to use. Defaults to Dockerfile.
     type: string
@@ -101,17 +109,18 @@ parameters:
 
 steps:
   - build-and-push-image:
-      profile-name: << parameters.profile-name >>
-      aws-access-key-id: << parameters.aws-access-key-id >>
-      aws-secret-access-key: << parameters.aws-secret-access-key >>
-      region: << parameters.region >>
-      account-url: << parameters.account-url >>
-      repo: << parameters.repo >>
-      create-repo: << parameters.create-repo >>
-      tag: << parameters.tag >>
-      checkout: << parameters.checkout >>
-      attach-workspace: << parameters.attach-workspace >>
-      workspace-root: << parameters.workspace-root >>
-      dockerfile: << parameters.dockerfile >>
-      path: << parameters.path >>
-      extra-build-args: << parameters.extra-build-args >>
+      profile-name: <<parameters.profile-name>>
+      setup-remote-docker: <<parameters.setup-remote-docker>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      region: <<parameters.region>>
+      account-url: <<parameters.account-url>>
+      repo: <<parameters.repo>>
+      create-repo: <<parameters.create-repo>>
+      tag: <<parameters.tag>>
+      checkout: <<parameters.checkout>>
+      attach-workspace: <<parameters.attach-workspace>>
+      workspace-root: <<parameters.workspace-root>>
+      dockerfile: <<parameters.dockerfile>>
+      path: <<parameters.path>>
+      extra-build-args: <<parameters.extra-build-args>>

@@ -1,0 +1,11 @@
+description: >
+  CircleCI's Ubuntu-based machine executor VM:
+  https://circleci.com/docs/2.0/executor-types/#using-machine
+
+parameters:
+  image:
+    type: string
+    default: ubuntu-1604:201903-01
+
+machine:
+  image: <<parameters.image>>

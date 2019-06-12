@@ -6,7 +6,3 @@ description: >
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.7
-
-executors:
-  default:
-    machine: true

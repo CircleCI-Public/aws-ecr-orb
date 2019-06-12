@@ -114,7 +114,7 @@ workflows:
           requires: [pre-integration-master]
 
       # patch, minor, or major publishing
-      - dev-promote-prod:
+      - orb-tools/dev-promote-prod:
           name: dev-promote-patch
           context: orb-publishing
           orb-name: circleci/aws-ecr
@@ -126,7 +126,7 @@ workflows:
             tags:
               only: /master-patch.*/
 
-      - dev-promote-prod:
+      - orb-tools/dev-promote-prod:
           name: dev-promote-minor
           release: minor
           context: orb-publishing
@@ -139,7 +139,7 @@ workflows:
             tags:
               only: /master-minor.*/
 
-      - dev-promote-prod:
+      - orb-tools/dev-promote-prod:
           name: dev-promote-major
           release: major
           context: orb-publishing

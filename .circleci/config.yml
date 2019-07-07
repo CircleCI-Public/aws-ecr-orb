@@ -42,7 +42,7 @@ workflows:
 
       - orb-tools/publish-dev:
           context: orb-publishing
-          orb-name: circleci/aws-ecr
+          orb-name: clear/aws-ecr
           requires: [orb-tools/pack]
 
       - orb-tools/trigger-integration-workflow:
@@ -112,7 +112,7 @@ workflows:
       - orb-tools/dev-promote-prod:
           name: dev-promote-patch
           context: orb-publishing
-          orb-name: circleci/aws-ecr
+          orb-name: clear/aws-ecr
           ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
           requires: [integration-tests-master]
           filters:
@@ -125,7 +125,7 @@ workflows:
           name: dev-promote-minor
           release: minor
           context: orb-publishing
-          orb-name: circleci/aws-ecr
+          orb-name: clear/aws-ecr
           ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
           requires: [integration-tests-master]
           filters:
@@ -138,7 +138,7 @@ workflows:
           name: dev-promote-major
           release: major
           context: orb-publishing
-          orb-name: circleci/aws-ecr
+          orb-name: clear/aws-ecr
           ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
           requires: [integration-tests-master]
           filters:

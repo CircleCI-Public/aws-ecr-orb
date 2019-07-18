@@ -43,3 +43,6 @@ steps:
           -f <<parameters.dockerfile>> \
           -t $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> \
           <<parameters.path>>
+      no_output_timeout: 1h
+
+

@@ -75,8 +75,8 @@ workflows:
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
 
-          # ECR image tag, defaults to "latest"
-          tag: myECRRepoTag
+          # ECR image tags (comma-separated string), defaults to "latest"
+          tag: latest,myECRRepoTag
 
           # name of Dockerfile to use, defaults to "Dockerfile"
           dockerfile: myDockerfile

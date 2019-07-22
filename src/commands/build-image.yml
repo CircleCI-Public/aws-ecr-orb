@@ -38,13 +38,13 @@ steps:
   - run:
       name: Build docker image
       command: |
-        docker_tags=""
+        docker_tag_args=""
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
-          docker_tags="$docker_tags -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
+          docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
         done
         docker build \
           <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
           -f <<parameters.dockerfile>> \
-          $docker_tags \
+          $docker_tag_args \
           <<parameters.path>>

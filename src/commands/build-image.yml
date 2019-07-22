@@ -13,7 +13,7 @@ parameters:
     description: Name of an Amazon ECR repository
 
   tag:
-    description: A docker image tag (default = latest)
+    description: A comma-separated string containing docker image tags (default = latest)
     type: string
     default: "latest"
 
@@ -38,8 +38,13 @@ steps:
   - run:
       name: Build docker image
       command: |
+        docker_tags=""
+        IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
+        for tag in "${DOCKER_TAGS[@]}"; do
+          docker_tags="$docker_tags -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
+        done
         docker build \
           <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
           -f <<parameters.dockerfile>> \
-          -t $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> \
+          $docker_tags \
           <<parameters.path>>

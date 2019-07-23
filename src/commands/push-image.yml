@@ -1,4 +1,4 @@
-description: Push all of local image's tags to the Amazon ECR registry
+description: Push either one or all of local image's tags to the Amazon ECR registry
 
 parameters:
   account-url:
@@ -13,7 +13,17 @@ parameters:
     type: string
     description: Name of an Amazon ECR repository
 
+  tag:
+    description: Optionally define a single docker image tag to push, instead of pushing all the repo's tags (default = "")
+    type: string
+    default: ""
+
 steps:
   - run:
       name: Push image to Amazon ECR
-      command: "docker push $<<parameters.account-url>>/<<parameters.repo>>"
+      command: |
+        tag_arg=""
+        if [ "<<parameters.tag>>" != "" ]; then
+          tag_arg=":<<parameters.tag>>"
+        fi
+        docker push $<<parameters.account-url>>/<<parameters.repo>>${tag_arg}"

@@ -26,4 +26,4 @@ steps:
         if [ "<<parameters.tag>>" != "" ]; then
           tag_arg=":<<parameters.tag>>"
         fi
-        docker push $<<parameters.account-url>>/<<parameters.repo>>${tag_arg}"
+        docker push $<<parameters.account-url>>/<<parameters.repo>>${tag_arg}

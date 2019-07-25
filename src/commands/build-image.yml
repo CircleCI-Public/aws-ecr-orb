@@ -27,6 +27,11 @@ parameters:
     type: string
     default: .
 
+  no-output-timeout:
+    description: The amount of time to allow the docker command to run before timing out.
+    type: string
+    default: 10m
+
   extra-build-args:
     description: >
       Extra flags to pass to docker build. For examples, see
@@ -43,3 +48,6 @@ steps:
           -f <<parameters.dockerfile>> \
           -t $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>> \
           <<parameters.path>>
+      no_output_timeout: <<parameters.no-output-timeout>>
+
+

@@ -73,7 +73,6 @@ workflows:
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-dev
-          context: orb-publishing
           attach-workspace: true
           workspace-root: workspace
           profile-name: testing
@@ -94,7 +93,6 @@ workflows:
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-master
-          context: orb-publishing
           attach-workspace: true
           workspace-root: workspace
           profile-name: testing

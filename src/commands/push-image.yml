@@ -14,16 +14,15 @@ parameters:
     description: Name of an Amazon ECR repository
 
   tag:
-    description: Optionally define a single docker image tag to push, instead of pushing all the repo's tags (default = "")
+    description: A comma-separated string containing docker image tags (default = latest)
     type: string
-    default: ""
+    default: "latest"
 
 steps:
   - run:
       name: Push image to Amazon ECR
       command: |
-        tag_arg=""
-        if [ "<<parameters.tag>>" != "" ]; then
-          tag_arg=":<<parameters.tag>>"
-        fi
-        docker push $<<parameters.account-url>>/<<parameters.repo>>${tag_arg}
+        IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
+        for tag in "${DOCKER_TAGS[@]}"; do
+          docker push $<<parameters.account-url>>/<<parameters.repo>>${tag}
+        done

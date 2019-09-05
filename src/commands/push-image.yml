@@ -1,4 +1,4 @@
-description: Push either one or all of local image's tags to the Amazon ECR registry
+description: Push a container image to the Amazon ECR registry
 
 parameters:
   account-url:

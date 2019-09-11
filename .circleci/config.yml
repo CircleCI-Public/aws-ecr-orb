@@ -79,7 +79,7 @@ workflows:
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
-          tag: integration-dev,latest
+          tag: integration-dev,myECRRepoTag
           dockerfile: workspace/Dockerfile
           path: workspace
           extra-build-args: --compress
@@ -100,7 +100,7 @@ workflows:
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
-          tag: integration-master,latest
+          tag: integration-master,myECRRepoTag
           dockerfile: workspace/Dockerfile
           path: workspace
           extra-build-args: --compress

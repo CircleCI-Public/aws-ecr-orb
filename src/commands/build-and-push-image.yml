@@ -65,7 +65,7 @@ parameters:
 
   tag:
     type: string
-    description: Docker tag (default = latest)
+    description: A comma-separated string containing docker image tags to build and push (default = latest)
     default: "latest"
 
   checkout:

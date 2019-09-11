@@ -17,7 +17,7 @@ Following is the full list of parameters required by this orb's various commands
 | `profile-name` | `string` | `default` | AWS profile name |
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
 | `repo` | `string` |  N/A | name of your ECR repository |
-| `tag` | `string` |  `latest` | ECR image tag |
+| `tag` | `string` |  `latest` | Comma-separated string of ECR image tags |
 
 ## Usage
 See below for both simple and complete examples of this orb's `build_and_push_image` job. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
@@ -75,8 +75,8 @@ workflows:
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
 
-          # ECR image tag, defaults to "latest"
-          tag: myECRRepoTag
+          # ECR image tags (comma-separated string), defaults to "latest"
+          tag: latest,myECRRepoTag
 
           # name of Dockerfile to use, defaults to "Dockerfile"
           dockerfile: myDockerfile

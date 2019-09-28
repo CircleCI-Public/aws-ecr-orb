@@ -21,7 +21,7 @@ parameters:
   profile-name:
     description: AWS profile name to be configured.
     type: string
-    default: "default"
+    default: 'default'
 
   aws-access-key-id:
     description: >
@@ -66,7 +66,7 @@ parameters:
   tag:
     type: string
     description: A comma-separated string containing docker image tags to build and push (default = latest)
-    default: "latest"
+    default: 'latest'
 
   checkout:
     description: >
@@ -86,7 +86,7 @@ parameters:
       Workspace root path that is either an absolute path or a path relative
       to the working directory. Defaults to '.' (the working directory)
     type: string
-    default: "."
+    default: '.'
 
   dockerfile:
     description: Name of dockerfile to use. Defaults to Dockerfile.
@@ -98,12 +98,21 @@ parameters:
     type: string
     default: .
 
+  cache-from:
+    type: string
+    default: ''
+    description: >
+      Images to consider as cache sources. Specified as comma separated values of
+      image and tag syntax.
+      Example, node:13,python:latest,openjdk:12,gcr.io/google-containers/busybox.
+      Please see, https://docs.docker.com/engine/reference/commandline/build/
+
   extra-build-args:
     description: >
       Extra flags to pass to docker build. For examples, see
       https://docs.docker.com/engine/reference/commandline/build
     type: string
-    default: ""
+    default: ''
 
 steps:
   - when:
@@ -139,6 +148,7 @@ steps:
       tag: <<parameters.tag>>
       dockerfile: <<parameters.dockerfile>>
       path: <<parameters.path>>
+      cache-from: <<parameters.cache-from>>
       extra-build-args: <<parameters.extra-build-args>>
 
   - when:

@@ -1,4 +1,4 @@
-description: 'Build a docker image'
+description: "Build a docker image"
 
 parameters:
   account-url:
@@ -15,7 +15,7 @@ parameters:
   tag:
     description: A comma-separated string containing docker image tags (default = latest)
     type: string
-    default: 'latest'
+    default: "latest"
 
   dockerfile:
     description: Name of dockerfile to use. Defaults to Dockerfile.
@@ -34,7 +34,7 @@ parameters:
 
   cache-from:
     type: string
-    default: ''
+    default: ""
     description: >
       Images to consider as cache sources. Specified as comma separated values of
       image and tag syntax.
@@ -46,7 +46,7 @@ parameters:
       Extra flags to pass to docker build. For examples, see
       https://docs.docker.com/engine/reference/commandline/build
     type: string
-    default: ''
+    default: ""
 
 steps:
   - run:

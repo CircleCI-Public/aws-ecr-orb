@@ -1,0 +1,15 @@
+description: Pull a container image to the Amazon ECR registry
+
+parameters:
+  region:
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_REGION
+    type: env_var_name
+    default: AWS_REGION
+
+steps:
+  - run:
+      name: Pull image to Amazon ECR
+      command: |
+        docker pull $<<parameters.account-url>>/<<parameters.repo>>:${tag}

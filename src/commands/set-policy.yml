@@ -1,0 +1,68 @@
+description: "Set policy to pull a repository with secondary ids"
+parameters:
+
+  secondary-account-ids:
+    description: A comma-separated string containing secondary-account-ids
+    type: env_var_name
+    default: AWS_SECONDARY_ACCOUNT_IDS
+
+  profile-name:
+    default: default
+    description: AWS profile name to be configured.
+    type: string
+
+  region:
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_REGION
+    type: env_var_name
+    default: AWS_REGION
+
+  repo:
+    type: string
+    description: Name of an Amazon ECR repository
+
+steps:
+  - run:
+      name: Build to create an IAM policy to pull a repository
+      command: |
+        iam_permissions=""
+
+        IFS="," read -r -a SECONDARY_IDS \<<< "<< parameters.secondary-account-ids >>"
+
+        for index in "${!SECONDARY_IDS[@]}"
+        do
+            if [ $index -gt 0 ]
+            then
+                iam_permissions+=", "
+            fi
+            iam_permissions+="\"${SECONDARY_IDS[index]}\""
+        done
+
+        cat \<< EOM > policy.json
+        {
+          "Version": "2008-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": [${iam_permissions}]
+              },
+              "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:BatchGetImage"
+              ]
+            }
+          ]
+        }
+        EOM
+
+        aws ecr set-repository-policy \
+            --profile <<parameters.profile-name>> \
+            --region $<<parameters.region>> \
+            --repository-name <<parameters.repo>> \
+            --policy-text \
+          file://policy.json
+
+        rm -f policy.json

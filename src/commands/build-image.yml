@@ -58,7 +58,7 @@ steps:
           docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
         done
         docker build \
-          --cache-from <<parameters.cache-from>> \
+          --cache-from "<<parameters.cache-from>>" \
           <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
           -f <<parameters.dockerfile>> \
           $docker_tag_args \

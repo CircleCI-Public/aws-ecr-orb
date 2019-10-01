@@ -106,7 +106,7 @@ parameters:
     description: >
       Images to consider as cache sources. Specified as comma separated values of
       image and tag syntax.
-      Example, node:13,python:latest,openjdk:12,gcr.io/google-containers/busybox.
+      For example, node:13,python:latest,openjdk:12,gcr.io/google-containers/busybox.
       Please see https://docs.docker.com/engine/reference/commandline/build/
 
   extra-build-args:

@@ -52,11 +52,17 @@ steps:
   - run:
       name: Build docker image
       command: |
+        IFS="," read -ra CACHE_FROM_IMAGES \<<< "<< parameters.cache-from >>"
+        for image in "${CACHE_FROM_IMAGES[@]}"; do
+          docker pull $image
+        done
+
         docker_tag_args=""
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
           docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
         done
+        
         docker build \
           --cache-from "<<parameters.cache-from>>" \
           <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \

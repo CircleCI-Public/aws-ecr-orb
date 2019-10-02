@@ -1,6 +1,9 @@
 version: "3.5"
 services:
   aws-orb:
-    build: .
+    image: readytalk/nodejs
+    volumes:
+      - .:/app
     ports:
-      80:80
+      - 80:80
+    entrypoint: ["/nodejs/bin/npm", "start"]

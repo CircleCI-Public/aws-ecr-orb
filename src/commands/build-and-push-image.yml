@@ -105,6 +105,12 @@ parameters:
     type: string
     default: ""
 
+  no-output-timeout:
+    description: >
+      The amount of time to allow the docker build command to run before timing out (default is `10m`)
+    type: string
+    default: "10m"
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -140,6 +146,7 @@ steps:
       dockerfile: <<parameters.dockerfile>>
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
+      no-output-timeout: <<parameters.no-output-timeout>>
 
   - when:
       condition: <<parameters.create-repo>>

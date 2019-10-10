@@ -18,6 +18,7 @@ Following is the full list of parameters required by this orb's various commands
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
 | `repo` | `string` |  N/A | name of your ECR repository |
 | `tag` | `string` |  `latest` | Comma-separated string of ECR image tags |
+| `no-output-timeout` | `string` |  `latest` | The amount of time to allow the docker build command to run before timing out (default is `10m`) |
 
 ## Usage
 See below for both simple and complete examples of this orb's `build_and_push_image` job. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
@@ -83,6 +84,9 @@ workflows:
 
           # path to Dockerfile, defaults to . (working directory)
           path: pathToMyDockerfile
+
+          # The amount of time to allow the docker build command to run before timing out (default is `10m`)
+          no-output-timeout: 15m
 ```
 
 ## Contributing

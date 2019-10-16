@@ -21,7 +21,7 @@ Following is the full list of parameters required by this orb's various commands
 | `no-output-timeout` | `string` |  `latest` | The amount of time to allow the docker build command to run before timing out (default is `10m`) |
 
 ## Usage
-See below for both simple and complete examples of this orb's `build_and_push_image` job. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
+See below for both simple and complete examples of this orb's `build_and_push_image` jobs. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
 
 ### Simple
 ```yaml

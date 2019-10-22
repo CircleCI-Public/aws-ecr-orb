@@ -4,8 +4,8 @@ CircleCI orb for interacting with Amazon's Elastic Container Registry (ECR).
 ## Parameters
 Following is the full list of parameters required by this orb's various commands and jobs. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
+|  Parameter |  Type |  Default |  Description |
+|------------|-------|----------|--------------|
 | `account-url` | `env_var_name` | `AWS_ECR_ACCOUNT_URL` | name of env var storing your ECR account URL |
 | `aws-access-key-id` | `env_var_name` | `AWS_ACCESS_KEY_ID` | name of env var storing your AWS Access Key ID |
 | `aws-secret-access-key` | `env_var_name` | `AWS_SECRET_ACCESS_KEY` | name of env var storing your AWS Secret Access Key |

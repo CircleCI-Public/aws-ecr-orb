@@ -44,3 +44,6 @@ usage:
 
             # path to Dockerfile, defaults to . (working directory)
             path: pathToMyDockerfile
+
+            # path to save the repo digest of the pushed image
+            digest-path: /tmp/my_image_digest.txt

@@ -18,6 +18,11 @@ parameters:
     type: string
     default: "latest"
 
+  digest-path:
+    type: string
+    description: The path to save the RepoDigest of the pushed image
+    default: ""
+
 steps:
   - run:
       name: Push image to Amazon ECR
@@ -25,4 +30,9 @@ steps:
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
           docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag}
+
+          if [ -n "<<parameters.digest-path>>" ]; then
+            mkdir -p "$(dirname <<parameters.digest-path>>)"
+            docker image inspect --format="{{index .RepoDigests 0}}" $<<parameters.account-url>>/<<parameters.repo>>:${tag} > "<<parameters.digest-path>>"
+          fi
         done

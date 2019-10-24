@@ -68,6 +68,11 @@ parameters:
     description: A comma-separated string containing docker image tags to build and push (default = latest)
     default: "latest"
 
+  digest-path:
+    type: string
+    description: The path to save the RepoDigest of the pushed image
+    default: ""
+
   checkout:
     description: >
       Boolean for whether or not to checkout as a first step. Default is true.
@@ -159,3 +164,4 @@ steps:
       account-url: <<parameters.account-url>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
+      digest-path: <<parameters.digest-path>>

@@ -22,7 +22,8 @@ parameters:
     type: boolean
     default: false
     description: >
-      If using setup-remote-docker, should docker_layer_caching be enabled (https://circleci.com/docs/2.0/docker-layer-caching/)
+      If using setup-remote-docker, should docker_layer_caching be enabled
+      (https://circleci.com/docs/2.0/docker-layer-caching/)
 
   profile-name:
     description: AWS profile name to be configured.

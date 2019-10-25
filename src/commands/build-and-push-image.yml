@@ -18,6 +18,12 @@ parameters:
       Setup and use CircleCI's remote Docker environment for Docker and
       docker-compose commands? Not required if using the default executor
 
+  docker-layer-caching:
+    type: boolean
+    default: false
+    description: >
+      If using setup-remote-docker, should docker_layer_caching be enabled (https://circleci.com/docs/2.0/docker-layer-caching/)
+
   profile-name:
     description: AWS profile name to be configured.
     type: string
@@ -134,7 +140,8 @@ steps:
   - when:
       condition: <<parameters.setup-remote-docker>>
       steps:
-        - setup_remote_docker
+        - setup_remote_docker:
+          docker_layer_caching: <<parameters.docker-layer-caching>>
 
   - ecr-login:
       region: <<parameters.region>>

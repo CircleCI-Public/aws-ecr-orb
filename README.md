@@ -1,19 +1,19 @@
-# AWS ECR Orb [![CircleCI status](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb.svg "CircleCI status")](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/circleci/aws-ecr)](https://circleci.com/orbs/registry/orb/circleci/aws-ecr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/aws-ecr-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
-CircleCI orb for interacting with Amazon's Elastic Container Registry (ECR).
+## AWS ECR Orb [![CircleCI status](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb.svg "CircleCI status")](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/circleci/aws-ecr)](https://circleci.com/orbs/registry/orb/circleci/aws-ecr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/aws-ecr-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+CircleCI orb used for interacting with Amazon's Elastic Container Registry (ECR).
 
 ## Parameters
 Following is the full list of parameters required by this orb's various commands and jobs. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
 
-| Parameter | Type | Default | Description |
+| **Parameter | Type | Default | Description** |
 |-----------|------|---------|-------------|
 | `account-url` | `env_var_name` | `AWS_ECR_ACCOUNT_URL` | name of env var storing your ECR account URL |
 | `aws-access-key-id` | `env_var_name` | `AWS_ACCESS_KEY_ID` | name of env var storing your AWS Access Key ID |
 | `aws-secret-access-key` | `env_var_name` | `AWS_SECRET_ACCESS_KEY` | name of env var storing your AWS Secret Access Key |
 | `create-repo` | `boolean` | `false` | set this to true to create the repository if it does not already exist |
-| `dockerfile` | `string` | `Dockerfile` | name of Dockerfile to use |
+| `dockerfile` | `string` | `Dockerfile` | name of the Dockerfile to use |
 | `executor` | `executor` | `default` | name of any custom executor (default is `machine: true`) |
 | `extra-build-args` | `string` | `""` | Extra flags to pass to `docker build` (see [docs.docker.com/engine/reference/commandline/build](https://docs.docker.com/engine/reference/commandline/build)) |
-| `path` | `string` | `.` | path to Dockerfile, defaults to the working directory |
+| `path` | `string` | `.` | path to Dockerfile, default to the working directory |
 | `profile-name` | `string` | `default` | AWS profile name |
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
 | `repo` | `string` |  N/A | name of your ECR repository |
@@ -91,3 +91,4 @@ workflows:
 
 ## Contributing
 We welcome [issues](https://github.com/CircleCI-Public/aws-ecr-orb/issues) to and [pull requests](https://github.com/CircleCI-Public/aws-ecr-orb/pulls) against this repository! For further questions/comments about this or other orbs, visit [CircleCI's Orbs discussion forum](https://discuss.circleci.com/c/orbs).
+keep contibuting!

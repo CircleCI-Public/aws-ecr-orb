@@ -16,7 +16,7 @@ Following is the full list of parameters required by this orb's various commands
 | `path` | `string` | `.` | path to Dockerfile, defaults to the working directory |
 | `profile-name` | `string` | `default` | AWS profile name |
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
-| `repo` | `string` |  N/A | name of your ECR repository |
+| [`repo`](https://github.com/CircleCI-Public/aws-ecr-orb) | `string` |  N/A | name of your ECR repository |
 | `tag` | `string` |  `latest` | Comma-separated string of ECR image tags |
 | `no-output-timeout` | `string` |  `latest` | The amount of time to allow the docker build command to run before timing out (default is `10m`) |
 

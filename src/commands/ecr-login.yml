@@ -8,12 +8,17 @@ parameters:
     type: env_var_name
     default: AWS_REGION
 
+  profile-name:
+    description: AWS profile name to be configured.
+    type: string
+    default: "default"
+
 steps:
   - run:
       name: Log into Amazon ECR
       command: |
         # aws ecr get-login returns a login command w/ a temp token
-        LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $<<parameters.region>>)
+        LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $<<parameters.region>> --profile $<<parameters.profile-name>>)
 
         # save it to an env var & use that env var to login
         $LOGIN_COMMAND

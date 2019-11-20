@@ -75,6 +75,46 @@ workflows:
           name: integration-tests-dev
           attach-workspace: true
           workspace-root: workspace
+          profile-name: default
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          create-repo: true
+          tag: integration-dev,myECRRepoTag
+          dockerfile: workspace/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          filters: *integration-dev_filters
+          post-steps: *integration-post-steps
+          requires: [pre-integration-dev]
+
+      # triggered by master branch commits
+      - pre-integration-checkout-workspace-job:
+          name: pre-integration-master
+          filters: *integration-master_filters
+
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-master
+          attach-workspace: true
+          workspace-root: workspace
+          profile-name: default
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          create-repo: true
+          tag: integration-master,myECRRepoTag
+          dockerfile: workspace/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          filters: *integration-master_filters
+          post-steps: *integration-post-steps
+          requires: [pre-integration-master]
+
+      # triggered by non-master branch commits
+      - pre-integration-checkout-workspace-job:
+          name: pre-integration-dev
+          filters: *integration-dev_filters
+
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-dev
+          attach-workspace: true
+          workspace-root: workspace
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true

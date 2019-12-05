@@ -10,6 +10,7 @@ Following is the full list of parameters required by this orb's various commands
 | `aws-access-key-id` | `env_var_name` | `AWS_ACCESS_KEY_ID` | name of env var storing your AWS Access Key ID |
 | `aws-secret-access-key` | `env_var_name` | `AWS_SECRET_ACCESS_KEY` | name of env var storing your AWS Secret Access Key |
 | `create-repo` | `boolean` | `false` | set this to true to create the repository if it does not already exist |
+| `repo-scan-on-push` | `boolean` | `true` | set this to true to scan the created repository for CVEs on push |
 | `dockerfile` | `string` | `Dockerfile` | name of Dockerfile to use |
 | `executor` | `executor` | `default` | name of any custom executor (default is `machine: true`) |
 | `extra-build-args` | `string` | `""` | Extra flags to pass to `docker build` (see [docs.docker.com/engine/reference/commandline/build](https://docs.docker.com/engine/reference/commandline/build)) |
@@ -75,6 +76,9 @@ workflows:
 
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
+
+          # set this to true to scan the created repository for CVEs on push, defaults to "true"
+          repo-scan-on-push: true
 
           # ECR image tags (comma-separated string), defaults to "latest"
           tag: latest,myECRRepoTag

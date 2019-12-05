@@ -63,6 +63,11 @@ parameters:
     description: Should the repo be created if it does not exist?
     default: false
 
+  repo-scan-on-push:
+    type: boolean
+    description: Should the created repo be security scanned on push?
+    default: true
+
   tag:
     type: string
     description: A comma-separated string containing docker image tags to build and push (default = latest)
@@ -153,7 +158,7 @@ steps:
       steps:
         - run: |
             aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
-            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=true
+            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
 
   - push-image:
       account-url: <<parameters.account-url>>

@@ -79,7 +79,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-dev,myECRRepoTag
-          dockerfile: workspace/Dockerfile
+          dockerfile: Dockerfile
           path: workspace
           extra-build-args: --compress
           filters: *integration-dev_filters
@@ -99,7 +99,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
           tag: integration-master,myECRRepoTag
-          dockerfile: workspace/Dockerfile
+          dockerfile: Dockerfile
           path: workspace
           extra-build-args: --compress
           filters: *integration-master_filters

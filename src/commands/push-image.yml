@@ -33,5 +33,4 @@ steps:
           echo $PUSH | base64 --decode
         done
         SHA=$(echo $PUSH | base64 --decode | grep sha256 | cut -d " " -f3)
-        echo "SHA: $SHA"
         echo "export <<parameters.return-sha-var>>=${SHA}" >> "$BASH_ENV"

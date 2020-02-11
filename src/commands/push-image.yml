@@ -29,8 +29,9 @@ steps:
       command: |
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
-          PUSH=$(docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag})
-          echo $PUSH
+          PUSH=$(docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag} | base64 --wrap=0)
+          echo $PUSH | base64 --decode
         done
-        SHA=$(echo $PUSH | grep sha256 | cut -d " " -f3)
-        echo `export <<parameters.return-sha-var>>="$SHA"` >> $BASH_ENV
+        SHA=$(echo $PUSH | base64 --decode | grep sha256 | cut -d " " -f3)
+        echo "SHA: $SHA"
+        echo "export <<parameters.return-sha-var>>=${SHA}" >> "$BASH_ENV"

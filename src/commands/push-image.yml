@@ -32,4 +32,4 @@ steps:
           PUSH=$(docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag})
           echo $PUSH
         done
-        export <<parameters.return-sha-var>>=$(echo $PUSH | grep sha256 | cut -d " " -f3)
+        echo `export <<parameters.return-sha-var>>=$(echo $PUSH | grep sha256 | cut -d " " -f3)` >> $BASH_ENV

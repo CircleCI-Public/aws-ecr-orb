@@ -19,6 +19,7 @@ Following is the full list of parameters required by this orb's various commands
 | `region` | `env_var_name` |  `AWS_REGION` | name of env var storing your AWS region |
 | `repo` | `string` |  N/A | name of your ECR repository |
 | `tag` | `string` |  `latest` | Comma-separated string of ECR image tags |
+| `return-sha-var` | `string` |  `SHA256` | set this to the variable you want returned with the image SHA |
 | `no-output-timeout` | `string` |  `latest` | The amount of time to allow the docker build command to run before timing out (default is `10m`) |
 
 ## Usage
@@ -82,6 +83,9 @@ workflows:
 
           # ECR image tags (comma-separated string), defaults to "latest"
           tag: latest,myECRRepoTag
+
+          # The return variable desired for the container SHA (default is `SHA256`)
+          return-sha-var: MYIMAGE
 
           # name of Dockerfile to use, defaults to "Dockerfile"
           dockerfile: myDockerfile

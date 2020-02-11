@@ -18,11 +18,18 @@ parameters:
     type: string
     default: "latest"
 
+  return-sha-var:
+    description: Variable you want set with the container sha (default = SHA256)
+    type: string
+    default: SHA256
+
 steps:
   - run:
       name: Push image to Amazon ECR
       command: |
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
-          docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag}
+          PUSH=$(docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag})
+          echo $PUSH
         done
+        export <<parameters.return-sha-var>>=$(echo $PUSH | grep sha256 | cut -d " " -f3)

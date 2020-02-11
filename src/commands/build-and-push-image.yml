@@ -73,6 +73,11 @@ parameters:
     default: "latest"
     description: A comma-separated string containing docker image tags to build and push (default = latest)
 
+  return-sha-var:
+    description: Variable you want set with the container sha (default = SHA256)
+    type: string
+    default: SHA256
+
   checkout:
     type: boolean
     default: true
@@ -164,3 +169,4 @@ steps:
       account-url: <<parameters.account-url>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
+      return-sha-var: <<parameters.return-sha-var>>

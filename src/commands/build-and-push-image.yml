@@ -142,6 +142,7 @@ steps:
         - setup_remote_docker
 
   - ecr-login:
+      profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
 
   - build-image:

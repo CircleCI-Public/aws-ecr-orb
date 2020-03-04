@@ -1,8 +1,19 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@8.20.0
+  orb-tools: circleci/orb-tools@9.0
   aws-ecr: circleci/aws-ecr@dev:alpha
+
+# Pipeline parameters
+parameters:
+  # These pipeline parameters are required by the "trigger-integration-tests-workflow"
+  # job, by default.
+  run-integration-tests:
+    type: boolean
+    default: false
+  dev-orb-version:
+    type: string
+    default: "dev:alpha"
 
 jobs:
   pre-integration-checkout-workspace-job:
@@ -16,24 +27,12 @@ jobs:
           root: .
           paths: Dockerfile
 
-# yaml anchors
-integration-dev_filters: &integration-dev_filters
-  branches:
-    ignore: /.*/
-  tags:
-    only: /integration-.*/
-
-integration-master_filters: &integration-master_filters
-  branches:
-    ignore: /.*/
-  tags:
-    only: /master-.*/
-
 integration-post-steps: &integration-post-steps
   [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force"]
 
 workflows:
   lint-pack_validate_deploy-dev:
+    unless: << pipeline.parameters.run-integration-tests >>
     jobs:
       - orb-tools/lint
 
@@ -45,102 +44,53 @@ workflows:
           orb-name: circleci/aws-ecr
           requires: [orb-tools/pack]
 
-      - orb-tools/trigger-integration-workflow:
-          name: trigger-integration-dev
-          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
-          cleanup-tags: true
+      - orb-tools/trigger-integration-tests-workflow:
+          context: orb-publishing
           requires: [orb-tools/publish-dev]
-          filters:
-            branches:
-              ignore: master
 
-      - orb-tools/trigger-integration-workflow:
-          name: trigger-integration-master
-          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
-          cleanup-tags: true
-          tag: master
-          requires: [orb-tools/publish-dev]
+  integration-tests_deploy-prod:
+    when: << pipeline.parameters.run-integration-tests >>
+    jobs:
+
+      - pre-integration-checkout-workspace-job:
+          name: pre-integration
+
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-default-profile
+          attach-workspace: true
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          create-repo: true
+          tag: integration,myECRRepoTag
+          dockerfile: Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          post-steps: *integration-post-steps
+          requires: [pre-integration]
+
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-named-profile
+          attach-workspace: true
+          workspace-root: workspace
+          profile-name: testing
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          create-repo: true
+          tag: integration,myECRRepoTag
+          dockerfile: Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          post-steps: *integration-post-steps
+          requires: [integration-tests-default-profile]
+
+      - orb-tools/dev-promote-prod-from-commit-subject:
+          orb-name: circleci/aws-ecr
+          context: orb-publishing
+          add-pr-comment: true
+          bot-token-variable: GHI_TOKEN
+          bot-user: cpe-bot
+          fail-if-semver-not-indicated: true
+          publish-version-tag: false
           filters:
             branches:
               only: master
-
-  integration-tests_deploy-prod:
-    jobs:
-      # triggered by non-master branch commits
-      - pre-integration-checkout-workspace-job:
-          name: pre-integration-dev
-          filters: *integration-dev_filters
-
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-dev
-          attach-workspace: true
-          workspace-root: workspace
-          profile-name: testing
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
-          create-repo: true
-          tag: integration-dev,myECRRepoTag
-          dockerfile: Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          filters: *integration-dev_filters
-          post-steps: *integration-post-steps
-          requires: [pre-integration-dev]
-
-      # triggered by master branch commits
-      - pre-integration-checkout-workspace-job:
-          name: pre-integration-master
-          filters: *integration-master_filters
-
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-master
-          attach-workspace: true
-          workspace-root: workspace
-          profile-name: testing
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
-          create-repo: true
-          tag: integration-master,myECRRepoTag
-          dockerfile: Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          filters: *integration-master_filters
-          post-steps: *integration-post-steps
-          requires: [pre-integration-master]
-
-      # patch, minor, or major publishing
-      - orb-tools/dev-promote-prod:
-          name: dev-promote-patch
-          context: orb-publishing
-          orb-name: circleci/aws-ecr
-          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
-          requires: [integration-tests-master]
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-patch.*/
-
-      - orb-tools/dev-promote-prod:
-          name: dev-promote-minor
-          release: minor
-          context: orb-publishing
-          orb-name: circleci/aws-ecr
-          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
-          requires: [integration-tests-master]
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-minor.*/
-
-      - orb-tools/dev-promote-prod:
-          name: dev-promote-major
-          release: major
-          context: orb-publishing
-          orb-name: circleci/aws-ecr
-          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
-          requires: [integration-tests-master]
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-major.*/
+          requires: [integration-tests-named-profile]

@@ -89,7 +89,8 @@ workflows:
           bot-token-variable: GHI_TOKEN
           bot-user: cpe-bot
           fail-if-semver-not-indicated: true
-          publish-version-tag: false
+          publish-version-tag: true
+          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
           filters:
             branches:
               only: master

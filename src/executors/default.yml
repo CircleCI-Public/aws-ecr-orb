@@ -6,6 +6,10 @@ parameters:
   image:
     type: string
     default: ubuntu-1604:201903-01
+  use-docker-layer-caching:
+    type: boolean
+    default: false
 
 machine:
   image: <<parameters.image>>
+  docker_layer_caching: <<parameters.use-docker-layer-caching>>

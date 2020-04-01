@@ -15,11 +15,6 @@ parameters:
     type: string
     default: "dev:alpha"
 
-executors:
-  machine-with-dlc:
-    machine:
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true
 jobs:
   pre-integration-checkout-workspace-job:
     executor:
@@ -85,7 +80,9 @@ workflows:
           path: workspace
           extra-build-args: --compress
           post-steps: *integration-post-steps
-          executor: machine-with-dlc
+          executor:
+            name: aws-ecr/default
+            use-docker-layer-caching: true
           requires: [integration-tests-default-profile]
 
       - orb-tools/dev-promote-prod-from-commit-subject:

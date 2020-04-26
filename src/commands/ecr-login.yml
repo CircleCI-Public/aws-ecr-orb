@@ -1,6 +1,14 @@
 description: "Authenticate into the Amazon ECR service"
 
 parameters:
+  account-url:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_URL
+    description: >
+      Env var storing Amazon ECR account URL that maps to an AWS account,
+      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
+      defaults to AWS_ECR_ACCOUNT_URL
+
   region:
     type: env_var_name
     default: AWS_REGION
@@ -19,8 +27,5 @@ steps:
   - run:
       name: Log into Amazon ECR
       command: |
-        # aws ecr get-login returns a login command w/ a temp token
-        LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $<<parameters.region>> --profile <<parameters.profile-name>>)
-
-        # save it to an env var & use that env var to login
-        $LOGIN_COMMAND
+        # get-login-password returns a password that we pipe to the docker login command
+        aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin <<parameters.account-url>>

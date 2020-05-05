@@ -70,7 +70,7 @@ workflows:
           # name of Dockerfile to use, defaults to "Dockerfile"
           dockerfile: myDockerfile
 
-          # path to Dockerfile, defaults to . (working directory)
+          # path to the Dockerfile, also will be passed as a path to the docker build command, defaults to . (working directory)
           path: pathToMyDockerfile
 
           # The amount of time to allow the docker build command to run before timing out (default is `10m`)

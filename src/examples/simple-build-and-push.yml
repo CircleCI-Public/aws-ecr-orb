@@ -44,3 +44,6 @@ usage:
 
             # path to Dockerfile, defaults to . (working directory)
             path: pathToMyDockerfile
+
+            # The amount of time to allow the docker build command to run before timing out, defaults to "10m"
+            no-output-timeout: 20m

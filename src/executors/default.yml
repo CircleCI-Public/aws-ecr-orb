@@ -1,15 +1,9 @@
 description: >
-  CircleCI's Ubuntu-based machine executor VM:
-  https://circleci.com/docs/2.0/executor-types/#using-machine
+  Select what Docker image to run your jobs in. By default, this orb's included jobs will use our Next Generation CircleCI Python Convenience image with the -node varient for maximum compatability.
 
 parameters:
   image:
     type: string
-    default: ubuntu-1604:201903-01
-  use-docker-layer-caching:
-    type: boolean
-    default: false
-
-machine:
-  image: <<parameters.image>>
-  docker_layer_caching: <<parameters.use-docker-layer-caching>>
+    default: "cimg/python:3.8-node"
+docker:
+  - image: <<parameters.image>>

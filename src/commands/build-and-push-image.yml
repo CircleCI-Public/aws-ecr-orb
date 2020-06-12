@@ -6,17 +6,6 @@ description: >
   or in Contexts (https://circleci.com/docs/2.0/contexts).
 
 parameters:
-  executor:
-    type: executor
-    default: default
-    description: executor to use for this job
-
-  setup-remote-docker:
-    type: boolean
-    default: false
-    description: >
-      Setup and use CircleCI's remote Docker environment for Docker and
-      docker-compose commands? Not required if using the default executor
 
   profile-name:
     type: string
@@ -133,11 +122,6 @@ steps:
       steps:
         - attach_workspace:
             at: <<parameters.workspace-root>>
-
-  - when:
-      condition: <<parameters.setup-remote-docker>>
-      steps:
-        - setup_remote_docker
 
   - ecr-login:
       profile-name: <<parameters.profile-name>>

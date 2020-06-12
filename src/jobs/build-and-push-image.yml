@@ -83,13 +83,6 @@ parameters:
       Workspace root path that is either an absolute path or a path relative
       to the working directory. Defaults to '.' (the working directory)
 
-  setup-remote-docker:
-    type: boolean
-    default: false
-    description: >
-      Setup and use CircleCI's remote Docker environment for Docker and
-      docker-compose commands? Not required if using the default executor
-
   dockerfile:
     type: string
     default: Dockerfile
@@ -116,7 +109,6 @@ parameters:
 steps:
   - build-and-push-image:
       profile-name: <<parameters.profile-name>>
-      setup-remote-docker: <<parameters.setup-remote-docker>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       region: <<parameters.region>>

@@ -82,7 +82,6 @@ workflows:
           post-steps: *integration-post-steps
           executor:
             name: aws-ecr/default
-            use-docker-layer-caching: true
           requires: [integration-tests-default-profile]
 
       - orb-tools/dev-promote-prod-from-commit-subject:

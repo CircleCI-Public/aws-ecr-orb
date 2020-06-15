@@ -60,6 +60,8 @@ workflows:
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-default-profile
+          pre-steps:
+            - setup_remote_docker
           context: orb-publishing
           attach-workspace: true
           workspace-root: workspace
@@ -76,6 +78,8 @@ workflows:
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile
+          pre-steps:
+            - setup_remote_docker
           context: orb-publishing
           attach-workspace: true
           workspace-root: workspace

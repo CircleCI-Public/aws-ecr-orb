@@ -14,7 +14,10 @@ parameters:
   dev-orb-version:
     type: string
     default: "dev:alpha"
-
+executors:
+  docker-main:
+    docker:
+      - image: cimg/base:stable
 jobs:
   pre-integration-checkout-workspace-job:
     executor:
@@ -68,6 +71,8 @@ workflows:
           extra-build-args: --compress
           post-steps: *integration-post-steps
           requires: [pre-integration]
+          executor: docker-main
+
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile
@@ -82,9 +87,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           post-steps: *integration-post-steps
-          executor:
-            name: aws-ecr/default
-            use-docker-layer-caching: true
+          executor: docker-main
           requires: [integration-tests-default-profile]
 
       - orb-tools/dev-promote-prod-from-commit-subject:

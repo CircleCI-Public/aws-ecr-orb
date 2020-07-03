@@ -116,19 +116,16 @@ parameters:
     description: >
       The amount of time to allow the docker build command to run before timing out (default is `10m`)
 
+  skip-build-when-tags-exist-in-ecr:
+    type: boolean
+    default: false
+    description: Whether to skip image building if all specified tags already exist in ECR
+
 steps:
   - when:
       condition: <<parameters.checkout>>
       steps:
         - checkout
-
-  - aws-cli/install
-
-  - aws-cli/configure:
-      profile-name: <<parameters.profile-name>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      aws-region: <<parameters.region>>
 
   - when:
       condition: <<parameters.attach-workspace>>
@@ -141,10 +138,16 @@ steps:
       steps:
         - setup_remote_docker
 
-  - ecr-login:
-      profile-name: <<parameters.profile-name>>
-      region: <<parameters.region>>
-      account-url: <<parameters.account-url>>
+  - when:
+      condition:
+        not: <<parameters.skip-build-when-tags-exist-in-ecr>>
+      steps:
+        - ecr-login:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            account-url: <<parameters.account-url>>
+            aws-access-key-id: <<parameters.aws-access-key-id>>
+            aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - build-image:
       account-url: <<parameters.account-url>>
@@ -154,6 +157,9 @@ steps:
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
+      skip-build-when-tags-exist-in-ecr: <<parameters.skip-build-when-tags-exist-in-ecr>>
+      profile-name: <<parameters.profile-name>>
+      region: <<parameters.region>>
 
   - when:
       condition: <<parameters.create-repo>>

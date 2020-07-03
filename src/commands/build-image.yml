@@ -39,20 +39,56 @@ parameters:
       Extra flags to pass to docker build. For examples, see
       https://docs.docker.com/engine/reference/commandline/build
 
+  skip-build-when-tags-exist-in-ecr:
+    type: boolean
+    default: false
+    description: Whether to skip image building if all specified tags already exist in ECR
+
+  region:
+    type: env_var_name
+    default: AWS_REGION
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_REGION. Only required when skip-build-when-tags-exist-in-ecr
+      is set to true.
+
+  profile-name:
+    type: string
+    default: "default"
+    description: >
+      AWS profile name to be configured. Only required when skip-build-when-tags-exist-in-ecr
+      is set to true.
+
 steps:
+  - when:
+      condition: <<parameters.skip-build-when-tags-exist-in-ecr>>
+      steps:
+        - ecr-login:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            account-url: <<parameters.account-url>>
+
   - run:
       name: Build docker image
       command: |
+        registry_id=$(echo <<parameters.account-url>> | sed "s;\.\w;;g")
+        docker_tags_exist_in_ecr="false"
+
         docker_tag_args=""
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
+          if [ "<<parameters.skip-build-when-tags-exist-in-ecr>>" = "true" ]; then
+            docker_tags_exist_in_ecr=$(aws ecr describe-images --registry-id $registry_id --repository-name <<parameters.repo>> --query "contains(imageDetails[].imageTags[], '$tag')")
+          fi
           docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
         done
-        docker build \
-          <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
-          -f <<parameters.path>>/<<parameters.dockerfile>> \
-          $docker_tag_args \
-          <<parameters.path>>
+        if [ "<<parameters.skip-build-when-tags-exist-in-ecr>>" = "false" ] || [ "<<parameters.skip-build-when-tags-exist-in-ecr>>" = "true" -a "$docker_tags_exist_in_ecr" = "false" ]; then
+          docker build \
+            <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
+            -f <<parameters.path>>/<<parameters.dockerfile>> \
+            $docker_tag_args \
+            <<parameters.path>>
+        fi
       no_output_timeout: <<parameters.no-output-timeout>>
 
 

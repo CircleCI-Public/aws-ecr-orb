@@ -113,6 +113,11 @@ parameters:
     description: >
       The amount of time to allow the docker build command to run before timing out. Defaults to '10m'
 
+  skip-build-when-tags-exist-in-ecr:
+    type: boolean
+    default: false
+    description: Whether to skip image building if all specified tags already exist in ECR
+
 steps:
   - build-and-push-image:
       profile-name: <<parameters.profile-name>>
@@ -131,3 +136,4 @@ steps:
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
+      skip-build-when-tags-exist-in-ecr: <<parameters.skip-build-when-tags-exist-in-ecr>>

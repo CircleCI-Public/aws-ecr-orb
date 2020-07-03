@@ -75,6 +75,10 @@ workflows:
 
           # The amount of time to allow the docker build command to run before timing out (default is `10m`)
           no-output-timeout: 15m
+
+          # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
+          # you are tagging with the git commit hash. Specially useful for faster code reverts.
+          skip-build-when-tags-exist-in-ecr: false
 ```
 
 ## Contributing

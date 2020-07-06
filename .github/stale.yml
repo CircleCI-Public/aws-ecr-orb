@@ -2,9 +2,6 @@
 #
 # See https://github.com/probot/stale#usage for values
 #
-
-
-
 # Number of days of inactivity before an issue becomes stale
 daysUntilStale: 60
 
@@ -15,10 +12,12 @@ daysUntilClose: 7
 exemptLabels:
   - pinned
   - security
+  - confirmed
+  - bug
+  - enhancement
 
 # only issues with these labesl will be considered ([] is disabling this rule, look at all issues except excempt)
 onlyLabels: []
-
 
 # Label to use when marking an issue as stale
 staleLabel: stale

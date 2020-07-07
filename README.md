@@ -1,4 +1,4 @@
-# AWS ECR Orb [![CircleCI status](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb.svg "CircleCI status")](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/circleci/aws-ecr)](https://circleci.com/orbs/registry/orb/circleci/aws-ecr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/aws-ecr-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+# AWS ECR Orb [![CircleCI status](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb.svg?style=shield "CircleCI status")](https://circleci.com/gh/CircleCI-Public/aws-ecr-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/circleci/aws-ecr)](https://circleci.com/orbs/registry/orb/circleci/aws-ecr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/aws-ecr-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 CircleCI orb for interacting with Amazon's Elastic Container Registry (ECR).
 
 ## Parameters
@@ -22,6 +22,10 @@ Following is the full list of parameters required by this orb's various commands
 | `digest-path` | `string` |  N/A | The path to save the image digest of the pushed image |
 
 ## Usage
+
+See the [orb registry listing](https://circleci.com/orbs/registry/orb/circleci/aws-ecr) for usage guidelines.
+
+## Examples
 See below for both simple and complete examples of this orb's `build_and_push_image` job. For details, see the [listing in the Orb Registry](https://circleci.com/orbs/registry/orb/circleci/aws-ecr).
 
 ### Simple
@@ -76,6 +80,9 @@ workflows:
 
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
+
+          # set this to true to scan the created repository for CVEs on push, defaults to "true"
+          repo-scan-on-push: true
 
           # ECR image tags (comma-separated string), defaults to "latest"
           tag: latest,myECRRepoTag

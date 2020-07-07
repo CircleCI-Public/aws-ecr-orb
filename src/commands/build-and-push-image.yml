@@ -7,9 +7,9 @@ description: >
 
 parameters:
   executor:
-    description: executor to use for this job
     type: executor
     default: default
+    description: executor to use for this job
 
   setup-remote-docker:
     type: boolean
@@ -19,40 +19,40 @@ parameters:
       docker-compose commands? Not required if using the default executor
 
   profile-name:
-    description: AWS profile name to be configured.
     type: string
     default: "default"
+    description: AWS profile name to be configured.
 
   aws-access-key-id:
+    type: env_var_name
+    default: AWS_ACCESS_KEY_ID
     description: >
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will set to hold this
       value, i.e. AWS_ACCESS_KEY.
-    type: env_var_name
-    default: AWS_ACCESS_KEY_ID
 
   aws-secret-access-key:
+    type: env_var_name
+    default: AWS_SECRET_ACCESS_KEY
     description: >
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
-    type: env_var_name
-    default: AWS_SECRET_ACCESS_KEY
 
   region:
+    type: env_var_name
+    default: AWS_REGION
     description: >
       Name of env var storing your AWS region information,
       defaults to AWS_REGION
-    type: env_var_name
-    default: AWS_REGION
 
   account-url:
     type: env_var_name
+    default: AWS_ECR_ACCOUNT_URL
     description: >
       Env var storing Amazon ECR account URL that maps to an AWS account,
       e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
       defaults to AWS_ECR_ACCOUNT_URL
-    default: AWS_ECR_ACCOUNT_URL
 
   repo:
     type: string
@@ -60,13 +60,18 @@ parameters:
 
   create-repo:
     type: boolean
-    description: Should the repo be created if it does not exist?
     default: false
+    description: Should the repo be created if it does not exist?
+
+  repo-scan-on-push:
+    type: boolean
+    default: true
+    description: Should the created repo be security scanned on push?
 
   tag:
     type: string
-    description: A comma-separated string containing docker image tags to build and push (default = latest)
     default: "latest"
+    description: A comma-separated string containing docker image tags to build and push (default = latest)
 
   digest-path:
     type: string
@@ -74,47 +79,47 @@ parameters:
     default: ""
 
   checkout:
-    description: >
-      Boolean for whether or not to checkout as a first step. Default is true.
     type: boolean
     default: true
+    description: >
+      Boolean for whether or not to checkout as a first step. Default is true.
 
   attach-workspace:
+    type: boolean
+    default: false
     description: >
       Boolean for whether or not to attach to an existing workspace. Default
       is false.
-    type: boolean
-    default: false
 
   workspace-root:
+    type: string
+    default: "."
     description: >
       Workspace root path that is either an absolute path or a path relative
       to the working directory. Defaults to '.' (the working directory)
-    type: string
-    default: "."
 
   dockerfile:
-    description: Name of dockerfile to use. Defaults to Dockerfile.
     type: string
     default: Dockerfile
+    description: Name of dockerfile to use. Defaults to Dockerfile.
 
   path:
-    description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
     type: string
     default: .
+    description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
 
   extra-build-args:
+    type: string
+    default: ""
     description: >
       Extra flags to pass to docker build. For examples, see
       https://docs.docker.com/engine/reference/commandline/build
-    type: string
-    default: ""
 
   no-output-timeout:
-    description: >
-      The amount of time to allow the docker build command to run before timing out (default is `10m`)
     type: string
     default: "10m"
+    description: >
+      The amount of time to allow the docker build command to run before timing out (default is `10m`)
 
 steps:
   - when:
@@ -124,7 +129,7 @@ steps:
 
   - aws-cli/install
 
-  - aws-cli/configure:
+  - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
@@ -142,7 +147,9 @@ steps:
         - setup_remote_docker
 
   - ecr-login:
+      profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
+      account-url: <<parameters.account-url>>
 
   - build-image:
       account-url: <<parameters.account-url>>
@@ -158,7 +165,7 @@ steps:
       steps:
         - run: |
             aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
-            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>>
+            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
 
   - push-image:
       account-url: <<parameters.account-url>>

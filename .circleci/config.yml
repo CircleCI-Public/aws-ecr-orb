@@ -91,7 +91,7 @@ workflows:
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
-          tag: integration,myECRRepoTag
+          tag: skip-build-when-tags-exist-in-ecr
           dockerfile: Dockerfile
           path: workspace
           extra-build-args: --compress

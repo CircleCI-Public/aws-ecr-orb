@@ -79,18 +79,12 @@ steps:
   - when:
       condition: <<parameters.skip-build-when-tags-exist-in-ecr>>
       steps:
-        - aws-cli/install
-
-        - aws-cli/setup:
-            profile-name: <<parameters.profile-name>>
-            aws-access-key-id: <<parameters.aws-access-key-id>>
-            aws-secret-access-key: <<parameters.aws-secret-access-key>>
-            aws-region: <<parameters.region>>
-
         - ecr-login:
             profile-name: <<parameters.profile-name>>
             region: <<parameters.region>>
             account-url: <<parameters.account-url>>
+            aws-access-key-id: <<parameters.aws-access-key-id>>
+            aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - run:
       name: Build docker image

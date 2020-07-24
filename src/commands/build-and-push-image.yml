@@ -138,16 +138,12 @@ steps:
       steps:
         - setup_remote_docker
 
-  - when:
-      condition:
-        not: <<parameters.skip-build-when-tags-exist-in-ecr>>
-      steps:
-        - ecr-login:
-            profile-name: <<parameters.profile-name>>
-            region: <<parameters.region>>
-            account-url: <<parameters.account-url>>
-            aws-access-key-id: <<parameters.aws-access-key-id>>
-            aws-secret-access-key: <<parameters.aws-secret-access-key>>
+  - ecr-login:
+      profile-name: <<parameters.profile-name>>
+      region: <<parameters.region>>
+      account-url: <<parameters.account-url>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - when:
       condition: <<parameters.create-repo>>

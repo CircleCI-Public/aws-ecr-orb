@@ -71,7 +71,7 @@ steps:
   - run:
       name: Build docker image
       command: |
-        registry_id=$(echo $<<parameters.account-url>> | sed "s;\.\w;;g")
+        registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
         docker_tags_exist_in_ecr="false"
 
         docker_tag_args=""

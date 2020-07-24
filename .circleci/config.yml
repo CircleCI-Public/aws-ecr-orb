@@ -85,6 +85,23 @@ workflows:
             use-docker-layer-caching: true
           requires: [integration-tests-default-profile]
 
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-skip-when-tags-exist
+          attach-workspace: true
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          create-repo: true
+          tag: skip-when-tags-exist
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          skip-when-tags-exist: true
+          post-steps: *integration-post-steps
+          executor:
+            name: aws-ecr/default
+            use-docker-layer-caching: true
+          requires: [integration-tests-named-profile]
+
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr
           context: orb-publishing

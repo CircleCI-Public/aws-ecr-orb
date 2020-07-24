@@ -116,19 +116,16 @@ parameters:
     description: >
       The amount of time to allow the docker build command to run before timing out (default is `10m`)
 
+  skip-when-tags-exist:
+    type: boolean
+    default: false
+    description: Whether to skip image building if all specified tags already exist in ECR
+
 steps:
   - when:
       condition: <<parameters.checkout>>
       steps:
         - checkout
-
-  - aws-cli/install
-
-  - aws-cli/setup:
-      profile-name: <<parameters.profile-name>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      aws-region: <<parameters.region>>
 
   - when:
       condition: <<parameters.attach-workspace>>
@@ -145,6 +142,15 @@ steps:
       profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
       account-url: <<parameters.account-url>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+
+  - when:
+      condition: <<parameters.create-repo>>
+      steps:
+        - run: |
+            aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
+            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
 
   - build-image:
       account-url: <<parameters.account-url>>
@@ -154,13 +160,11 @@ steps:
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
-
-  - when:
-      condition: <<parameters.create-repo>>
-      steps:
-        - run: |
-            aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
-            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
+      skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+      profile-name: <<parameters.profile-name>>
+      region: <<parameters.region>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - push-image:
       account-url: <<parameters.account-url>>

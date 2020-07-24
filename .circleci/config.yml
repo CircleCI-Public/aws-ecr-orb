@@ -86,16 +86,16 @@ workflows:
           requires: [integration-tests-default-profile]
 
       - aws-ecr/build-and-push-image:
-          name: integration-tests-skip-build-when-tags-exist-in-ecr
+          name: integration-tests-skip-when-tags-exist
           attach-workspace: true
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
           create-repo: true
-          tag: skip-build-when-tags-exist-in-ecr
+          tag: skip-when-tags-exist
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          skip-build-when-tags-exist-in-ecr: true
+          skip-when-tags-exist: true
           post-steps: *integration-post-steps
           executor:
             name: aws-ecr/default

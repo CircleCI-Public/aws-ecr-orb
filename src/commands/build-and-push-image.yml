@@ -116,7 +116,7 @@ parameters:
     description: >
       The amount of time to allow the docker build command to run before timing out (default is `10m`)
 
-  skip-build-when-tags-exist-in-ecr:
+  skip-when-tags-exist:
     type: boolean
     default: false
     description: Whether to skip image building if all specified tags already exist in ECR
@@ -160,7 +160,7 @@ steps:
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
-      skip-build-when-tags-exist-in-ecr: <<parameters.skip-build-when-tags-exist-in-ecr>>
+      skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
       profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
       aws-access-key-id: <<parameters.aws-access-key-id>>

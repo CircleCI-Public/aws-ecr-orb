@@ -50,4 +50,4 @@ usage:
 
             # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
             # you are tagging with the git commit hash. Specially useful for faster code reverts.
-            skip-build-when-tags-exist-in-ecr: false
+            skip-when-tags-exist: false

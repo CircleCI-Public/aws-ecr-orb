@@ -90,17 +90,21 @@ steps:
       name: Build docker image
       command: |
         registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
-        docker_tags_exist_in_ecr="false"
+        number_of_tags_in_ecr=0
 
         docker_tag_args=""
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do
           if [ "<<parameters.skip-when-tags-exist>>" = "true" ]; then
-            docker_tags_exist_in_ecr=$(aws ecr describe-images --registry-id $registry_id --repository-name <<parameters.repo>> --query "contains(imageDetails[].imageTags[], '$tag')")
+            docker_tag_exists_in_ecr=$(aws ecr describe-images --registry-id $registry_id --repository-name <<parameters.repo>> --query "contains(imageDetails[].imageTags[], '$tag')")
+            if [ "$docker_tag_exists_in_ecr" = "true" ]; then
+              docker pull $<<parameters.account-url>>/<<parameters.repo>>:${tag}
+              let "number_of_tags_in_ecr+=1"
+            fi
           fi
           docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
         done
-        if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a "$docker_tags_exist_in_ecr" = "false" ]; then
+        if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
           docker build \
             <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
             -f <<parameters.path>>/<<parameters.dockerfile>> \

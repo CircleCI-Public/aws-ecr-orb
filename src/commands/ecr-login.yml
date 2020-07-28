@@ -40,8 +40,6 @@ parameters:
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
 steps:
-  - aws-cli/install
-
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>

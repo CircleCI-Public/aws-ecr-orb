@@ -27,9 +27,6 @@ jobs:
           root: .
           paths: [sample/Dockerfile]
 
-integration-post-steps: &integration-post-steps
-  [run: "aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7} --force"]
-
 workflows:
   lint-pack_validate_deploy-dev:
     unless: << pipeline.parameters.run-integration-tests >>
@@ -51,7 +48,6 @@ workflows:
   integration-tests_deploy-prod:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
-
       - pre-integration-checkout-workspace-job:
           name: pre-integration
 
@@ -59,13 +55,14 @@ workflows:
           name: integration-tests-default-profile
           attach-workspace: true
           workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          post-steps: *integration-post-steps
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -73,34 +70,51 @@ workflows:
           attach-workspace: true
           workspace-root: workspace
           profile-name: testing
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          post-steps: *integration-post-steps
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
           executor:
             name: aws-ecr/default
             use-docker-layer-caching: true
-          requires: [integration-tests-default-profile]
+          requires: [pre-integration]
+
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-skip-when-tags-exist-populate-image
+          attach-workspace: true
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist
+          create-repo: true
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          skip-when-tags-exist: true
+          executor:
+            name: aws-ecr/default
+            use-docker-layer-caching: true
+          requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-skip-when-tags-exist
           attach-workspace: true
           workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}
-          create-repo: true
-          tag: skip-when-tags-exist
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist
+          tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
-          post-steps: *integration-post-steps
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist --force
           executor:
             name: aws-ecr/default
             use-docker-layer-caching: true
-          requires: [integration-tests-named-profile]
+          requires: [integration-tests-skip-when-tags-exist-populate-image]
 
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr
@@ -114,4 +128,7 @@ workflows:
           filters:
             branches:
               only: master
-          requires: [integration-tests-named-profile]
+          requires:
+            - integration-tests-default-profile
+            - integration-tests-named-profile
+            - integration-tests-skip-when-tags-exist

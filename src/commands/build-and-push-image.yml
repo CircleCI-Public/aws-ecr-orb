@@ -17,6 +17,11 @@ parameters:
     description: >
       Setup and use CircleCI's remote Docker environment for Docker and
       docker-compose commands? Not required if using the default executor
+      
+  remote-docker-version:
+    type: string
+    default: 19.03.13
+    description: Specific remote docker version
 
   profile-name:
     type: string
@@ -137,6 +142,7 @@ steps:
       condition: <<parameters.setup-remote-docker>>
       steps:
         - setup_remote_docker
+            version: <<parameters.remote-docker-version>>
 
   - ecr-login:
       profile-name: <<parameters.profile-name>>

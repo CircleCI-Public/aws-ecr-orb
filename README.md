@@ -58,6 +58,13 @@ workflows:
           # name of your ECR repository
           repo: myECRRepository
 
+          # set this to use CircleCI's remote Docker environment for Docker and docker-compose commands,
+          # defaults to "false"
+          setup-remote-docker: true
+
+          # when setup-remote-docker is true, customize docker engine version (default is `19.03.13`)
+          remote-docker-version: 19.03.13
+
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
 

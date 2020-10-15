@@ -90,6 +90,11 @@ parameters:
       Setup and use CircleCI's remote Docker environment for Docker and
       docker-compose commands? Not required if using the default executor
 
+  remote-docker-version:
+    type: string
+    default: 19.03.13
+    description: Specific remote docker version
+
   dockerfile:
     type: string
     default: Dockerfile
@@ -122,6 +127,7 @@ steps:
   - build-and-push-image:
       profile-name: <<parameters.profile-name>>
       setup-remote-docker: <<parameters.setup-remote-docker>>
+      remote-docker-version: <<parameters.remote-docker-version>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       region: <<parameters.region>>

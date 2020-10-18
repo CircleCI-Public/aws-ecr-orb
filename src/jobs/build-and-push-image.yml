@@ -95,6 +95,13 @@ parameters:
     default: 19.03.13
     description: Specific remote docker version
 
+  remote-docker-layer-caching:
+    type: boolean
+    default: false
+    description: >
+      Enable Docker layer caching if using remote Docker engine.
+      Defaults to false.
+
   dockerfile:
     type: string
     default: Dockerfile
@@ -128,6 +135,7 @@ steps:
       profile-name: <<parameters.profile-name>>
       setup-remote-docker: <<parameters.setup-remote-docker>>
       remote-docker-version: <<parameters.remote-docker-version>>
+      remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       region: <<parameters.region>>

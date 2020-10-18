@@ -23,6 +23,13 @@ parameters:
     default: 19.03.13
     description: Specific remote docker version
 
+  remote-docker-layer-caching:
+    type: boolean
+    default: false
+    description: >
+      Enable Docker layer caching if using remote Docker engine.
+      Defaults to false.
+
   profile-name:
     type: string
     default: "default"
@@ -143,6 +150,7 @@ steps:
       steps:
         - setup_remote_docker:
             version: <<parameters.remote-docker-version>>
+            docker_layer_caching: <<parameters.remote-docker-layer-caching>>
 
   - ecr-login:
       profile-name: <<parameters.profile-name>>

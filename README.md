@@ -65,6 +65,10 @@ workflows:
           # when setup-remote-docker is true, customize docker engine version (default is `19.03.13`)
           remote-docker-version: 19.03.13
 
+          # set this to enable Docker layer caching if using remote Docker engine.
+          # defaults to "false"
+          remote-docker-layer-caching: true
+
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
 

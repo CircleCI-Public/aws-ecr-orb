@@ -18,7 +18,39 @@ parameters:
     type: string
     default: "latest"
 
+  create-repo:
+    type: boolean
+    default: false
+    description: Should the repo be created if it does not exist?
+
+  repo-scan-on-push:
+    type: boolean
+    default: true
+    description: Should the created repo be security scanned on push?
+
+  region:
+    type: env_var_name
+    default: AWS_REGION
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_REGION. Only required when skip-when-tags-exist
+      or ecr-login are set to true.
+
+  profile-name:
+    type: string
+    default: "default"
+    description: >
+      AWS profile name to be configured. Only required when skip-when-tags-exist
+      or ecr-login are set to true.
+
 steps:
+  - when:
+      condition: <<parameters.create-repo>>
+      steps:
+        - run: |
+            aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
+            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
+
   - run:
       name: Push image to Amazon ECR
       command: |

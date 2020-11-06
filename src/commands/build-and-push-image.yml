@@ -159,13 +159,6 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
-  - when:
-      condition: <<parameters.create-repo>>
-      steps:
-        - run: |
-            aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
-            aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
-
   - build-image:
       account-url: <<parameters.account-url>>
       repo: <<parameters.repo>>
@@ -184,3 +177,7 @@ steps:
       account-url: <<parameters.account-url>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
+      create-repo: <<parameters.create-repo>>
+      repo-scan-on-push: <<parameters.repo-scan-on-push>>
+      profile-name: <<parameters.profile-name>>
+      region: <<parameters.region>>

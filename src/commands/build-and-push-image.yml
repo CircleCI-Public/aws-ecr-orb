@@ -37,7 +37,7 @@ parameters:
       Enable dockerhub authentication. Defaults to false.
 
   dockerhub-username:
-    type: string
+    type: env_var_name
     default: DOCKERHUB_USERNAME
     description: >
       Dockerhub username to be configured. Set this to the name of
@@ -45,7 +45,7 @@ parameters:
       value, i.e. DOCKERHUB_USERNAME.
 
   dockerhub-password:
-    type: string
+    type: env_var_name
     default: DOCKERHUB_PASSWORD
     description: >
       Dockerhub password to be configured. Set this to the name of

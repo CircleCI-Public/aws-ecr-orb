@@ -69,6 +69,15 @@ workflows:
           # defaults to "false"
           remote-docker-layer-caching: true
 
+          # set this to enable dockerhub authenticated pulls, defaults to false.
+          docker-login: true
+
+          # name of env var storing your dockerhub username, defaults to DOCKERHUB_USERNAME.
+          dockerhub-username: DOCKERHUB_USERNAME
+
+          # name of env var storing your dockerhub password, defaults to DOCKERHUB_PASSWORD.
+          dockerhub-password: DOCKERHUB_PASSWORD
+
           # set this to true to create the repository if it does not already exist, defaults to "false"
           create-repo: true
 

@@ -102,6 +102,28 @@ parameters:
       Enable Docker layer caching if using remote Docker engine.
       Defaults to false.
 
+  docker-login:
+    type: boolean
+    default: false
+    description: >
+      Enable dockerhub authentication. Defaults to false.
+
+  dockerhub-username:
+    type: env_var_name
+    default: DOCKERHUB_USERNAME
+    description: >
+      Dockerhub username to be configured. Set this to the name of
+      the environment variable you will set to hold this
+      value, i.e. DOCKERHUB_USERNAME.
+
+  dockerhub-password:
+    type: env_var_name
+    default: DOCKERHUB_PASSWORD
+    description: >
+      Dockerhub password to be configured. Set this to the name of
+      the environment variable you will set to hold this
+      value, i.e. DOCKERHUB_PASSWORD.
+
   dockerfile:
     type: string
     default: Dockerfile
@@ -136,6 +158,9 @@ steps:
       setup-remote-docker: <<parameters.setup-remote-docker>>
       remote-docker-version: <<parameters.remote-docker-version>>
       remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
+      docker-login: <<parameters.docker-login>>
+      dockerhub-username: <<parameters.dockerhub-username>>
+      dockerhub-password: <<parameters.dockerhub-password>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       region: <<parameters.region>>

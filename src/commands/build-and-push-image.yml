@@ -192,7 +192,7 @@ steps:
       condition: <<parameters.docker-login>>
       steps:
         - run: |
-            docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
+            echo <<parameters.dockerhub-password>> | docker login -u $<<parameters.dockerhub-username>> --password-stdin
 
   - build-image:
       account-url: <<parameters.account-url>>

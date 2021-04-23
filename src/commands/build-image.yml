@@ -99,7 +99,7 @@ steps:
           - <<parameters.ecr-login>>
           - <<parameters.skip-when-tags-exist>>
       steps:
-        - ecr-login:
+        - docker-ecr-login:
             profile-name: <<parameters.profile-name>>
             region: <<parameters.region>>
             account-url: <<parameters.account-url>>

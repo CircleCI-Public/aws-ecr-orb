@@ -1,0 +1,39 @@
+description: Push a helm chart to the Amazon ECR registry
+
+parameters:
+  account-url:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_URL
+    description: >
+      Env var storing Amazon ECR account URL that maps to an AWS account,
+      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
+      defaults to AWS_ECR_ACCOUNT_URL
+
+  repo:
+    type: string
+    description: Name of an Amazon ECR repository
+
+  tag:
+    type: string
+    default: "latest"
+    description: A string containing the Helm chart tag to push (default = latest)
+  
+  helm-version:
+    type: string
+    default: "v3.2.4"
+    description: Helm version to install, .e.g. v3.2.4.
+
+  path:
+    type: string
+    default: .
+    description: Path to the directory containing your Helm chart and build context. Defaults to . (working directory).
+
+steps:
+  - helm/install-helm-client:
+      version: <<parameters.helm-version>>
+  - run:
+      name: Push chart to Amazon ECR
+      command: |
+        export HELM_EXPERIMENTAL_OCI=1 
+        helm chart save <<parameters.path>> $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>
+        helm chart push $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>

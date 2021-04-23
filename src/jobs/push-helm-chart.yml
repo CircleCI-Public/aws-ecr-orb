@@ -1,0 +1,104 @@
+description: >
+  Install AWS CLI and Helm, if needed, and configure. Log into Amazon ECR
+  and push helm chart to repository. Requires environment variables
+  for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
+  these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
+  or in Contexts (https://circleci.com/docs/2.0/contexts).
+
+executor: <<parameters.executor>>
+
+parameters:
+  executor:
+    type: executor
+    default: default
+    description: executor to use for this job
+
+  profile-name:
+    type: string
+    default: "default"
+    description: AWS profile name to be configured.
+
+  aws-access-key-id:
+    type: env_var_name
+    default: AWS_ACCESS_KEY_ID
+    description: >
+      AWS access key id for IAM role. Set this to the name of
+      the environment variable you will set to hold this
+      value, i.e. AWS_ACCESS_KEY_ID.
+
+  aws-secret-access-key:
+    type: env_var_name
+    default: AWS_SECRET_ACCESS_KEY
+    description: >
+      AWS secret key for IAM role. Set this to the name of
+      the environment variable you will set to hold this
+      value, i.e. AWS_SECRET_ACCESS_KEY.
+
+  region:
+    type: env_var_name
+    default: AWS_REGION
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_REGION
+
+  account-url:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_URL
+    description: >
+      Env var storing Amazon ECR account URL that maps to an AWS account,
+      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
+      defaults to AWS_ECR_ACCOUNT_URL
+
+  repo:
+    type: string
+    description: Name of an Amazon ECR repository
+
+  create-repo:
+    type: boolean
+    default: false
+    description: Should the repo be created if it does not exist?
+
+  tag:
+    type: string
+    default: "latest"
+    description: A string containing helm chart tag to push (default = latest)
+
+  checkout:
+    type: boolean
+    default: true
+    description: >
+      Boolean for whether or not to checkout as a first step. Default is true.
+
+  attach-workspace:
+    type: boolean
+    default: false
+    description: >
+      Boolean for whether or not to attach to an existing workspace. Default
+      is false.
+
+  workspace-root:
+    type: string
+    default: "."
+    description: >
+      Workspace root path that is either an absolute path or a path relative
+      to the working directory. Defaults to '.' (the working directory)
+
+  path:
+    type: string
+    default: .
+    description: Path to the directory containing your Chart and build context. Defaults to . (working directory).
+
+steps:
+  - login-and-push-helm-chart:
+      profile-name: <<parameters.profile-name>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      region: <<parameters.region>>
+      account-url: <<parameters.account-url>>
+      repo: <<parameters.repo>>
+      create-repo: <<parameters.create-repo>>
+      tag: <<parameters.tag>>
+      checkout: <<parameters.checkout>>
+      attach-workspace: <<parameters.attach-workspace>>
+      workspace-root: <<parameters.workspace-root>>
+      path: <<parameters.path>>

@@ -1,6 +1,6 @@
 description: >
-  Install AWS CLI, if needed, and configure. Log into Amazon ECR
-  and push image to repository. Requires environment variables
+  Install AWS CLI and Helm, if needed, and configure. Log into Amazon ECR
+  and push Helm chart to repository. Requires environment variables
   for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
   these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
   or in Contexts (https://circleci.com/docs/2.0/contexts).
@@ -10,47 +10,6 @@ parameters:
     type: executor
     default: default
     description: executor to use for this job
-
-  setup-remote-docker:
-    type: boolean
-    default: false
-    description: >
-      Setup and use CircleCI's remote Docker environment for Docker and
-      docker-compose commands? Not required if using the default executor
-
-  remote-docker-version:
-    type: string
-    default: 19.03.13
-    description: Specific remote docker version
-
-  remote-docker-layer-caching:
-    type: boolean
-    default: false
-    description: >
-      Enable Docker layer caching if using remote Docker engine.
-      Defaults to false.
-
-  docker-login:
-    type: boolean
-    default: false
-    description: >
-      Enable dockerhub authentication. Defaults to false.
-
-  dockerhub-username:
-    type: env_var_name
-    default: DOCKERHUB_USERNAME
-    description: >
-      Dockerhub username to be configured. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. DOCKERHUB_USERNAME.
-
-  dockerhub-password:
-    type: env_var_name
-    default: DOCKERHUB_PASSWORD
-    description: >
-      Dockerhub password to be configured. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. DOCKERHUB_PASSWORD.
 
   profile-name:
     type: string
@@ -105,7 +64,7 @@ parameters:
   tag:
     type: string
     default: "latest"
-    description: A comma-separated string containing docker image tags to build and push (default = latest)
+    description: A string containing the Helm chart tag to push (default = latest)
 
   checkout:
     type: boolean
@@ -127,33 +86,10 @@ parameters:
       Workspace root path that is either an absolute path or a path relative
       to the working directory. Defaults to '.' (the working directory)
 
-  dockerfile:
-    type: string
-    default: Dockerfile
-    description: Name of dockerfile to use. Defaults to Dockerfile.
-
   path:
     type: string
     default: .
-    description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
-
-  extra-build-args:
-    type: string
-    default: ""
-    description: >
-      Extra flags to pass to docker build. For examples, see
-      https://docs.docker.com/engine/reference/commandline/build
-
-  no-output-timeout:
-    type: string
-    default: "10m"
-    description: >
-      The amount of time to allow the docker build command to run before timing out (default is `10m`)
-
-  skip-when-tags-exist:
-    type: boolean
-    default: false
-    description: Whether to skip image building if all specified tags already exist in ECR
+    description: Path to the directory containing your Helm chart and build context. Defaults to . (working directory).
 
 steps:
   - when:
@@ -167,14 +103,7 @@ steps:
         - attach_workspace:
             at: <<parameters.workspace-root>>
 
-  - when:
-      condition: <<parameters.setup-remote-docker>>
-      steps:
-        - setup_remote_docker:
-            version: <<parameters.remote-docker-version>>
-            docker_layer_caching: <<parameters.remote-docker-layer-caching>>
-
-  - docker-ecr-login:
+  - helm-ecr-login:
       profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
       account-url: <<parameters.account-url>>
@@ -188,27 +117,8 @@ steps:
             aws ecr describe-repositories --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-names <<parameters.repo>> > /dev/null 2>&1 || \
             aws ecr create-repository --profile <<parameters.profile-name>> --region $<<parameters.region>> --repository-name <<parameters.repo>> --image-scanning-configuration scanOnPush=<<parameters.repo-scan-on-push>>
 
-  - when:
-      condition: <<parameters.docker-login>>
-      steps:
-        - run: |
-            docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
-
-  - build-image:
+  - push-helm-chart:
       account-url: <<parameters.account-url>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
-      dockerfile: <<parameters.dockerfile>>
       path: <<parameters.path>>
-      extra-build-args: <<parameters.extra-build-args>>
-      no-output-timeout: <<parameters.no-output-timeout>>
-      skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
-      profile-name: <<parameters.profile-name>>
-      region: <<parameters.region>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-
-  - push-image:
-      account-url: <<parameters.account-url>>
-      repo: <<parameters.repo>>
-      tag: <<parameters.tag>>

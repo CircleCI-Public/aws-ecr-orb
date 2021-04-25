@@ -17,7 +17,7 @@ parameters:
     type: string
     default: "latest"
     description: A string containing the Helm chart tag to push (default = latest)
-  
+
   helm-version:
     type: string
     default: "v3.2.4"
@@ -34,6 +34,6 @@ steps:
   - run:
       name: Push chart to Amazon ECR
       command: |
-        export HELM_EXPERIMENTAL_OCI=1 
+        export HELM_EXPERIMENTAL_OCI=1
         helm chart save <<parameters.path>> $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>
         helm chart push $<<parameters.account-url>>/<<parameters.repo>>:<<parameters.tag>>

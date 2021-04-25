@@ -38,13 +38,13 @@ parameters:
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
-  
+
   helm-version:
     type: string
     default: "v3.2.4"
     description: >
       Helm version to install, .e.g. v3.2.4.
-      
+
 steps:
 
   - aws-cli/setup:
@@ -57,7 +57,7 @@ steps:
   - run:
       name: Log helm into Amazon ECR
       command: |
-        export HELM_EXPERIMENTAL_OCI=1 
+        export HELM_EXPERIMENTAL_OCI=1
         # get-login-password returns a password that we pipe to the helm login command
         aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | \
           helm registry login \

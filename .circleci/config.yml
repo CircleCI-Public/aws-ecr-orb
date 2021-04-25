@@ -156,3 +156,5 @@ workflows:
             - integration-tests-default-profile
             - integration-tests-named-profile
             - integration-tests-skip-when-tags-exist
+            - integration-tests-helm-chart-default-profile
+            - integration-tests-helm-chart-named-profile

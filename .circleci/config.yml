@@ -58,7 +58,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           create-repo: true
           tag: integration
-          path: workspace/sample/mychart
+          path: sample/mychart
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           requires: [pre-integration]
@@ -70,7 +70,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
           tag: integration
-          path: workspace/sample/mychart
+          path: sample/mychart
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           requires: [pre-integration]

@@ -55,24 +55,24 @@ workflows:
           attach-workspace: true
           workspace-root: workspace
           profile-name: testing
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          repo: aws-ecr-orb-helm-${CIRCLE_SHA1:0:7}-named-profile
           create-repo: true
           tag: integration
           path: sample/mychart
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-helm-${CIRCLE_SHA1:0:7}-named-profile --force
           requires: [pre-integration]
 
       - aws-ecr/push-helm-chart:
           name: integration-tests-helm-chart-default-profile
           attach-workspace: true
           workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
+          repo: aws-ecr-orb-helm-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
           tag: integration
           path: sample/mychart
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-helm-${CIRCLE_SHA1:0:7}-default-profile --force
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:

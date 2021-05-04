@@ -19,7 +19,7 @@ jobs:
   pre-integration-checkout-workspace-job:
     docker:
       - image: cimg/base:stable
-    resource-class: small
+    resource_class: small
     steps:
       - checkout
       - persist_to_workspace:

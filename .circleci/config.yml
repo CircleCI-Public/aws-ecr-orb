@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@9.0
-  aws-ecr: circleci/aws-ecr@dev:alpha
+  orb-tools: circleci/orb-tools@10.0
+  aws-ecr: circleci/aws-ecr@<<pipeline.parameters.dev-orb-version>>
 
 # Pipeline parameters
 parameters:
@@ -17,18 +17,17 @@ parameters:
 
 jobs:
   pre-integration-checkout-workspace-job:
-    executor:
-      name: orb-tools/alpine
-      resource-class: small
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
     steps:
       - checkout
-
       - persist_to_workspace:
           root: .
           paths: [sample/Dockerfile]
 
 workflows:
-  lint-pack_validate_deploy-dev:
+  test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
       - orb-tools/lint
@@ -37,15 +36,15 @@ workflows:
           requires: [orb-tools/lint]
 
       - orb-tools/publish-dev:
-          context: orb-publishing
+          context: orb-publisher
           orb-name: circleci/aws-ecr
           requires: [orb-tools/pack]
 
       - orb-tools/trigger-integration-tests-workflow:
-          context: orb-publishing
+          context: orb-publisher
           requires: [orb-tools/publish-dev]
 
-  integration-tests_deploy-prod:
+  integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
       - pre-integration-checkout-workspace-job:
@@ -118,10 +117,10 @@ workflows:
 
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr
-          context: orb-publishing
+          context: orb-publisher
           add-pr-comment: true
           bot-token-variable: GHI_TOKEN
-          bot-user: cpe-bot
+          bot-user: orb-publisher
           fail-if-semver-not-indicated: true
           publish-version-tag: true
           ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2

@@ -17,12 +17,11 @@ parameters:
 
 jobs:
   pre-integration-checkout-workspace-job:
-    executor:
-      name: orb-tools/alpine
-      resource-class: small
+    docker:
+      - image: cimg/base:stable
+    resource-class: small
     steps:
       - checkout
-
       - persist_to_workspace:
           root: .
           paths: [sample/Dockerfile]

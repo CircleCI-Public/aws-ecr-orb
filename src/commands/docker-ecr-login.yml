@@ -1,4 +1,4 @@
-description: "Authenticate into the Amazon ECR service"
+description: "Authenticate docker into the Amazon ECR service"
 
 parameters:
   account-url:
@@ -47,7 +47,7 @@ steps:
       aws-region: <<parameters.region>>
 
   - run:
-      name: Log into Amazon ECR
+      name: Log docker into Amazon ECR
       command: |
         # get-login-password returns a password that we pipe to the docker login command
         aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>

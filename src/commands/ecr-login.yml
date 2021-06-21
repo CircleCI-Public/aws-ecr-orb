@@ -49,5 +49,11 @@ steps:
   - run:
       name: Log into Amazon ECR
       command: |
-        # get-login-password returns a password that we pipe to the docker login command
-        aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
+        # The older versions of awscli does not support the subcommand `get-login-password`
+        # Use get-login in that case
+        if aws ecr help | grep get-login-password &>/dev/null; then
+          # get-login-password returns a password that we pipe to the docker login command
+          aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
+        else
+          $(aws ecr get-login --no-include-email --region $<<parameters.region>> --profile <<parameters.profile-name>>)
+        fi

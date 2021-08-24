@@ -123,7 +123,7 @@ workflows:
           bot-user: orb-publisher
           fail-if-semver-not-indicated: true
           publish-version-tag: true
-          ssh-fingerprints: 54:b8:9b:79:74:29:3e:dd:95:52:4d:4b:e6:8b:38:f2
+          ssh-fingerprints: 6f:16:49:d2:97:35:10:43:bc:a6:3f:f8:62:89:1f:42
           filters:
             branches:
               only: master

@@ -9,7 +9,12 @@ parameters:
   use-docker-layer-caching:
     type: boolean
     default: false
+  resource-class:
+    type: string
+    default: medium
 
 machine:
   image: <<parameters.image>>
   docker_layer_caching: <<parameters.use-docker-layer-caching>>
+
+resource_class: <<parameters.resource-class>>

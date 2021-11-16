@@ -1,0 +1,37 @@
+description: Log into AWS, publish remote tags for existing image
+
+usage:
+  version: 2.1
+
+  orbs:
+    aws-ecr: circleci/aws-ecr@x.y.z
+
+  jobs:
+    tag_ecr_image:
+      parameters:
+        repo:
+          type: string
+        source-tag:
+          type: string
+        target-tag:
+          type: string
+      steps:
+        - aws-ecr/login
+        - aws-ecr/tag-image:
+            # name of your ECR repository
+            repo: <<parameters.repo>>
+
+            # existing tag that has been pushed to the registry
+            source-tag: <<parameters.source-tag>>
+
+            # ECR image tags you want to push (comma separated string)
+            target-tag: <<parameters.target-tag>>
+
+  workflows:
+    build_and_push_image:
+      jobs:
+        # Tag ECR image with "latest" and "staging"
+        - tag_ecr_image:
+            repo: my-ecr/repository
+            source-tag: $CIRCLE_SHA1
+            target-tag: latest,staging

@@ -99,6 +99,9 @@ workflows:
           # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
           # you are tagging with the git commit hash. Specially useful for faster code reverts.
           skip-when-tags-exist: false
+
+          # Set the resource_class option on the executor, defaults to "medium"
+          resource-class: medium
 ```
 
 ## Contributing

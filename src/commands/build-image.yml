@@ -130,7 +130,7 @@ steps:
           docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
         done
         if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
-          docker buildx build --platform <<parameters.platform>> \
+          docker buildx build --platform <<parameters.platform>> --push \
             <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
             -f <<parameters.path>>/<<parameters.dockerfile>> \
             $docker_tag_args \

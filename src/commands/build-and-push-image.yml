@@ -211,7 +211,3 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
-  - push-image:
-      account-url: <<parameters.account-url>>
-      repo: <<parameters.repo>>
-      tag: <<parameters.tag>>

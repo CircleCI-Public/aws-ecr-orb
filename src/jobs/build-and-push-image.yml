@@ -152,6 +152,11 @@ parameters:
     default: false
     description: Whether to skip image building if all specified tags already exist in ECR
 
+  platform:
+    type: string
+    default: "linux/amd64"
+    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
+
 steps:
   - build-and-push-image:
       profile-name: <<parameters.profile-name>>
@@ -176,3 +181,4 @@ steps:
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+      platform: <<parameters.platform>>

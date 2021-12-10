@@ -131,11 +131,14 @@ steps:
         done
         if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
           docker context create builder
+          # install binfmt_misc to allow creating native binaries inside the container
+          docker --context builder run --privileged --rm tonistiigi/binfmt --install all
           docker --context builder buildx create --use
           docker --context builder buildx build \
             -f <<parameters.path>>/<<parameters.dockerfile>> \
             $docker_tag_args \
             --platform <<parameters.platform>> --push \
+            --progress plain \
             <<parameters.path>> \
             <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
         fi

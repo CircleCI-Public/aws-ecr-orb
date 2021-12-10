@@ -1,0 +1,39 @@
+description: Install buildx.
+parameters:
+  version:
+    default: v0.7.1
+    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+    type: string
+steps:
+  - run:
+      command: |
+        if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
+
+        echo "Installing buildx"
+        cd /tmp || exit
+        # Platform check
+        if uname -a | grep "Darwin"; then
+          if uname -m | grep "amd64"; then
+            export SYS_ENV_PLATFORM=darwin-amd64
+          elif uname -m | grep "arm64"; then
+            export SYS_ENV_PLATFORM=darwin-arm64
+          fi
+        elif uname -a | grep "Linux"; then
+          if uname -m | grep "x86_64"; then
+            export SYS_ENV_PLATFORM=linux-amd64
+          elif uname -m | grep "aarch64"; then
+            export SYS_ENV_PLATFORM=linux-arm64
+          fi
+        else
+            echo "This platform appears to be unsupported."
+            uname -a
+            exit 1
+        fi
+        echo "Platform $SYS_ENV_PLATFORM"
+        curl -sSL "https://github.com/docker/buildx/releases/download/${PARAM_BUILDX_VERSION}/buildx-${PARAM_BUILDX_VERSION}.${SYS_ENV_PLATFORM}" -o "buildx"
+        mkdir ~/.docker/cli-plugins/
+        cp buildx ~/.docker/cli-plugins/docker-buildx
+        chmod a+x ~/.docker/cli-plugins/docker-buildx
+      environment:
+        PARAM_BUILDX_VERSION: <<parameters.version>>
+      name: Install buildx - <<parameters.version>>

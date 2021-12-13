@@ -140,6 +140,6 @@ steps:
             --platform <<parameters.platform>> --push \
             --progress plain \
             <<parameters.path>> \
-            <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
+            <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>>
         fi
       no_output_timeout: <<parameters.no-output-timeout>>

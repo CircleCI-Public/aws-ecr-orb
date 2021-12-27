@@ -102,6 +102,9 @@ workflows:
 
           # Set the resource_class option on the executor, defaults to "medium"
           resource-class: medium
+
+          # Path to save the digest of pushed image
+          digest-path: /tmp/my_image_digest.txt
 ```
 
 ## Contributing

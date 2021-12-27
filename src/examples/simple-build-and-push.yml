@@ -45,6 +45,9 @@ usage:
             # path to Dockerfile, defaults to . (working directory)
             path: pathToMyDockerfile
 
+            # path to save the digest of the pushed image
+            digest-path: /tmp/my_image_digest.txt
+
             # The amount of time to allow the docker build command to run before timing out, defaults to "10m"
             no-output-timeout: 20m
 

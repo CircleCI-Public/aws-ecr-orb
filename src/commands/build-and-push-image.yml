@@ -52,6 +52,11 @@ parameters:
     default: "default"
     description: AWS profile name to be configured.
 
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
+
   aws-access-key-id:
     type: env_var_name
     default: AWS_ACCESS_KEY_ID
@@ -171,6 +176,7 @@ steps:
 
   - ecr-login:
       profile-name: <<parameters.profile-name>>
+      role-arn: <<parameters.role-arn>>
       region: <<parameters.region>>
       account-url: <<parameters.account-url>>
       aws-access-key-id: <<parameters.aws-access-key-id>>

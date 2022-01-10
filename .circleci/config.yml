@@ -15,6 +15,12 @@ parameters:
     type: string
     default: "dev:alpha"
 
+executors:
+  ubuntu:
+    machine:
+      image: ubuntu-2004:202107-02
+      docker_layer_caching: true
+
 jobs:
   pre-integration-checkout-workspace-job:
     docker:
@@ -43,7 +49,7 @@ workflows:
       - orb-tools/trigger-integration-tests-workflow:
           context: orb-publisher
           requires: [orb-tools/publish-dev]
-#
+
   integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
@@ -77,9 +83,7 @@ workflows:
           extra-build-args: --compress
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
-          executor:
-            name: aws-ecr/default
-            use-docker-layer-caching: true
+          executor: ubuntu
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -93,9 +97,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
-          executor:
-            name: aws-ecr/default
-            use-docker-layer-caching: true
+          executor: ubuntu
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -110,9 +112,7 @@ workflows:
           skip-when-tags-exist: true
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist --force
-          executor:
-            name: aws-ecr/default
-            use-docker-layer-caching: true
+          executor: ubuntu
           requires: [integration-tests-skip-when-tags-exist-populate-image]
 
       - orb-tools/dev-promote-prod-from-commit-subject:

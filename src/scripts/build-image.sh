@@ -1,5 +1,5 @@
 #!/bin/bash
-ACCOUNT_URL=$(eval echo "${PARAM_ACCOUNT_URL}")
+ACCOUNT_URL=$(eval echo "\$$PARAM_ACCOUNT_URL")
 TAG=$(eval echo "$PARAM_TAG")
 SKIP_WHEN_TAGS_EXIST=$(eval echo "$PARAM_SKIP_WHEN_TAGS_EXIST")
 REPO=$(eval echo "$PARAM_REPO")
@@ -7,12 +7,12 @@ EXTRA_BUILD_ARGS=$(eval echo "$PARAM_EXTRA_BUILD_ARGS")
 PATH=$(eval echo "$PARAM_PATH")
 DOCKERFILE=$(eval echo "$PARAM_PATH")
 PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
-ACCOUNT_ID=$(eval echo "${PARAM_ACCOUNT_ID}")
+ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
 
 #registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
-echo "${PARAM_ACCOUNT_URL}" >> test.txt
-echo "${ACCOUNT_URL}" >> test.txt
-echo "$ACCOUNT_ID">> test.txt
+echo "\$$PARAM_ACCOUNT_URL" >> test.txt
+echo "$ACCOUNT_URL" >> test.txt
+echo "$ACCOUNT_ID" >> test.txt
 number_of_tags_in_ecr=0
 
 docker_tag_args=""

@@ -9,9 +9,9 @@ DOCKERFILE=$(eval echo "$PARAM_PATH")
 PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
 
-registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
+# registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
 number_of_tags_in_ecr=0
-echo "Registry ID: $registry_id" >> test.txt
+# echo "Registry ID: $registry_id" >> test.txt
 docker_tag_args=""
 IFS="," read -ra DOCKER_TAGS <<< "$TAG"
 for tag in "${DOCKER_TAGS[@]}"; do

@@ -12,7 +12,7 @@ parameters:
     type: env_var_name
     default: AWS_ECR_ACCOUNT_ID
     description: >
-      The 12 digit AWS id associated with the ECR account. 
+      The 12 digit AWS id associated with the ECR account.
 
   repo:
     type: string

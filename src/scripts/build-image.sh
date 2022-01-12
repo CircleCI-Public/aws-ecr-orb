@@ -19,23 +19,43 @@ docker_tag_args=""
 IFS="," read -ra DOCKER_TAGS <<< "$TAG"
 for tag in "${DOCKER_TAGS[@]}"; do
     if [ "$SKIP_WHEN_TAGS_EXIST" = "true" ]; then
-    docker_tag_exists_in_ecr=$(aws ecr describe-images --profile "${PROFILE_NAME}" --registry-id $ACCOUNT_ID --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '$tag')")
+    docker_tag_exists_in_ecr=$(aws ecr describe-images --profile "${PROFILE_NAME}" --registry-id "$ACCOUNT_ID" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '$tag')")
     if [ "$docker_tag_exists_in_ecr" = "true" ]; then
         docker pull "${ACCOUNT_URL}"/"${REPO}":${tag}
         let "number_of_tags_in_ecr+=1"
     fi
     fi
-    docker_tag_args="$docker_tag_args -t "${ACCOUNT_URL}/${REPO}":$tag"
+    docker_tag_args="${docker_tag_args} -t "${ACCOUNT_URL}/${REPO}":$tag"
 done
 if [ "$SKIP_WHEN_TAGS_EXIST" = "false" ] || [ "$SKIP_WHEN_TAGS_EXIST" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
     # <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> 
+    docker build \
 
-    if [ -n "$EXTRA_BUILD_ARGS" ]; then
-        set -- "$@" "$EXTRA_BUILD_ARGS"
-    fi
-
-    set "$@" -f "${PATH}"/"${DOCKERFILE}" \
-    $docker_tag_args \
-    "${PATH}"
-    docker build "$@"
+        if [ -n "$EXTRA_BUILD_ARGS" ]; then
+            set "$EXTRA_BUILD_ARGS"
+        fi
+        -f "${PATH}"/"${DOCKERFILE}" \
+        "${docker_tag_args}" \
+        "${PATH}"
 fi
+# registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
+# number_of_tags_in_ecr=0
+# docker_tag_args=""
+# IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
+# for tag in "${DOCKER_TAGS[@]}"; do
+#     if [ "<<parameters.skip-when-tags-exist>>" = "true" ]; then
+#     docker_tag_exists_in_ecr=$(aws ecr describe-images --profile <<parameters.profile-name>> --registry-id $registry_id --repository-name <<parameters.repo>> --query "contains(imageDetails[].imageTags[], '$tag')")
+#     if [ "$docker_tag_exists_in_ecr" = "true" ]; then
+#         docker pull $<<parameters.account-url>>/<<parameters.repo>>:${tag}
+#         let "number_of_tags_in_ecr+=1"
+#     fi
+#     fi
+#     docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
+# done
+# if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
+#     docker build \
+#     <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
+#     -f <<parameters.path>>/<<parameters.dockerfile>> \
+#     $docker_tag_args \
+#     <<parameters.path>>
+# fi

@@ -70,6 +70,8 @@ workflows:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           executor: ubuntu
           requires: [pre-integration]
+      - store_artifacts:
+          path: test.txt
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile

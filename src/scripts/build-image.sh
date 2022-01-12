@@ -10,8 +10,9 @@ PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 ACCOUNT_ID=$(eval echo "$PARAM_ACCOUNT_ID")
 
 #registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
-echo "ACCOUNT URL ${PARAM_ACCOUNT_URL}" >> test.txt
-echo "ACCOUNT URL ${ACCOUNT_URL}" >> test.txt
+echo "${PARAM_ACCOUNT_URL}" >> test.txt
+echo "${ACCOUNT_URL}" >> test.txt
+echo "$ACCOUNT_ID"
 number_of_tags_in_ecr=0
 
 docker_tag_args=""
@@ -35,6 +36,6 @@ if [ "$SKIP_WHEN_TAGS_EXIST" = "false" ] || [ "$SKIP_WHEN_TAGS_EXIST" = "true" -
 
     set "$@" -f "${PATH}"/"${DOCKERFILE}" \
     $docker_tag_args \
-    "$PATH"
+    "${PATH}"
     docker build "$@"
 fi

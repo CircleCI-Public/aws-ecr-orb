@@ -150,6 +150,5 @@ steps:
             -f <<parameters.path>>/<<parameters.dockerfile>> \
             $docker_tag_args \
             <<parameters.path>>
-            
         fi
       no_output_timeout: <<parameters.no-output-timeout>>

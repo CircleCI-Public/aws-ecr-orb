@@ -128,7 +128,6 @@ steps:
       command: |
         registry_id=$(echo $<< parameters.account-url >> | sed "s;\..*;;g")
         number_of_tags_in_ecr=0
-        
         docker_tag_args=""
         IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
         for tag in "${DOCKER_TAGS[@]}"; do

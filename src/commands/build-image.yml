@@ -8,6 +8,12 @@ parameters:
       The Amazon ECR account URL that maps to an AWS account,
       e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
 
+  account-id:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_ID
+    description: >
+      The 12 digit AWS id associated with the ECR account. 
+
   repo:
     type: string
     description: Name of an Amazon ECR repository
@@ -117,6 +123,7 @@ steps:
         PARAM_PATH: <<parameters.path>>
         PARAM_DOCKERFILE: <<parameters.dockerfile>>
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
+        PARAM_ACCOUNT_ID:  <<parameters.account-id>>
       command: <<include(scripts/build-image.sh)>>
         # registry_id=$(echo $<< parameters.account-url >> | sed "s;\..*;;g")
         # number_of_tags_in_ecr=0

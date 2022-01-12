@@ -9,12 +9,13 @@ DOCKERFILE=$(eval echo "$PARAM_PATH")
 PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
 
-#registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
+registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
 number_of_tags_in_ecr=0
-
+echo "Registry ID: $registry_id" >> test.txt
 docker_tag_args=""
 IFS="," read -ra DOCKER_TAGS <<< "$TAG"
 for tag in "${DOCKER_TAGS[@]}"; do
+    echo "${DOCKER_TAGS[@]}" >>test.txt
     echo "$TAG" >> test.txt
     if [ "$SKIP_WHEN_TAGS_EXIST" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws ecr describe-images --profile "$PROFILE_NAME" --registry-id "$ACCOUNT_ID" --repository-name "$REPO" --query "contains(imageDetails[].imageTags[], '$tag')")
@@ -24,11 +25,13 @@ for tag in "${DOCKER_TAGS[@]}"; do
     fi
     fi
     docker_tag_args="$docker_tag_args -t "${ACCOUNT_URL}/$REPO":$tag"
+    echo "Docker tag args: $docker_tag_args" >> test.txt
 done
 if [ "$SKIP_WHEN_TAGS_EXIST" = "false" ] || [ "$SKIP_WHEN_TAGS_EXIST" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
     docker build \
 
         if [ -n "$EXTRA_BUILD_ARGS" ]; then
+            echo "It gets to this if block" >> test.txt
             set "$EXTRA_BUILD_ARGS"
         fi
         -f "$PATH"/"$DOCKERFILE" \

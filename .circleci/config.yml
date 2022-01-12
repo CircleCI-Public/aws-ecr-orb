@@ -68,6 +68,7 @@ workflows:
           extra-build-args: --compress
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
+          executor: ubuntu
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:

@@ -8,7 +8,7 @@ PATH=$(eval echo "$PARAM_PATH")
 DOCKERFILE=$(eval echo "$PARAM_PATH")
 PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 
-registry_id=$(echo "$PARAM_ACCOUNT_URL" | sed "s;\..*;;g")
+registry_id=$(echo "${ACCOUNT_URL}" | sed "s;\..*;;g")
 number_of_tags_in_ecr=0
 
 docker_tag_args=""

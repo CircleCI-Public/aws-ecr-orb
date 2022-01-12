@@ -5,13 +5,10 @@ description: >
   these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
   or in Contexts (https://circleci.com/docs/2.0/contexts).
 
-# executor: <<parameters.executor>>
-
-# parameters:
-#   executor:
-#     type: executor
-#     default: default
-#     description: executor to use for this job
+executor:
+  machine:
+      image: ubuntu-2004:202107-02
+      docker_layer_caching: true
 
   profile-name:
     type: string

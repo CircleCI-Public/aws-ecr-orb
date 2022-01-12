@@ -141,5 +141,3 @@ steps:
         #     <<parameters.path>>
         # fi
       no_output_timeout: <<parameters.no-output-timeout>>
-
-

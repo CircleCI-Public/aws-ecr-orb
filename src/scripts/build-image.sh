@@ -10,14 +10,12 @@ PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
 
 #registry_id=$(echo "$ACCOUNT_URL" | sed "s;\..*;;g")
-echo "\$$PARAM_ACCOUNT_URL" >> test.txt
-echo "$ACCOUNT_URL" >> test.txt
-echo "$ACCOUNT_ID" >> test.txt
 number_of_tags_in_ecr=0
 
 docker_tag_args=""
 IFS="," read -ra DOCKER_TAGS <<< "$TAG"
 for tag in "${DOCKER_TAGS[@]}"; do
+    echo "$TAG" >> test.txt
     if [ "$SKIP_WHEN_TAGS_EXIST" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws ecr describe-images --profile "$PROFILE_NAME" --registry-id "$ACCOUNT_ID" --repository-name "$REPO" --query "contains(imageDetails[].imageTags[], '$tag')")
     if [ "$docker_tag_exists_in_ecr" = "true" ]; then

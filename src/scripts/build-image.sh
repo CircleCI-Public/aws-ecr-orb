@@ -16,11 +16,11 @@ for tag in "${DOCKER_TAGS[@]}"; do
     if [ "$SKIP_WHEN_TAGS_EXIST" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws ecr describe-images --profile "$PROFILE_NAME" --registry-id "$ACCOUNT_ID" --repository-name "$REPO" --query "contains(imageDetails[].imageTags[], '$tag')")
     if [ "$docker_tag_exists_in_ecr" = "true" ]; then
-        docker pull "${ACCOUNT_URL}"/"$REPO":$tag
+        docker pull "${ACCOUNT_URL}"/"$REPO":"$tag"
         let "number_of_tags_in_ecr+=1"
     fi
     fi
-    docker_tag_args="$docker_tag_args -t "${ACCOUNT_URL}/$REPO":$tag"
+    docker_tag_args="$docker_tag_args -t "${ACCOUNT_URL}/$REPO":${tag}"
 done
 if [ "$SKIP_WHEN_TAGS_EXIST" = "false" ] || [ "$SKIP_WHEN_TAGS_EXIST" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
         if [ -n "$EXTRA_BUILD_ARGS" ]; then

@@ -21,8 +21,13 @@ parameters:
 steps:
   - run:
       name: Push image to Amazon ECR
-      command: |
-        IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
-        for tag in "${DOCKER_TAGS[@]}"; do
-          docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag}
-        done
+      environment:
+        PARAM_ACCOUNT_URL: <<parameters.account-url>>
+        PARAM_REPO: <<parameters.repo>>
+        PARAM_TAG: <<parameters.tag>>
+      command: <<include(push-image.sh)>>
+      # command: |
+      #   IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
+      #   for tag in "${DOCKER_TAGS[@]}"; do
+      #     docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag}
+      #   done

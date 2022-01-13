@@ -16,13 +16,13 @@ parameters:
     default: "dev:alpha"
 
 executors:
-  ubuntu:
-    docker:
-      - image: cimg/base:stable
   # ubuntu:
-  #   machine:
-  #     image: ubuntu-2004:202107-02
-  #     docker_layer_caching: true
+  #   docker:
+  #     - image: cimg/base:stable
+  ubuntu:
+    machine:
+      image: ubuntu-2004:202107-02
+      docker_layer_caching: true
 
 jobs:
   pre-integration-checkout-workspace-job:

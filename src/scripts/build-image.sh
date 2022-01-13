@@ -21,7 +21,6 @@ for tag in "${DOCKER_TAGS[@]}"; do
     fi
     fi
     docker_tag_args="$docker_tag_args -t "${ACCOUNT_URL}/$REPO":$tag"
-    echo "Docker tag args: $docker_tag_args" >> test.txt
 done
 if [ "$SKIP_WHEN_TAGS_EXIST" = "false" ] || [ "$SKIP_WHEN_TAGS_EXIST" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
         if [ -n "$EXTRA_BUILD_ARGS" ]; then

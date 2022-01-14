@@ -19,14 +19,14 @@ for tag in "${DOCKER_TAGS[@]}"; do
       let "number_of_tags_in_ecr+=1"
     fi
   fi
-  docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/$REPO:${tag}"
+  docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"
 done
 if [ "${SKIP_WHEN_TAGS_EXIST}" = "false" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "true" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then    
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
         set -- "$@" "${EXTRA_BUILD_ARGS}"
     echo "$@"
     fi
-    set -- "$@" -f "${FILE_PATH}/${DOCKERFILE} ${docker_tag_args} ${FILE_PATH}"
+    set -- "$@" -f "${FILE_PATH}/${DOCKERFILE} $docker_tag_args ${FILE_PATH}"
     echo "$@"    
     docker build "$@"
 fi

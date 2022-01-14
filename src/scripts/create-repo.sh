@@ -1,0 +1,8 @@
+#!/bin/bash
+PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
+REGION=$(eval echo "${PARAM_REGION}")
+REPO=$(eval echo "${PARAM_REPO}")
+REPO_SCAN_ON_PUSH=$(eval echo "${PARAM_REPO_SCAN_ON_PUSH}")
+
+aws ecr describe-repositories --profile "${PROFILE_NAME}" --region "${REGION}" --repository-names "${REPO}" > /dev/null 2>&1 || \
+aws ecr create-repository --profile "${PROFILE_NAME}" --region "${REGION}" --repository-name "${REPO}" --image-scanning-configuration scanOnPush="${REPO_SCAN_ON_PUSH}"

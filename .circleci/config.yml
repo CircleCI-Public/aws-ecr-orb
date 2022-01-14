@@ -16,9 +16,6 @@ parameters:
     default: "dev:alpha"
 
 executors:
-  # ubuntu:
-  #   docker:
-  #     - image: cimg/base:stable
   ubuntu:
     machine:
       image: ubuntu-2004:202107-02

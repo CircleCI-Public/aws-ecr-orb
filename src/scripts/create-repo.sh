@@ -1,6 +1,6 @@
 #!/bin/bash
 PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
-REGION=$(eval echo "${PARAM_REGION}")
+REGION=$(eval echo "\$${PARAM_REGION}")
 REPO=$(eval echo "${PARAM_REPO}")
 REPO_SCAN_ON_PUSH=$(eval echo "${PARAM_REPO_SCAN_ON_PUSH}")
 

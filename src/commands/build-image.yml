@@ -144,7 +144,6 @@ steps:
           echo "Docker tag args: $docker_tag_args" >> test.txt
         done
         if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
-          
           echo "docker build \
             <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
             -f <<parameters.path>>/<<parameters.dockerfile>> \

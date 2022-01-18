@@ -111,8 +111,8 @@ workflows:
           path: workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
-          post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist --force
+          # post-steps:
+          #   - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist --force
           executor: ubuntu
           requires: [integration-tests-skip-when-tags-exist-populate-image]
 

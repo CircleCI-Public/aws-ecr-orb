@@ -9,6 +9,16 @@ DOCKERFILE=$(eval echo "$PARAM_DOCKERFILE")
 PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
 
+echo "$ACCOUNT_URL" >> test1.txt
+echo "$TAG" >> test1.txt
+echo "$SKIP_WHEN_TAGS_EXIST"  >> test1.txt
+echo "$REPO" >> test1.txt
+echo "$EXTRA_BUILD_ARGS" >> test1.txt
+echo "$FILE_PATH" >> test1.txt
+echo "$DOCKERFILE" >> test1.txt
+echo "$PROFILE_NAME" >> test1.txt
+echo "$ACCOUNT_ID" >> test1.txt
+
 number_of_tags_in_ecr=0
 docker_tag_args=""
 IFS="," read -ra DOCKER_TAGS <<< "${TAG}"

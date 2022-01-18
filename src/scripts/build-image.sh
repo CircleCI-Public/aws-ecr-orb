@@ -5,7 +5,7 @@ SKIP_WHEN_TAGS_EXIST=$(eval echo "$PARAM_SKIP_WHEN_TAGS_EXIST")
 REPO=$(eval echo "$PARAM_REPO")
 EXTRA_BUILD_ARGS=$(eval echo "$PARAM_EXTRA_BUILD_ARGS")
 FILE_PATH=$(eval echo "$PARAM_PATH")
-DOCKERFILE=$(eval echo "$PARAM_PATH")
+DOCKERFILE=$(eval echo "$PARAM_DOCKERFILE")
 PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
 ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
 
@@ -14,7 +14,6 @@ docker_tag_args=""
 IFS="," read -ra DOCKER_TAGS <<< "${TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
-      echo aws ecr describe-images --profile "${PROFILE_NAME}" --registry-id "${ACCOUNT_ID}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')" >> test.txt 
       docker_tag_exists_in_ecr=$(aws ecr describe-images --profile "${PROFILE_NAME}" --registry-id "${ACCOUNT_ID}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       docker pull "${ACCOUNT_URL}/${REPO}:${tag}"
@@ -29,10 +28,10 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "false" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "tru
        set -- "$@" "${EXTRA_BUILD_ARGS}" \
 
      fi
-    set -- "$@" -f ${FILE_PATH}/${DOCKERFILE} $docker_tag_args ${FILE_PATH}
-    echo "$@" >> test.txt 
+    set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" "$docker_tag_args" "${FILE_PATH}"
+    # echo "$@" >> test.txt 
     docker build "$@" 
 
-    echo docker build "$@" >> test.txt
-    # set -x docker build "$@"
+    # echo docker build "$@" >> test.txt
+    # # set -x docker build "$@"
 fi

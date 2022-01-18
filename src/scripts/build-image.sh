@@ -26,6 +26,7 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "false" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "tru
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
       set -- "$@" "${EXTRA_BUILD_ARGS}"
     fi
-    set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" "$docker_tag_args" "${FILE_PATH}"
+    set -- "$@" -f ${FILE_PATH}/${DOCKERFILE} $docker_tag_args ${FILE_PATH}
+    echo docker build "$@" >> test.txt
     set -x docker build "$@"
 fi

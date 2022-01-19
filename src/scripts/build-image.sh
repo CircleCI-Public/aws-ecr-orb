@@ -35,13 +35,12 @@ done
 if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
     #set -x docker build \
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
-       set -- "$@" "${EXTRA_BUILD_ARGS}" \
-
+       set -- "$@" "${EXTRA_BUILD_ARGS}"
      fi
     set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" "$docker_tag_args" "${FILE_PATH}"
-    # echo "$@" >> test.txt 
+    echo "$@" >> test1.txt 
+    echo docker build "$@" >> test1.txt
     docker build "$@" 
 
-    # echo docker build "$@" >> test.txt
     # # set -x docker build "$@"
 fi

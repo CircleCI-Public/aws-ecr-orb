@@ -64,7 +64,7 @@ workflows:
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
-          path: workspace
+          path: ~/project/workspace
           extra-build-args: --compress
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
@@ -80,7 +80,7 @@ workflows:
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
-          path: workspace
+          path: ~/project/workspace
           extra-build-args: --compress
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
@@ -95,7 +95,7 @@ workflows:
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
-          path: workspace
+          path: ~/project/workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
           executor: ubuntu
@@ -108,7 +108,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
-          path: workspace
+          path: ~/project/workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
           # post-steps:

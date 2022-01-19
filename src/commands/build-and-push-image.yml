@@ -205,9 +205,6 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
-  - store_artifacts:
-      path: test1.txt
-
   - push-image:
       account-url: <<parameters.account-url>>
       repo: <<parameters.repo>>

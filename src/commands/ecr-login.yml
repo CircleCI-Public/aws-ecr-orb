@@ -53,5 +53,3 @@ steps:
         PARAM_REGION: <<parameters.region>>
         PARAM_ACCOUNT_URL: <<parameters.account-url>>
       command: <<include(scripts/ecr-login.sh)>>
-        # # get-login-password returns a password that we pipe to the docker login command
-        # aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>

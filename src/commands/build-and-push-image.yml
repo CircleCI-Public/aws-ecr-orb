@@ -75,19 +75,12 @@ parameters:
       Name of env var storing your AWS region information,
       defaults to AWS_DEFAULT_REGION
 
-  account-url:
-    type: env_var_name
-    default: AWS_ECR_ACCOUNT_URL
-    description: >
-      Env var storing Amazon ECR account URL that maps to an AWS account,
-      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
-      defaults to AWS_ECR_ACCOUNT_URL
-
   account-id:
     type: env_var_name
     default: AWS_ECR_ACCOUNT_ID
     description: >
       The 12 digit AWS id associated with the ECR account.
+      defaults to AWS_ECR_ACCOUNT_ID
 
   repo:
     type: string
@@ -198,7 +191,6 @@ steps:
             docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
 
   - build-image:
-      account-url: <<parameters.account-url>>
       account-id: <<parameters.account-id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
@@ -213,7 +205,6 @@ steps:
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - push-image:
-      account-url: <<parameters.account-url>>
       account-id: <<parameters.account-id>>
       region: <<parameters.region>>
       repo: <<parameters.repo>>

@@ -13,6 +13,13 @@ parameters:
     type: executor
     default: ubuntu
 
+  account-id:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_ID
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      defaults to AWS_ECR_ACCOUNT_ID
+
   profile-name:
     type: string
     default: "default"
@@ -40,14 +47,6 @@ parameters:
     description: >
       Name of env var storing your AWS region information,
       defaults to AWS_DEFAULT_REGION
-
-  account-url:
-    type: env_var_name
-    default: AWS_ECR_ACCOUNT_URL
-    description: >
-      Env var storing Amazon ECR account URL that maps to an AWS account,
-      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
-      defaults to AWS_ECR_ACCOUNT_URL
 
   repo:
     type: string
@@ -164,7 +163,7 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       region: <<parameters.region>>
-      account-url: <<parameters.account-url>>
+      account-id: <<parameters.account.id>>
       repo: <<parameters.repo>>
       create-repo: <<parameters.create-repo>>
       tag: <<parameters.tag>>

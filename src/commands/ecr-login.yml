@@ -56,7 +56,6 @@ steps:
       name: Log into Amazon ECR
       environment:
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
-        PARAM_REGION: <<parameters.region>>
-        # PARAM_ACCOUNT_URL: <<parameters.account-url>>
         PARAM_ACCOUNT_ID: <<parameters.account-id>>
+        PARAM_REGION: <<parameters.region>>
       command: <<include(scripts/ecr-login.sh)>>

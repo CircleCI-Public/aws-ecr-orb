@@ -214,5 +214,8 @@ steps:
 
   - push-image:
       account-url: <<parameters.account-url>>
+      account-id: <<parameters.account-id>>
+      region: <<parameters.region>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
+

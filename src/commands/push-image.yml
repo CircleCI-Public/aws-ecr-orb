@@ -9,6 +9,20 @@ parameters:
       e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
       defaults to AWS_ECR_ACCOUNT_URL
 
+  account-id:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_ID
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      defaults to AWS_ECR_ACCOUNT_ID
+
+  region:
+    type: env_var_name
+    default: AWS_DEFAULT_REGION
+    description: >
+      Name of env var storing your AWS region information,
+      defaults to AWS_DEFAULT_REGION
+
   repo:
     type: string
     description: Name of an Amazon ECR repository
@@ -22,7 +36,8 @@ steps:
   - run:
       name: Push image to Amazon ECR
       environment:
-        PARAM_ACCOUNT_URL: <<parameters.account-url>>
+        PARAM_REGION: <<parameters.region>>
+        PARAM_ACCOUNT_ID: <<parameters.account-id>>
         PARAM_REPO: <<parameters.repo>>
         PARAM_TAG: <<parameters.tag>>
       command: <<include(scripts/push-image.sh)>>

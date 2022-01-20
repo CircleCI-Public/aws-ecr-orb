@@ -1,13 +1,13 @@
 #!/bin/bash
 TAG=$(eval echo "$PARAM_TAG")
 SKIP_WHEN_TAGS_EXIST=$(eval echo "$PARAM_SKIP_WHEN_TAGS_EXIST")
-REPO=$(eval echo "$PARAM_REPO")
-EXTRA_BUILD_ARGS=$(eval echo "$PARAM_EXTRA_BUILD_ARGS")
-FILE_PATH=$(eval echo "$PARAM_PATH")
-DOCKERFILE=$(eval echo "$PARAM_DOCKERFILE")
-PROFILE_NAME=$(eval echo "$PARAM_PROFILE_NAME")
-ACCOUNT_ID=$(eval echo "\$$PARAM_ACCOUNT_ID")
-REGION=$(eval echo "\$$PARAM_REGION")
+REPO=$(eval echo "${PARAM_REPO}")
+EXTRA_BUILD_ARGS=$(eval echo "${PARAM_EXTRA_BUILD_ARGS}")
+FILE_PATH=$(eval echo "${PARAM_PATH}")
+DOCKERFILE=$(eval echo "${PARAM_DOCKERFILE}")
+PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
+ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
+REGION=$(eval echo "\$${PARAM_REGION}")
 ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""

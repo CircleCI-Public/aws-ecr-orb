@@ -11,10 +11,10 @@ parameters:
 
   region:
     type: env_var_name
-    default: AWS_REGION
+    default: AWS_DEFAULT_REGION
     description: >
       Name of env var storing your AWS region information,
-      defaults to AWS_REGION
+      defaults to AWS_DEFAULT_REGION
 
   profile-name:
     type: string

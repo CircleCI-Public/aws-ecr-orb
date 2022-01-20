@@ -176,5 +176,3 @@ steps:
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
-  - store_artifacts:
-      path: test.txt

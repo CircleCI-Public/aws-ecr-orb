@@ -1,13 +1,12 @@
 description: "Authenticate into the Amazon ECR service"
 
 parameters:
-  account-url:
+
+  account-id:
     type: env_var_name
-    default: AWS_ECR_ACCOUNT_URL
+    default: AWS_ECR_ACCOUNT_ID
     description: >
-      Env var storing Amazon ECR account URL that maps to an AWS account,
-      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
-      defaults to AWS_ECR_ACCOUNT_URL
+      The 12 digit AWS id associated with the ECR account.
 
   region:
     type: env_var_name
@@ -51,5 +50,6 @@ steps:
       environment:
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
         PARAM_REGION: <<parameters.region>>
-        PARAM_ACCOUNT_URL: <<parameters.account-url>>
+        # PARAM_ACCOUNT_URL: <<parameters.account-url>>
+        PARAM_ACCOUNT_ID: <<parameters.account-id>>
       command: <<include(scripts/ecr-login.sh)>>

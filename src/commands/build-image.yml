@@ -113,9 +113,9 @@ steps:
             aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - run:
-      name: Build docker image
+      name: Build Docker Image
       environment:
-        PARAM_ACCOUNT_URL: << parameters.account-url >>
+        # PARAM_ACCOUNT_URL: << parameters.account-url >>
         PARAM_TAG: << parameters.tag >>
         PARAM_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
         PARAM_REPO: << parameters.repo >>
@@ -124,5 +124,6 @@ steps:
         PARAM_DOCKERFILE: <<parameters.dockerfile>>
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
         PARAM_ACCOUNT_ID: <<parameters.account-id>>
+        PARAM_REGION: <<parameters.region>>
       command: <<include(scripts/build-image.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

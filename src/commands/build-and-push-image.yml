@@ -199,6 +199,7 @@ steps:
 
   - build-image:
       account-url: <<parameters.account-url>>
+      account-id: <<parameters.account-id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
       dockerfile: <<parameters.dockerfile>>

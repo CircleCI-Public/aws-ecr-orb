@@ -11,6 +11,7 @@ parameters:
 
   target-tag:
     type: string
+    default: "latest"
     description: A comma-separated string containing docker image tags (default = latest)
 
 steps:
@@ -18,8 +19,7 @@ steps:
       name: Add <<parameters.target-tag>> tag to <<parameters.repo>>:<<parameters.source-tag>>
       command: |
         # pull the image manifest from ECR
-        MANIFEST=$(aws ecr batch-get-image --repository-name <<parameters.repo>> --image-ids imageTag=<<parameters.source-tag>> --query 'images[].imageManifest' --output text)
+        MANIFEST=$(aws ecr batch-get-image --repository-name "<<parameters.repo>>" --image-ids "imageTag=<<parameters.source-tag>>" --query 'images[].imageManifest' --output text)
         IFS="," read -ra ECR_TAGS \<<< "<< parameters.target-tag >>"
         for tag in "${ECR_TAGS[@]}"; do
-          aws ecr put-image --repository-name <<parameters.repo>> --image-tag ${tag} --image-manifest "$MANIFEST"
-        done
+          aws ecr put-image --repository-name "<<parameters.repo>>" --image-tag "${tag}" --image-manifest "$MANIFEST"

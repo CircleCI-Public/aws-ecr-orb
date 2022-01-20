@@ -1,6 +1,13 @@
 description: "Authenticate into the Amazon ECR service"
 
 parameters:
+  account-url:
+    type: env_var_name
+    default: AWS_ECR_ACCOUNT_URL
+    description: >
+      Env var storing Amazon ECR account URL that maps to an AWS account,
+      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
+      defaults to AWS_ECR_ACCOUNT_URL
 
   account-id:
     type: env_var_name

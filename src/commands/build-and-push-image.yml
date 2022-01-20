@@ -178,7 +178,6 @@ steps:
   - ecr-login:
       profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
-      account-url: <<parameters.account-url>>
       account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

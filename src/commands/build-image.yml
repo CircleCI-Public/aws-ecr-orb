@@ -102,14 +102,12 @@ steps:
         - ecr-login:
             profile-name: <<parameters.profile-name>>
             region: <<parameters.region>>
-            account-url: <<parameters.account-url>>
             aws-access-key-id: <<parameters.aws-access-key-id>>
             aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
   - run:
       name: Build Docker Image
       environment:
-        # PARAM_ACCOUNT_URL: << parameters.account-url >>
         PARAM_TAG: << parameters.tag >>
         PARAM_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
         PARAM_REPO: << parameters.repo >>

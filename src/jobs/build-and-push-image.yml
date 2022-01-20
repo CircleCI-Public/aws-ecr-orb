@@ -163,7 +163,6 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       region: <<parameters.region>>
-      account-id: <<parameters.account.id>>
       repo: <<parameters.repo>>
       create-repo: <<parameters.create-repo>>
       tag: <<parameters.tag>>

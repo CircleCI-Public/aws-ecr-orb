@@ -63,7 +63,7 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
           tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
+          dockerfile: .hidden/Dockerfile
           path: workspace
           extra-build-args: --compress
           post-steps:

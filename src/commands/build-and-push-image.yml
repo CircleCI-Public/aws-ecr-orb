@@ -149,6 +149,11 @@ parameters:
     default: false
     description: Whether to skip image building if all specified tags already exist in ECR
 
+  aws-cli-version:
+    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+    default: latest
+    type: string
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -174,6 +179,7 @@ steps:
       account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-cli-version: <<parameters.aws-cli-version>>
 
   - when:
       condition: <<parameters.create-repo>>

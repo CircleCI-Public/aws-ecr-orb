@@ -69,7 +69,7 @@ parameters:
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
   region:
-    type: env_var_name
+    type: string
     default: AWS_DEFAULT_REGION
     description: >
       Name of env var storing your AWS region information,

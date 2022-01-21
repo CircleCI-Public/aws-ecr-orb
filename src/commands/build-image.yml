@@ -57,7 +57,7 @@ parameters:
     description: Whether to skip image building if all specified tags already exist in ECR
 
   region:
-    type: env_var_name
+    type: string
     default: AWS_DEFAULT_REGION
     description: >
       Name of env var storing your AWS region information,

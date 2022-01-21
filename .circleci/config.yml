@@ -32,6 +32,21 @@ jobs:
           root: .
           paths: [sample/Dockerfile]
 
+  # build-and-push-to-many-regions:
+  #   executor: ubuntu
+  #   steps:
+  #     - build-image:
+  #         attach-workspace: true
+  #         workspace-root: workspace
+  #         repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
+  #         create-repo: true
+  #         tag: integration,myECRRepoTag
+  #         dockerfile: sample/Dockerfile
+  #         path: workspace
+  #         # post-steps:
+  #         #   - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
+  #         # requires: [pre-integration]
+
 workflows:
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
@@ -63,7 +78,8 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
           tag: integration,myECRRepoTag
-          dockerfile: .hidden/Dockerfile
+          dockerfile: sample/Dockerfile
+          path: workspace
           extra-build-args: --compress
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force

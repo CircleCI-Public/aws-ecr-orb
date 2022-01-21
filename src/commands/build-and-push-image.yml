@@ -76,7 +76,7 @@ parameters:
       defaults to AWS_DEFAULT_REGION
 
   account-id:
-    type: env_var_name
+    type: string
     default: AWS_ECR_ACCOUNT_ID
     description: >
       The 12 digit AWS id associated with the ECR account.

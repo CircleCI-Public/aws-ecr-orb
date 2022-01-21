@@ -41,6 +41,11 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
+  aws-cli-version:
+    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+    default: latest
+    type: string
+
   region:
     type: env_var_name
     default: AWS_DEFAULT_REGION
@@ -162,6 +167,7 @@ steps:
       dockerhub-password: <<parameters.dockerhub-password>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-cli-version: <<parameters.aws-cli-version>>
       region: <<parameters.region>>
       repo: <<parameters.repo>>
       create-repo: <<parameters.create-repo>>

@@ -50,7 +50,7 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-region: <<parameters.region>>
-      aws-cli-version: <<parameters.aws-cli-version>>
+      version: <<parameters.aws-cli-version>>
 
   - run:
       name: Log into Amazon ECR

@@ -42,7 +42,7 @@ parameters:
   aws-cli-version:
     description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
     default: latest
-    type: string    
+    type: string
 
 steps:
   - aws-cli/setup:

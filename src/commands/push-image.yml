@@ -3,7 +3,7 @@ description: Push a container image to the Amazon ECR registry
 parameters:
   account-id:
     type: string
-    default: AWS_ECR_ACCOUNT_ID
+    default: AWS_ECR_ACCOUNT_ID_NEW
     description: >
       The 12 digit AWS id associated with the ECR account.
       defaults to AWS_ECR_ACCOUNT_ID

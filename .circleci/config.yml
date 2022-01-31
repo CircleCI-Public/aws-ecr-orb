@@ -78,7 +78,7 @@ workflows:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
 
-      - aws-ecr/build-and-push:
+      - aws-ecr/build-and-push-image:
           name: integration-tests-default-multi-region
           attach-workspace: true
           workspace-root: workspace

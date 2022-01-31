@@ -8,10 +8,9 @@ parameters:
     description: AWS profile name to be configured.
   region:
     type: string
-    default: AWS_DEFAULT_REGION
+    default: ""
     description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_DEFAULT_REGION
+      Name of var storing your AWS region information
   repo:
     type: string
     description: Name of an Amazon ECR repository

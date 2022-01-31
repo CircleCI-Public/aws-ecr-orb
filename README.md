@@ -42,6 +42,9 @@ workflows:
           # AWS profile name, defaults to "default"
           profile-name: myProfileName
 
+          # AWS role profile should assume
+          role-arn: arn:aws:iam::123456789:role/some-role
+
           # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID
           aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
 

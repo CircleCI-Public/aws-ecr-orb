@@ -39,7 +39,6 @@ jobs:
   #         at: .
   #     - aws-ecr/create-repo:
   #         profile-name: default
-          
   #     - aws-ecr/build-image:
   #         repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region
   #         tag: multi-region
@@ -89,7 +88,7 @@ workflows:
           path: workspace
           # matrix:
           #   parameters:
-          #     region: ["us-west-1", "us-west-2"]          
+          #     region: ["us-west-1", "us-west-2"]
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region --force
           executor: ubuntu

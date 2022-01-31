@@ -60,8 +60,8 @@ parameters:
     type: string
     default: ""
     description: >
-      Name of env var your AWS region information,
-      defaults to AWS_DEFAULT_REGION. Only required when skip-when-tags-exist
+      Name of env var your AWS region information.
+      Only required when skip-when-tags-exist
       or ecr-login are set to true.
 
   profile-name:

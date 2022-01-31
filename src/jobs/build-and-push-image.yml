@@ -41,6 +41,11 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
+  role-arn:
+    type: string
+    default: AWS_ROLE_ARN
+    description: Role ARN that the profile should take.
+
   aws-cli-version:
     description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
     default: latest
@@ -169,6 +174,7 @@ steps:
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-cli-version: <<parameters.aws-cli-version>>
       region: <<parameters.region>>
+      role-arn: <<parameters.role-arn>>
       repo: <<parameters.repo>>
       create-repo: <<parameters.create-repo>>
       tag: <<parameters.tag>>

@@ -23,6 +23,11 @@ parameters:
       AWS profile name to be configured.
       defaults to "default"
 
+  role-arn:
+    type: string
+    default: AWS_ROLE_ARN
+    description: Role ARN that the profile should take.
+
   aws-access-key-id:
     type: env_var_name
     default: AWS_ACCESS_KEY_ID
@@ -49,6 +54,7 @@ steps:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      role-arn: <<parameters.role-arn>>
       aws-region: <<parameters.region>>
       version: <<parameters.aws-cli-version>>
 

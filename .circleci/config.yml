@@ -97,6 +97,7 @@ workflows:
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
+          context: [CPE_ORBS_AWS]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
@@ -109,6 +110,7 @@ workflows:
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile
           attach-workspace: true
+          context: [CPE_ORBS_AWS]
           workspace-root: workspace
           profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
@@ -125,6 +127,7 @@ workflows:
       - aws-ecr/build-and-push-image:
           name: integration-tests-skip-when-tags-exist-populate-image
           attach-workspace: true
+          context: [CPE_ORBS_AWS]
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist
           create-repo: true
@@ -139,6 +142,7 @@ workflows:
       - aws-ecr/build-and-push-image:
           name: integration-tests-skip-when-tags-exist
           attach-workspace: true
+          context: [CPE_ORBS_AWS]
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist
           tag: integration,myECRRepoTag

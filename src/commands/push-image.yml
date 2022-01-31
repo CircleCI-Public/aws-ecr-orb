@@ -7,7 +7,6 @@ parameters:
     description: >
       The 12 digit AWS id associated with the ECR account.
       defaults to AWS_ECR_ACCOUNT_ID
-
   region:
     type: string
     default: AWS_DEFAULT_REGION
@@ -17,7 +16,6 @@ parameters:
   repo:
     type: string
     description: Name of an Amazon ECR repository
-
   tag:
     description: A comma-separated string containing docker image tags (default = latest)
     type: string

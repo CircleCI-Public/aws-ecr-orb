@@ -174,7 +174,7 @@ steps:
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-cli-version: <<parameters.aws-cli-version>>
       region: <<parameters.region>>
-      role-arn: <<parameters.role-arn>>
+      # role-arn: <<parameters.role-arn>>
       repo: <<parameters.repo>>
       create-repo: <<parameters.create-repo>>
       tag: <<parameters.tag>>

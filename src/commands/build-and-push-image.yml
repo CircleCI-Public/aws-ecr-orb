@@ -70,7 +70,7 @@ parameters:
 
   role-arn:
     type: string
-    default: AWS_ROLE_ARN
+    default: ""
     description: Role ARN that the profile should take.
 
   region:
@@ -181,7 +181,7 @@ steps:
   - ecr-login:
       profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
-      # role-arn: <<parameters.role-arn>>
+      role-arn: <<parameters.role-arn>>
       account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

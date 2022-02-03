@@ -159,6 +159,11 @@ parameters:
     default: latest
     type: string
 
+  platform:
+    type: string
+    default: "linux/amd64"
+    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -212,6 +217,7 @@ steps:
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
       profile-name: <<parameters.profile-name>>
+      # platform: <<parameters.platform>>
       region: <<parameters.region>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

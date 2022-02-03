@@ -64,10 +64,10 @@ parameters:
       defaults to AWS_REGION. Only required when skip-when-tags-exist
       or ecr-login are set to true.
 
-  role-arn:
-    type: string
-    default: ""
-    description: Role ARN that the profile should take.
+  # role-arn:
+  #   type: string
+  #   default: ""
+  #   description: Role ARN that the profile should take.
 
   profile-name:
     type: string

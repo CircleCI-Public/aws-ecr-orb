@@ -68,10 +68,10 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
-  role-arn:
-    type: string
-    default: ""
-    description: Role ARN that the profile should take.
+  # role-arn:
+  #   type: string
+  #   default: ""
+  #   description: Role ARN that the profile should take.
 
   region:
     type: env_var_name

@@ -23,10 +23,10 @@ parameters:
       AWS profile name to be configured.
       defaults to "default"
 
-  role-arn:
-    type: string
-    default: ""
-    description: Role ARN that the profile should take.
+  # role-arn:
+  #   type: string
+  #   default: ""
+  #   description: Role ARN that the profile should take.
 
   aws-access-key-id:
     type: env_var_name

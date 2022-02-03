@@ -43,7 +43,7 @@ parameters:
 
   role-arn:
     type: string
-    default: AWS_ROLE_ARN
+    default: ""
     description: Role ARN that the profile should take.
 
   aws-cli-version:

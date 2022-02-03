@@ -54,7 +54,7 @@ steps:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      role-arn: <<parameters.role-arn>>
+      # role-arn: <<parameters.role-arn>>
       aws-region: <<parameters.region>>
       version: <<parameters.aws-cli-version>>
 

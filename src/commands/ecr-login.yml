@@ -57,7 +57,6 @@ steps:
       # role-arn: <<parameters.role-arn>>
       aws-region: <<parameters.region>>
       version: <<parameters.aws-cli-version>>
-      context: [CPE_ORBS_AWS]
 
   - run:
       name: Log into Amazon ECR

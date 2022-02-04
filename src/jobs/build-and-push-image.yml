@@ -27,7 +27,7 @@ parameters:
 
   aws-access-key-id:
     type: env_var_name
-    default: AWS_ACCESS_KEY_ID_NEW
+    default: AWS_ACCESS_KEY_ID
     description: >
       AWS access key id for IAM role. Set this to the name of
       the environment variable you will set to hold this
@@ -35,7 +35,7 @@ parameters:
 
   aws-secret-access-key:
     type: env_var_name
-    default: AWS_SECRET_ACCESS_KEY_NEW
+    default: AWS_SECRET_ACCESS_KEY
     description: >
       AWS secret key for IAM role. Set this to the name of
       the environment variable you will set to hold this

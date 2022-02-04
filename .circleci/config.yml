@@ -182,6 +182,9 @@ workflows:
             branches:
               only: master
           requires:
-            - integration-tests-default-profile
-            - integration-tests-named-profile
-            - integration-tests-skip-when-tags-exist
+            - integration-tests-default-profile-ubuntu
+            - integration-tests-named-profile-ubuntu
+            - integration-tests-skip-when-tags-exist-ubuntu
+            - integration-tests-default-profile-arm64
+            - integration-tests-named-profile-arm64
+            - integration-tests-skip-when-tags-exist-arm64

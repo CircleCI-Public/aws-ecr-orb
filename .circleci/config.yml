@@ -113,7 +113,7 @@ workflows:
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
-          name: integration-tests-default-profile
+          name: integration-tests-default-profile-arm64
           attach-workspace: true
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile

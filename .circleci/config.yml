@@ -138,7 +138,7 @@ workflows:
           attach-workspace: true
           context: [CPE_ORBS_AWS]
           workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
@@ -167,7 +167,9 @@ workflows:
           matrix:
             parameters:
               executor: ["ubuntu", "arm64"]
-          requires: [integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>]
+          requires:
+            - integration-tests-skip-when-tags-exist-populate-image-ubuntu
+            - integration-tests-skip-when-tags-exist-populate-image-arm64
 
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr

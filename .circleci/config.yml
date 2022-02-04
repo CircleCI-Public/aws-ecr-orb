@@ -167,7 +167,7 @@ workflows:
           matrix:
             parameters:
               executor: ["ubuntu", "arm64"]
-          requires: [integration-tests-skip-when-tags-exist-populate-image]
+          requires: [integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>]
 
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr

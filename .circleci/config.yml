@@ -111,7 +111,7 @@ workflows:
           #   - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           matrix:
             parameters:
-              executor: [ubuntu, arm64]
+              executor: ["ubuntu", "arm64"]
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -130,7 +130,7 @@ workflows:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
           matrix:
             parameters:
-              executor: [ubuntu, arm64]
+              executor: ["ubuntu", "arm64"]
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -147,7 +147,7 @@ workflows:
           skip-when-tags-exist: true
           matrix:
             parameters:
-              executor: [ubuntu, arm64]
+              executor: ["ubuntu", "arm64"]
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -166,7 +166,7 @@ workflows:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist --force
           matrix:
             parameters:
-              executor: [ubuntu, arm64]
+              executor: ["ubuntu", "arm64"]
           requires: [integration-tests-skip-when-tags-exist-populate-image]
 
       - orb-tools/dev-promote-prod-from-commit-subject:

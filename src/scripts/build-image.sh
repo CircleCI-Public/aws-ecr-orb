@@ -26,9 +26,7 @@ done
 if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"
-     fi
-    # set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" ${docker_tag_args} "${FILE_PATH}"
-    # docker build "$@" 
+    fi
    docker context create builder
     # install binfmt_misc to allow creating native binaries inside the container
     docker --context builder run --privileged --rm tonistiigi/binfmt --install all

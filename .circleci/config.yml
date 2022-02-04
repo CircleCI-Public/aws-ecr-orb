@@ -20,6 +20,11 @@ executors:
     machine:
       image: ubuntu-2004:202107-02
       docker_layer_caching: true
+  arm64:
+    machine:
+      image: ubuntu-2004:202107-02
+      docker_layer_caching: true
+    resource_class: arm.medium
 
 jobs:
   pre-integration-checkout-workspace-job:
@@ -105,6 +110,22 @@ workflows:
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           executor: ubuntu
+          requires: [pre-integration]
+
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-default-profile
+          attach-workspace: true
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
+          create-repo: true
+          context: [CPE_ORBS_AWS]
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
+          executor: arm64
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:

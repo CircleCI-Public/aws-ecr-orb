@@ -98,6 +98,8 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create-repo: true
           context: [CPE_ORBS_AWS]
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace

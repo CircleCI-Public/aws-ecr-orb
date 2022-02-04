@@ -9,10 +9,10 @@ parameters:
       defaults to AWS_ECR_ACCOUNT_ID
   region:
     type: env_var_name
-    default: AWS_REGION
+    default: AWS_DEFAULT_REGION
     description: >
       Name of env var storing your AWS region information,
-      defaults to AWS_REGION
+      defaults to AWS_DEFAULT_REGION
   repo:
     type: string
     description: Name of an Amazon ECR repository

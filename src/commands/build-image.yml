@@ -128,5 +128,6 @@ steps:
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
         PARAM_ACCOUNT_ID: <<parameters.account-id>>
         PARAM_REGION: <<parameters.region>>
+        PARAM_PLATFORM: <<parameters.platform>>
       command: <<include(scripts/build-image.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

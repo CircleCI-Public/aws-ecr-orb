@@ -217,13 +217,13 @@ steps:
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
       profile-name: <<parameters.profile-name>>
-      # platform: <<parameters.platform>>
+      platform: <<parameters.platform>>
       region: <<parameters.region>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
 
-  - push-image:
-      account-id: <<parameters.account-id>>
-      region: <<parameters.region>>
-      repo: <<parameters.repo>>
-      tag: <<parameters.tag>>
+  # - push-image:
+  #     account-id: <<parameters.account-id>>
+  #     region: <<parameters.region>>
+  #     repo: <<parameters.repo>>
+  #     tag: <<parameters.tag>>

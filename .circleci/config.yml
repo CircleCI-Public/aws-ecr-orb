@@ -127,7 +127,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>> --force
           matrix:
             parameters:
               executor: ["ubuntu", "arm64"]
@@ -163,7 +163,7 @@ workflows:
           skip-when-tags-exist: true
           aws-cli-version: 2.4.10
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist --force
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
           matrix:
             parameters:
               executor: ["ubuntu", "arm64"]

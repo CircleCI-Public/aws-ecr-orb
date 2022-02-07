@@ -102,6 +102,7 @@ workflows:
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>>
           create-repo: true
+          remote-docker-layer-caching: true
           context: [CPE_ORBS_AWS]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile

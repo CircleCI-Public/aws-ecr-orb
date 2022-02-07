@@ -53,10 +53,10 @@ parameters:
 
   region:
     type: env_var_name
-    default: AWS_DEFAULT_REGION
+    default: AWS_REGION
     description: >
       Name of env var storing your AWS region information,
-      defaults to AWS_DEFAULT_REGION
+      defaults to AWS_REGION
 
   repo:
     type: string

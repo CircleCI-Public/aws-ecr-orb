@@ -27,15 +27,23 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"
     fi
-   docker context create builder
-    # install binfmt_misc to allow creating native binaries inside the container
-    docker --context builder run --privileged tonistiigi/binfmt --install all
-    docker --context builder buildx create --use
-    docker --context builder buildx build \
-    -f "${FILE_PATH}"/"${DOCKERFILE}" \
-    --build-arg BUILDKIT_INLINE_CACHE=1 \
-    --cache-from "${FILE_PATH}"/"${DOCKERFILE}"
-    ${docker_tag_args} \
+  #  docker context create builder
+  #   # install binfmt_misc to allow creating native binaries inside the container
+  #   docker --context builder run --privileged tonistiigi/binfmt --install all
+  #   docker --context builder buildx create --use
+  #   docker --context builder buildx build \
+  #   -f "${FILE_PATH}"/"${DOCKERFILE}" \
+  #   --build-arg BUILDKIT_INLINE_CACHE=1 \
+  #   ${docker_tag_args} \
+  #   --platform "${PLATFORM}" --push \
+  #   --progress plain \
+  #   "${FILE_PATH}" \
+  #   "$@"
+    #   if [ -n "$EXTRA_BUILD_ARGS" ]; then
+    #    set -- "$@" "${EXTRA_BUILD_ARGS}"
+    #  fi
+    set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" ${docker_tag_args} "${FILE_PATH}"
+    docker build "$@" \
     --platform "${PLATFORM}" --push \
     --progress plain \
     "${FILE_PATH}" \

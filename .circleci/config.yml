@@ -106,7 +106,7 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
-          extra-build-args: --compress --build-arg BUILDKIT_INLINE_CACHE=1
+          extra-build-args: --build-arg BUILDKIT_INLINE_CACHE=1
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           matrix:

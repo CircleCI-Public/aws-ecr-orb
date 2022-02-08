@@ -34,6 +34,7 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     docker --context builder buildx build \
     -f "${FILE_PATH}"/"${DOCKERFILE}" \
     --build-arg BUILDKIT_INLINE_CACHE=1 \
+    --cache-from "${FILE_PATH}"/"${DOCKERFILE}"
     ${docker_tag_args} \
     --platform "${PLATFORM}" --push \
     --progress plain \

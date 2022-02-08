@@ -44,7 +44,8 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     #  fi
     set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" ${docker_tag_args} "${FILE_PATH}"
     docker build "$@" \
-    # --platform "${PLATFORM}" --push \
+    --platform "${PLATFORM}"
+    #  --push \
     # --progress plain \
     # "${FILE_PATH}" \
     # "$@"

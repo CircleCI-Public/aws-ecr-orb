@@ -175,7 +175,12 @@ steps:
       steps:
         - attach_workspace:
             at: <<parameters.workspace-root>>
-
+  - when: 
+      condition:
+        - not: <<parameters.setup-remote-docker>>
+        - and: <<parameters.remote-docker-layer-caching>>
+      steps:
+        - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
   - when:
       condition: <<parameters.setup-remote-docker>>
       steps:

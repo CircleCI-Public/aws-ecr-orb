@@ -176,7 +176,7 @@ steps:
         - attach_workspace:
             at: <<parameters.workspace-root>>
   - when:
-      condition: 
+      condition:
         and:
           - <<parameters.remote-docker-layer-caching>>
           - not: <<parameters.setup-remote-docker>>

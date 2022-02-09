@@ -203,7 +203,7 @@ workflows:
             branches:
               only: master
           requires:
-            - integration-tests-default-profile-ubuntu
+            # - integration-tests-default-profile-ubuntu
             # - integration-tests-named-profile-ubuntu
             # - integration-tests-skip-when-tags-exist-ubuntu
             - integration-tests-default-profile-arm64

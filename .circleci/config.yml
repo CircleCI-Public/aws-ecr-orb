@@ -96,23 +96,23 @@ workflows:
       #     executor: ubuntu
       #     requires: [pre-integration]
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-default-profile-<<matrix.executor>>
-          attach-workspace: true
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>>
-          create-repo: true
-          context: [CPE_ORBS_AWS]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
-          matrix:
-            parameters:
-              executor: ["ubuntu"]
-          requires: [pre-integration]
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-default-profile-<<matrix.executor>>
+      #     attach-workspace: true
+      #     workspace-root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>>
+      #     create-repo: true
+      #     context: [CPE_ORBS_AWS]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     post-steps:
+      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
+      #     matrix:
+      #       parameters:
+      #         executor: ["ubuntu"]
+      #     requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-default-profile-<<matrix.executor>>
@@ -125,7 +125,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          platform: linux/arm64
+          # platform: linux/arm64
           # post-steps:
           #   - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
           matrix:

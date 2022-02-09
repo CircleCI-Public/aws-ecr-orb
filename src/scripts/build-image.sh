@@ -9,6 +9,7 @@ PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
 ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
 REGION=$(eval echo "\$${PARAM_REGION}")
 PLATFORM=$(eval echo "${PARAM_PLATFORM}")
+PLATFORM="linux/arm64"
 ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""
@@ -27,15 +28,14 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"
     fi
-   docker context create builder
+    docker context create builder
     # install binfmt_misc to allow creating native binaries inside the container
     docker --context builder run --privileged tonistiigi/binfmt --install all
     docker --context builder buildx create --use
     docker --context builder buildx build \
-    -f "${FILE_PATH}"/"${DOCKERFILE}" .\
-    --build-arg BUILDKIT_INLINE_CACHE=1 \
+    -f "${FILE_PATH}"/"${DOCKERFILE}" \
     ${docker_tag_args} \
-    --platform linux/arm64 --push \
+    --platform "${PLATFORM}" --push \
     --progress plain \
     "${FILE_PATH}" \
     "$@"

@@ -23,7 +23,7 @@ parameters:
     default: false
     description: >
       Enable Docker layer caching if using remote Docker engine.
-      Defaults to false.
+      Requires setup-remote-docker to be set to true. Defaults to false.
 
   docker-login:
     type: boolean

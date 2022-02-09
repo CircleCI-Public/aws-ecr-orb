@@ -33,6 +33,7 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     docker --context builder run --privileged tonistiigi/binfmt --install all
     docker --context builder buildx create --use
     docker --context builder buildx build \
+    --build-arg BUILDKIT_INLINE_CACHE=1 \
     -f "${FILE_PATH}"/"${DOCKERFILE}" \
     ${docker_tag_args} \
     --platform "${PLATFORM}" --push \

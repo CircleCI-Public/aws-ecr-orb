@@ -192,3 +192,5 @@ steps:
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
       platform: <<parameters.platform>>
+
+      # this should only have checkout build and push.  Copy GCP Orb

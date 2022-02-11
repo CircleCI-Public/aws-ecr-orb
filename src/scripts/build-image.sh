@@ -12,6 +12,7 @@ PLATFORM=$(eval echo "${PARAM_PLATFORM}")
 ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""
+
 IFS="," read -ra DOCKER_TAGS <<< "${TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${SKIP_WHEN_TAGS_EXIST}" = "1" ]; then
@@ -23,7 +24,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
   fi
   docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"
 done
-echo "${docker_tag_args}" >> args.txt
+
 if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"
@@ -39,15 +40,4 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     --progress plain \
     "${FILE_PATH}" \
     "$@"
-    # --platform "${PLATFORM}" --push \
-    #   if [ -n "$EXTRA_BUILD_ARGS" ]; then
-    #    set -- "$@" "${EXTRA_BUILD_ARGS}"
-    #  fi
-    # set -- "$@" -f "${FILE_PATH}"/"${DOCKERFILE}" ${docker_tag_args} "${FILE_PATH}"
-    # docker build "$@" \
-    
-    #  --push \
-    # --progress plain \
-    # "${FILE_PATH}" \
-    # "$@"
 fi

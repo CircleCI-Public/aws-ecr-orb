@@ -39,7 +39,7 @@ jobs:
 
   tag-ecr-image:
     docker:
-      - image: cimg/base:stable  
+      - image: cimg/base:stable
     parameters:
       repo:
         type: string

@@ -37,6 +37,23 @@ jobs:
           root: .
           paths: [sample/Dockerfile]
 
+  tag-ecr-image:
+    docker:
+      - image: cimg/base:stable  
+    parameters:
+      repo:
+        type: string
+      source-tag:
+        type: string
+      target-tag:
+        type: string
+    steps:
+      - aws-ecr/ecr-login
+      - aws-ecr/tag-image:
+          repo: <<parameters.repo>>
+          source-tag: <<parameters.source-tag>>
+          target-tag: <<parameters.target-tag>>
+
   # build-and-push-to-many-regions:
   #   executor: ubuntu
   #   steps:
@@ -132,6 +149,13 @@ workflows:
             parameters:
               executor: ["arm64"]
           requires: [pre-integration]
+
+      - tag-ecr-image:
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64
+          source-tag: integration
+          target-tag: latest
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64 --force
 
       # - aws-ecr/build-and-push-image:
       #     name: integration-tests-named-profile-<<matrix.executor>>

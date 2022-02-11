@@ -157,7 +157,8 @@ workflows:
           target-tag: latest
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64 --force
-
+          requires:
+            - integration-tests-default-profile-arm64
       # - aws-ecr/build-and-push-image:
       #     name: integration-tests-named-profile-<<matrix.executor>>
       #     attach-workspace: true

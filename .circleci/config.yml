@@ -152,6 +152,7 @@ workflows:
 
       - tag-ecr-image:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64
+          context: [CPE_ORBS_AWS]
           source-tag: integration
           target-tag: latest
           post-steps:

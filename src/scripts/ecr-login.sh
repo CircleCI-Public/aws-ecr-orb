@@ -7,5 +7,5 @@ ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 if [ -f ~/.docker/config.json ]; then
     echo "Credential helper installed"
 else
-    aws ecr get-login-password --region "${REGION}" --profile "${PROFILE_NAME}" | docker login --username AWS --password-stdin "${ACCOUNT_URL}"
+    aws ecr get-login-password --region "${REGION}" | docker login --username AWS --password-stdin "${ACCOUNT_URL}"
 fi

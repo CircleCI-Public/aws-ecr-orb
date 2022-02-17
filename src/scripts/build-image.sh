@@ -9,6 +9,7 @@ PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
 ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
 REGION=$(eval echo "\$${PARAM_REGION}")
 PLATFORM=$(eval echo "${PARAM_PLATFORM}")
+PUBLIC_REGISTRY=$(eval echo "${PARAM_PUBLIC_REGISTRY}")
 ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""

@@ -51,7 +51,7 @@ parameters:
   public-registry:
     type: boolean
     description: Set to true if building and pushing an image to a Public Registry on ECR.
-    default: false 
+    default: false
 
 steps:
   - aws-cli/setup:

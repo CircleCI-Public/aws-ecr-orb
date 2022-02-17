@@ -92,6 +92,11 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
+
   platform:
     type: string
     default: "linux/amd64"
@@ -112,6 +117,7 @@ steps:
             aws-access-key-id: <<parameters.aws-access-key-id>>
             aws-secret-access-key: <<parameters.aws-secret-access-key>>
             # role-arn: <<parameters.role-arn>>
+            public-registry: <<parameters.public-registry>>
 
   - run:
       name: Build Docker Image
@@ -126,5 +132,6 @@ steps:
         PARAM_ACCOUNT_ID: <<parameters.account-id>>
         PARAM_REGION: <<parameters.region>>
         PARAM_PLATFORM: <<parameters.platform>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
       command: <<include(scripts/build-image.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

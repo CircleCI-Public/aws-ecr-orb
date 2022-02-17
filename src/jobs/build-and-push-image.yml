@@ -232,6 +232,8 @@ steps:
       region: <<parameters.region>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+  - store_artifacts:
+      path: test.txt
 
 
       # this should only have checkout build and push.  Copy GCP Orb

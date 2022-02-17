@@ -15,10 +15,16 @@ parameters:
   repo:
     type: string
     description: Name of an Amazon ECR repository
+
   repo-scan-on-push:
     type: boolean
     default: true
     description: Should the created repo be security scanned on push?
+
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false 
 
 steps:
   - run:
@@ -28,4 +34,5 @@ steps:
         PARAM_REGION: <<parameters.region>>
         PARAM_REPO: <<parameters.repo>>
         PARAM_REPO_SCAN_ON_PUSH: <<parameters.repo-scan-on-push>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
       command: <<include(scripts/create-repo.sh)>>

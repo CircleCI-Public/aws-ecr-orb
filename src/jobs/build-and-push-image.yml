@@ -58,6 +58,11 @@ parameters:
       Name of env var storing your AWS region information,
       defaults to AWS_REGION
 
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false 
+
   repo:
     type: string
     description: Name of an Amazon ECR repository
@@ -196,6 +201,7 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-cli-version: <<parameters.aws-cli-version>>
+      public-registry: <<parameters.public-registry>>
 
   - when:
       condition: <<parameters.create-repo>>

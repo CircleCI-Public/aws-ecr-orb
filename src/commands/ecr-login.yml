@@ -18,10 +18,9 @@ parameters:
 
   profile-name:
     type: string
-    default: "default"
+    default: ""
     description: >
       AWS profile name to be configured.
-      defaults to "default"
 
   # role-arn:
   #   type: string
@@ -49,6 +48,11 @@ parameters:
     default: latest
     type: string
 
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false 
+
 steps:
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
@@ -64,4 +68,5 @@ steps:
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
         PARAM_ACCOUNT_ID: <<parameters.account-id>>
         PARAM_REGION: <<parameters.region>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
       command: <<include(scripts/ecr-login.sh)>>

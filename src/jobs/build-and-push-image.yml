@@ -15,7 +15,7 @@ parameters:
 
   account-id:
     type: string
-    default: AWS_ECR_ACCOUNT_ID_NEW
+    default: AWS_ECR_ACCOUNT_ID
     description: >
       The 12 digit AWS id associated with the ECR account.
       defaults to AWS_ECR_ACCOUNT_ID
@@ -71,12 +71,6 @@ parameters:
     type: string
     default: "latest"
     description: A comma-separated string containing docker image tags to build and push (default = latest)
-
-  checkout:
-    type: boolean
-    default: true
-    description: >
-      Boolean for whether or not to checkout as a first step. Default is true.
 
   attach-workspace:
     type: boolean
@@ -167,30 +161,66 @@ parameters:
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
 
 steps:
-  - build-and-push-image:
+  - checkout
+
+  - when:
+      condition: <<parameters.attach-workspace>>
+      steps:
+        - attach_workspace:
+            at: <<parameters.workspace-root>>
+  - when:
+      condition:
+        and:
+          - <<parameters.remote-docker-layer-caching>>
+          - not: <<parameters.setup-remote-docker>>
+      steps:
+        - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
+
+  - when:
+      condition: <<parameters.setup-remote-docker>>
+      steps:
+        - setup_remote_docker:
+            version: <<parameters.remote-docker-version>>
+            docker_layer_caching: <<parameters.remote-docker-layer-caching>>
+
+  - ecr-login:
       profile-name: <<parameters.profile-name>>
-      setup-remote-docker: <<parameters.setup-remote-docker>>
-      remote-docker-version: <<parameters.remote-docker-version>>
-      remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
-      docker-login: <<parameters.docker-login>>
-      dockerhub-username: <<parameters.dockerhub-username>>
-      dockerhub-password: <<parameters.dockerhub-password>>
+      region: <<parameters.region>>
+      # role-arn: <<parameters.role-arn>>
+      account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-cli-version: <<parameters.aws-cli-version>>
-      region: <<parameters.region>>
-      # role-arn: <<parameters.role-arn>>
+
+  - when:
+      condition: <<parameters.create-repo>>
+      steps:
+        - create-repo:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            repo: <<parameters.repo>>
+            repo-scan-on-push: <<parameters.repo-scan-on-push>>
+
+  - when:
+      condition: <<parameters.docker-login>>
+      steps:
+        - run: |
+            docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
+
+  - build-image:
+      account-id: <<parameters.account-id>>
       repo: <<parameters.repo>>
-      create-repo: <<parameters.create-repo>>
       tag: <<parameters.tag>>
-      checkout: <<parameters.checkout>>
-      attach-workspace: <<parameters.attach-workspace>>
-      workspace-root: <<parameters.workspace-root>>
       dockerfile: <<parameters.dockerfile>>
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+      profile-name: <<parameters.profile-name>>
       platform: <<parameters.platform>>
+      region: <<parameters.region>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+
 
       # this should only have checkout build and push.  Copy GCP Orb

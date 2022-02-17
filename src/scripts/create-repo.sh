@@ -10,3 +10,4 @@ if [ "$REPO_SCAN_ON_PUSH" == "1" ]; then
 else
     aws ecr create-repository --profile "${PROFILE_NAME}" --region "${REGION}" --repository-name "${REPO}" --image-scanning-configuration scanOnPush=false
 fi
+

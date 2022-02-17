@@ -60,6 +60,13 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_ACCESS_KEY_ID.
 
+  account-id:
+    type: string
+    default: AWS_ECR_ACCOUNT_ID
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      defaults to AWS_ECR_ACCOUNT_ID
+
   aws-secret-access-key:
     type: env_var_name
     default: AWS_SECRET_ACCESS_KEY
@@ -68,10 +75,10 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
-  # role-arn:
-  #   type: string
-  #   default: ""
-  #   description: Role ARN that the profile should take.
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
 
   region:
     type: env_var_name
@@ -80,12 +87,6 @@ parameters:
       Name of env var storing your AWS region information,
       defaults to AWS_REGION
 
-  account-id:
-    type: string
-    default: AWS_ECR_ACCOUNT_ID
-    description: >
-      The 12 digit AWS id associated with the ECR account.
-      defaults to AWS_ECR_ACCOUNT_ID
 
   repo:
     type: string
@@ -105,12 +106,6 @@ parameters:
     type: string
     default: "latest"
     description: A comma-separated string containing docker image tags to build and push (default = latest)
-
-  checkout:
-    type: boolean
-    default: true
-    description: >
-      Boolean for whether or not to checkout as a first step. Default is true.
 
   attach-workspace:
     type: boolean
@@ -165,10 +160,7 @@ parameters:
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
 
 steps:
-  - when:
-      condition: <<parameters.checkout>>
-      steps:
-        - checkout
+  # - checkout
 
   - when:
       condition: <<parameters.attach-workspace>>

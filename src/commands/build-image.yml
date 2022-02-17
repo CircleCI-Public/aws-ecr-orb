@@ -98,10 +98,7 @@ parameters:
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
 
 steps:
-  - when:
-      condition: <<parameters.checkout>>
-      steps:
-        - checkout
+  - checkout
 
   - when:
       condition:

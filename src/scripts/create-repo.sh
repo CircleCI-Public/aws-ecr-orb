@@ -13,6 +13,7 @@ fi
 
 aws "${ECR_COMMAND}" describe-repositories --profile "${PROFILE_NAME}" --region "${REGION}" --repository-names "${REPO}" > /dev/null 2>&1 || \
 if [ "$REPO_SCAN_ON_PUSH" == "1" ]; then
+    echo "aws ${ECR_COMMAND} create-repository --profile ${PROFILE_NAME} --region ${REGION} --repository-name ${REPO} --image-scanning-configuration scanOnPush=true" >> test.txt
     aws "${ECR_COMMAND}" create-repository --profile "${PROFILE_NAME}" --region "${REGION}" --repository-name "${REPO}" --image-scanning-configuration scanOnPush=true
 else
     aws "${ECR_COMMAND}" create-repository --profile "${PROFILE_NAME}" --region "${REGION}" --repository-name "${REPO}" --image-scanning-configuration scanOnPush=false

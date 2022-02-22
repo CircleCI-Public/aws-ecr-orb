@@ -211,6 +211,7 @@ steps:
             region: <<parameters.region>>
             repo: <<parameters.repo>>
             repo-scan-on-push: <<parameters.repo-scan-on-push>>
+            public-registry: <<parameters.public-registry>>
 
   - when:
       condition: <<parameters.docker-login>>

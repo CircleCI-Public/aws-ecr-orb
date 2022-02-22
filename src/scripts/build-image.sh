@@ -33,7 +33,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
   fi
   docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"
 done
-
+echo "$docker_tag_args" >> test.txt
 if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"

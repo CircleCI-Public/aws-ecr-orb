@@ -15,7 +15,7 @@ parameters:
       defaults to AWS_REGION
   repo:
     type: string
-    description: Name of an Amazon ECR repository  
+    description: Name of an Amazon ECR repository
   tag:
     description: A comma-separated string containing docker image tags (default = latest)
     type: string

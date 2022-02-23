@@ -26,5 +26,5 @@ steps:
         PARAM_REPO: <<parameters.repo>>
         PARAM_SOURCE_TAG: <<parameters.source-tag>>
         PARAM_TARGET_TAG:  <<parameters.target-tag>>
-        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>        
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
       command: <<include(scripts/tag-image.sh)>>

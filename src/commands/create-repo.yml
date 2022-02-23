@@ -7,7 +7,7 @@ parameters:
     default: "default"
     description: AWS profile name to be configured.
   region:
-    type: env_var_name
+    type: string
     default: AWS_REGION
     description: >
       Name of env var storing your AWS region information,
@@ -24,7 +24,7 @@ parameters:
   public-registry:
     type: boolean
     description: Set to true if building and pushing an image to a Public Registry on ECR.
-    default: false
+    default: false 
 
 steps:
   - run:
@@ -34,5 +34,4 @@ steps:
         PARAM_REGION: <<parameters.region>>
         PARAM_REPO: <<parameters.repo>>
         PARAM_REPO_SCAN_ON_PUSH: <<parameters.repo-scan-on-push>>
-        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
       command: <<include(scripts/create-repo.sh)>>

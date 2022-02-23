@@ -1,4 +1,4 @@
-description: "Build a docker image"
+description: "Build a docker image with Docker Buildx"
 
 parameters:
   account-id:
@@ -37,7 +37,7 @@ parameters:
     default: ""
     description: >
       Extra flags to pass to docker build. For examples, see
-      https://docs.docker.com/engine/reference/commandline/build
+      https://docs.docker.com/engine/reference/commandline/buildx
 
   checkout:
     type: boolean
@@ -57,11 +57,10 @@ parameters:
     description: Whether to skip image building if all specified tags already exist in ECR
 
   region:
-    type: env_var_name
+    type: string
     default: AWS_REGION
     description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_REGION. Only required when skip-when-tags-exist
+      Name of variable storing your AWS region information. Only required when skip-when-tags-exist
       or ecr-login are set to true.
 
   # role-arn:
@@ -100,7 +99,12 @@ parameters:
   platform:
     type: string
     default: "linux/amd64"
-    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
+    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64.
+
+  push-image: 
+    type: boolean
+    default: true
+    description: Set to false if the desire is to just build an image without pushing to repository.  Defaults to true.
 
 steps:
   - checkout
@@ -120,7 +124,7 @@ steps:
             public-registry: <<parameters.public-registry>>
 
   - run:
-      name: Build Docker Image
+      name: Build Docker Image with Buildx
       environment:
         PARAM_TAG: << parameters.tag >>
         PARAM_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
@@ -133,5 +137,5 @@ steps:
         PARAM_REGION: <<parameters.region>>
         PARAM_PLATFORM: <<parameters.platform>>
         PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
-      command: <<include(scripts/build-image.sh)>>
+      command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

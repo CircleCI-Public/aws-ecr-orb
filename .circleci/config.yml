@@ -47,16 +47,12 @@ jobs:
         type: string
       target-tag:
         type: string
-      public-registry:
-        type: boolean
-        default: false
     steps:
       - aws-ecr/ecr-login
       - aws-ecr/tag-image:
           repo: <<parameters.repo>>
           source-tag: <<parameters.source-tag>>
           target-tag: <<parameters.target-tag>>
-          public-registry: <<parameters.public-registry>>
 
   # build-and-push-to-many-regions:
   #   executor: ubuntu
@@ -155,16 +151,15 @@ workflows:
               executor: ["arm64"]
           requires: [pre-integration]
 
-      - tag-ecr-image:
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64
-          context: [CPE_ORBS_AWS]
-          source-tag: integration
-          target-tag: latest
-          public-registry: true
-          post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64 --force
-          requires:
-            - integration-tests-default-profile-arm64
+      # - tag-ecr-image:
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64
+      #     context: [CPE_ORBS_AWS]
+      #     source-tag: integration
+      #     target-tag: latest
+      #     post-steps:
+      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64 --force
+      #     requires:
+      #       - integration-tests-default-profile-arm64
       # - aws-ecr/build-and-push-image:
       #     name: integration-tests-named-profile-<<matrix.executor>>
       #     attach-workspace: true

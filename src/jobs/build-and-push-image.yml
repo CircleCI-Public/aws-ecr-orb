@@ -73,9 +73,9 @@ parameters:
     description: Should the repo be created if it does not exist?
 
   repo-scan-on-push:
-      type: boolean
-      default: true
-      description: Should the created repo be security scanned on push?
+    type: boolean
+    default: true
+    description: Should the created repo be security scanned on push?
 
   tag:
     type: string

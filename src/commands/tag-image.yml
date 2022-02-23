@@ -20,5 +20,5 @@ steps:
       environment:
         PARAM_REPO: <<parameters.repo>>
         PARAM_SOURCE_TAG: <<parameters.source-tag>>
-        PARAM_TARGET_TAG:  <<parameters.target-tag>>
+        PARAM_TARGET_TAG: <<parameters.target-tag>>
       command: <<include(scripts/tag-image.sh)>>

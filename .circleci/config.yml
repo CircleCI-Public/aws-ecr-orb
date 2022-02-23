@@ -47,12 +47,16 @@ jobs:
         type: string
       target-tag:
         type: string
+      public-registry:
+        type: boolean
+        default: false
     steps:
       - aws-ecr/ecr-login
       - aws-ecr/tag-image:
           repo: <<parameters.repo>>
           source-tag: <<parameters.source-tag>>
           target-tag: <<parameters.target-tag>>
+          public-registry: <<parameters.public-registry>>
 
   # build-and-push-to-many-regions:
   #   executor: ubuntu

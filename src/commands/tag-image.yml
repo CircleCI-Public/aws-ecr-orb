@@ -13,6 +13,12 @@ parameters:
     type: string
     default: "latest"
     description: A comma-separated string containing docker image tags (default = latest)
+
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
+
 steps:
   - run:
       name: <<parameters.target-tag>> tag to <<parameters.repo>>:<<parameters.source-tag>>
@@ -20,4 +26,5 @@ steps:
         PARAM_REPO: <<parameters.repo>>
         PARAM_SOURCE_TAG: <<parameters.source-tag>>
         PARAM_TARGET_TAG:  <<parameters.target-tag>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>        
       command: <<include(scripts/tag-image.sh)>>

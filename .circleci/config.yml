@@ -144,8 +144,8 @@ workflows:
           extra-build-args: --compress
           platform: linux/arm64
           public-registry: true
-          role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
-          new-profile: bvu
+          # role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
+          # new-profile-name: bvu
           # post-steps:
           #   - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
           matrix:

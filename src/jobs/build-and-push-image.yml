@@ -190,7 +190,6 @@ steps:
           - not: <<parameters.setup-remote-docker>>
       steps:
         - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
-
   - when:
       condition: <<parameters.setup-remote-docker>>
       steps:

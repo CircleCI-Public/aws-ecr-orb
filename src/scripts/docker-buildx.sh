@@ -23,7 +23,6 @@ if [ "$PUBLIC_REGISTRY" == "1" ]; then
     ACCOUNT_URL="public.ecr.aws/${ACCOUNT_ID}"
 fi
 
-
 IFS="," read -ra DOCKER_TAGS <<< "${TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${SKIP_WHEN_TAGS_EXIST}" = "1" ]; then
@@ -43,11 +42,7 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"
     fi
-    # docker context create builder
-    # # install binfmt_misc to allow creating native binaries inside the container
-    # docker --context builder run --privileged tonistiigi/binfmt --install all
-    # docker --context builder buildx create --use
-    # docker --context builder buildx build \
+
     docker buildx build \
     -f "${FILE_PATH}"/"${DOCKERFILE}" \
     ${docker_tag_args} \

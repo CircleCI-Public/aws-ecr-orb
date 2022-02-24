@@ -58,7 +58,7 @@ parameters:
 
   region:
     type: string
-    default: AWS_REGION
+    default: ""
     description: >
       Name of variable storing your AWS region information. Only required when skip-when-tags-exist
       or ecr-login are set to true.

@@ -11,7 +11,7 @@ parameters:
 
   region:
     type: string
-    default: AWS_REGION
+    default: ""
     description: >
         Name of env var storing your AWS region information,
         defaults to AWS_REGION

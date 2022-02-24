@@ -36,4 +36,5 @@ steps:
         PARAM_REGION: <<parameters.region>>
         PARAM_REPO: <<parameters.repo>>
         PARAM_REPO_SCAN_ON_PUSH: <<parameters.repo-scan-on-push>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
       command: <<include(scripts/create-repo.sh)>>

@@ -63,10 +63,19 @@ parameters:
       Name of env var storing your AWS region information,
       defaults to AWS_REGION
 
-  # role-arn:
-  #   type: string
-  #   default: ""
-  #   description: Role ARN that the profile should take.
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
+
+  source-profile:
+      description: Source profile containing credentials to assume the role with role-arn.
+      type: string
+      default: "default"
+
+  new-profile-name:
+      description: Name of new profile associated with role arn.
+      type: string
 
   profile-name:
     type: string

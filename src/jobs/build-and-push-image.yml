@@ -11,7 +11,7 @@ parameters:
     description: |
       Executor to use for this job.
     type: executor
-    default: ubuntu
+    default: amd64
 
   account-id:
     type: string
@@ -41,10 +41,19 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
-  # role-arn:
-  #   type: string
-  #   default: ""
-  #   description: Role ARN that the profile should take.
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
+
+  source-profile:
+      description: Source profile containing credentials to assume the role with role-arn.
+      type: string
+      default: "default"
+
+  new-profile-name:
+      description: Name of new profile associated with role arn.
+      type: string
 
   aws-cli-version:
     description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
@@ -200,12 +209,14 @@ steps:
   - ecr-login:
       profile-name: <<parameters.profile-name>>
       region: <<parameters.region>>
-      # role-arn: <<parameters.role-arn>>
       account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-cli-version: <<parameters.aws-cli-version>>
       public-registry: <<parameters.public-registry>>
+      role-arn: <<parameters.role-arn>>
+      new-profile-name: <<parameters.new-profile-name>>
+      source-profile: <<parameters.source-profile>>
 
   - when:
       condition: <<parameters.create-repo>>

@@ -16,7 +16,7 @@ parameters:
     default: "dev:alpha"
 
 executors:
-  ubuntu:
+  amd64:
     machine:
       image: ubuntu-2004:202107-02
       docker_layer_caching: true
@@ -55,7 +55,7 @@ jobs:
           target-tag: <<parameters.target-tag>>
 
   # build-and-push-to-many-regions:
-  #   executor: ubuntu
+  #   executor: amd64
   #   steps:
   #     - attach_workspace:
   #         at: .
@@ -110,7 +110,7 @@ workflows:
       #     path: workspace
       #     post-steps:
       #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region --force
-      #     executor: ubuntu
+      #     executor: amd64
       #     requires: [pre-integration]
 
       # - aws-ecr/build-and-push-image:
@@ -128,7 +128,7 @@ workflows:
       #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
       #     matrix:
       #       parameters:
-      #         executor: ["ubuntu"]
+      #         executor: ["amd64"]
       #     requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -142,8 +142,10 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          platform: linux/arm64,linux/amd64
+          platform: linux/arm64
           public-registry: true
+          role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
+          new-profile: bvu
           # post-steps:
           #   - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
           matrix:
@@ -176,7 +178,7 @@ workflows:
       #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>> --force
       #     matrix:
       #       parameters:
-      #         executor: ["ubuntu", "arm64"]
+      #         executor: ["amd64", "arm64"]
       #     requires: [pre-integration]
 
       # - aws-ecr/build-and-push-image:
@@ -193,7 +195,7 @@ workflows:
       #     skip-when-tags-exist: true
       #     matrix:
       #       parameters:
-      #         executor: ["ubuntu", "arm64"]
+      #         executor: ["amd64", "arm64"]
       #     requires: [pre-integration]
 
       # - aws-ecr/build-and-push-image:
@@ -212,9 +214,9 @@ workflows:
       #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
       #     matrix:
       #       parameters:
-      #         executor: ["ubuntu", "arm64"]
+      #         executor: ["amd64", "arm64"]
       #     requires:
-      #       - integration-tests-skip-when-tags-exist-populate-image-ubuntu
+      #       - integration-tests-skip-when-tags-exist-populate-image-amd64
       #       - integration-tests-skip-when-tags-exist-populate-image-arm64
 
       - orb-tools/dev-promote-prod-from-commit-subject:
@@ -230,9 +232,9 @@ workflows:
             branches:
               only: master
           requires:
-            # - integration-tests-default-profile-ubuntu
-            # - integration-tests-named-profile-ubuntu
-            # - integration-tests-skip-when-tags-exist-ubuntu
+            # - integration-tests-default-profile-amd64
+            # - integration-tests-named-profile-amd64
+            # - integration-tests-skip-when-tags-exist-amd64
             - integration-tests-default-profile-arm64
             # - integration-tests-named-profile-arm64
             # - integration-tests-skip-when-tags-exist-arm64

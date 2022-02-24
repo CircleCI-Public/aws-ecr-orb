@@ -22,10 +22,19 @@ parameters:
     description: >
       AWS profile name to be configured.
 
-  # role-arn:
-  #   type: string
-  #   default: ""
-  #   description: Role ARN that the profile should take.
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
+
+  source-profile:
+      description: Source profile containing credentials to assume the role with role-arn.
+      type: string
+      default: "default"
+
+  new-profile-name:
+      description: Name of new profile associated with role arn.
+      type: string
 
   aws-access-key-id:
     type: env_var_name
@@ -58,9 +67,16 @@ steps:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      # role-arn: <<parameters.role-arn>>
       aws-region: <<parameters.region>>
       version: <<parameters.aws-cli-version>>
+
+  - when:
+      condition: <<parameters.role-arn>>
+      steps:
+        - aws-cli/role-arn-setup:
+            profile-name: <<parameters.new-profile-name>>
+            role-arn: <<parameters.role-arn>>
+            source-profile: <<parameters.source-profile>>
 
   - run:
       name: Log into Amazon ECR

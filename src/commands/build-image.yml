@@ -104,7 +104,7 @@ parameters:
   push-image:
     type: boolean
     default: true
-    description: Set to false if the desire is to just build an image without pushing to repository.  Defaults to true.
+    description: Set to false to build an image without pushing to repository.  Defaults to true.
 
 steps:
   - checkout
@@ -137,5 +137,6 @@ steps:
         PARAM_REGION: <<parameters.region>>
         PARAM_PLATFORM: <<parameters.platform>>
         PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
+        PARAM_PUSH_IMAGE: <<parameters.push-image>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

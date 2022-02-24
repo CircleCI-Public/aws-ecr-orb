@@ -10,6 +10,8 @@ ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
 REGION=$(eval echo "\$${PARAM_REGION}")
 PLATFORM=$(eval echo "${PARAM_PLATFORM}")
 PUBLIC_REGISTRY=$(eval echo "${PARAM_PUBLIC_REGISTRY}")
+PUSH_IMAGE=$(eval echo "${PARAM_PUSH_IMAGE}")
+
 ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""
@@ -35,18 +37,21 @@ for tag in "${DOCKER_TAGS[@]}"; do
 done
 echo "$docker_tag_args" >> test.txt
 if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
+    if [ "$PUSH_IMAGE" == "1" ]; then
+      set -- "$@" --push
+    fi 
     if [ -n "$EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${EXTRA_BUILD_ARGS}"
     fi
-    # docker context create builder
-    # # install binfmt_misc to allow creating native binaries inside the container
-    # docker --context builder run --privileged tonistiigi/binfmt --install all
-    # docker --context builder buildx create --use
-    # docker --context builder buildx build \
-    docker buildx build \
+    docker context create builder
+    # install binfmt_misc to allow creating native binaries inside the container
+    # docker buildx build \
+    docker --context builder run --privileged tonistiigi/binfmt --install all
+    docker --context builder buildx create --use
+    docker --context builder buildx build \
     -f "${FILE_PATH}"/"${DOCKERFILE}" \
     ${docker_tag_args} \
-    --platform "${PLATFORM}" --push \
+    --platform "${PLATFORM}" \
     --progress plain \
     "${FILE_PATH}" \
     "$@"

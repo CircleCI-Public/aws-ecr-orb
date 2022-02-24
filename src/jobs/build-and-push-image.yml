@@ -170,6 +170,11 @@ parameters:
     default: "linux/amd64"
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
 
+  push-image:
+    type: boolean
+    default: true
+    description: Set to false to build an image without pushing to repository.  Defaults to true.
+
 steps:
   - checkout
 

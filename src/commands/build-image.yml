@@ -116,7 +116,7 @@ parameters:
     description: Set to false to build an image without pushing to repository.  Defaults to true.
 
 steps:
-  - checkout
+  # - checkout
 
   - when:
       condition:
@@ -135,7 +135,7 @@ steps:
             public-registry: <<parameters.public-registry>>
 
   - run:
-      name: Build Docker Image with Buildx
+      name: Build Docker Image with buildx
       environment:
         PARAM_TAG: << parameters.tag >>
         PARAM_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>

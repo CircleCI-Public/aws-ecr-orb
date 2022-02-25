@@ -249,6 +249,9 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       public-registry: <<parameters.public-registry>>
+      role-arn: <<parameters.role-arn>>
+      new-profile-name: <<parameters.new-profile-name>>
+      source-profile: <<parameters.source-profile>>
   - store_artifacts:
       path: test.txt
 

@@ -61,8 +61,8 @@ parameters:
     type: string
 
   region:
-    type: env_var_name
-    default: AWS_REGION
+    type: string
+    default: ""
     description: >
       Name of env var storing your AWS region information,
       defaults to AWS_REGION
@@ -186,7 +186,8 @@ parameters:
 
 steps:
   - checkout
-
+  - run: |
+       export AWS_REGION=<<parameters.region>>
   - when:
       condition: <<parameters.attach-workspace>>
       steps:
@@ -208,7 +209,7 @@ steps:
 
   - ecr-login:
       profile-name: <<parameters.profile-name>>
-      region: <<parameters.region>>
+      region: $AWS_REGION
       account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

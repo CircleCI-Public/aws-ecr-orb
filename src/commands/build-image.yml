@@ -57,8 +57,8 @@ parameters:
     description: Whether to skip image building if all specified tags already exist in ECR
 
   region:
-    type: env_var_name
-    default: AWS_REGION
+    type: string
+    default: ""
     description: >
       Name of env var storing your AWS region information,
       defaults to AWS_REGION
@@ -116,23 +116,22 @@ parameters:
     description: Set to false to build an image without pushing to repository.  Defaults to true.
 
 steps:
-  # - checkout
 
-  - when:
-      condition:
-        or:
-          - <<parameters.ecr-login>>
-          - <<parameters.skip-when-tags-exist>>
-      steps:
-        - ecr-login:
-            profile-name: <<parameters.profile-name>>
-            region: <<parameters.region>>
-            aws-access-key-id: <<parameters.aws-access-key-id>>
-            aws-secret-access-key: <<parameters.aws-secret-access-key>>
-            new-profile-name: <<parameters.new-profile-name>>
-            role-arn: <<parameters.role-arn>>
-            source-profile: <<parameters.source-profile>>
-            public-registry: <<parameters.public-registry>>
+  # - when:
+  #     condition:
+  #       or:
+  #         - <<parameters.ecr-login>>
+  #         - <<parameters.skip-when-tags-exist>>
+  #     steps:
+  #       - ecr-login:
+  #           profile-name: <<parameters.profile-name>>
+  #           region: <<parameters.region>>
+  #           aws-access-key-id: <<parameters.aws-access-key-id>>
+  #           aws-secret-access-key: <<parameters.aws-secret-access-key>>
+  #           new-profile-name: <<parameters.new-profile-name>>
+  #           role-arn: <<parameters.role-arn>>
+  #           source-profile: <<parameters.source-profile>>
+  #           public-registry: <<parameters.public-registry>>
 
   - run:
       name: Build Docker Image with buildx

@@ -64,7 +64,7 @@ parameters:
 
 steps:
   - run: |
-      export AWS_REGION=<<parameters.region>>
+      export AWS_DEFAULT_REGION=<<parameters.region>>
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>

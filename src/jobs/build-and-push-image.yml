@@ -187,8 +187,8 @@ parameters:
 steps:
   - checkout
   - run: |
-       export AWS_REGION=<<parameters.region>>
-       aws configure set region "$AWS_REGION"
+       export AWS_DEFAULT_REGION=<<parameters.region>>
+       aws configure set region "$AWS_DEFAULT_REGION"
   - when:
       condition: <<parameters.attach-workspace>>
       steps:

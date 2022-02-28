@@ -154,6 +154,30 @@ workflows:
               executor: ["arm64"]
           requires: [pre-integration]
 
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-multi-region-<<matrix.region>>
+          attach-workspace: true
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.region>>
+          create-repo: true
+          context: [CPE_ORBS_AWS]
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          platform: linux/arm64
+          region: us-west-2
+          # public-registry: true
+          # role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
+          new-profile-name: bvu
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
+          executor: ["arm64"]
+          matrix:
+            parameters:
+              region: ["us-west-2","us-west-1"]
+          requires: [pre-integration]
+
       # - tag-ecr-image:
       #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64
       #     context: [CPE_ORBS_AWS]

@@ -206,7 +206,7 @@ steps:
             docker_layer_caching: <<parameters.remote-docker-layer-caching>>
   - ecr-login:
       profile-name: <<parameters.profile-name>>
-      region: <<parameters.region>>
+      # region: <<parameters.region>>
       registry-id: <<parameters.registry-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
@@ -244,12 +244,7 @@ steps:
       profile-name: <<parameters.profile-name>>
       platform: <<parameters.platform>>
       region: <<parameters.region>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
       public-registry: <<parameters.public-registry>>
-      role-arn: <<parameters.role-arn>>
-      new-profile-name: <<parameters.new-profile-name>>
-      source-profile: <<parameters.source-profile>>
   - store_artifacts:
       path: test.txt
 

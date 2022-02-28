@@ -62,12 +62,14 @@ parameters:
     default: false
 
 steps:
+  # - run: |
+  #     export AWS_REGION="us-west-2"
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       version: <<parameters.aws-cli-version>>
-      region: <<parameters.region>>
+      # region: ${AWS_REGION}
 
   - when:
       condition: <<parameters.role-arn>>

@@ -65,11 +65,12 @@ parameters:
 steps:
   - run: |
       export AWS_REGION=<<parameters.region>>
+      aws configure set region "${AWS_REGION}"
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      aws-region: ${AWS_REGION}
+      # aws-region: ${AWS_REGION}
       version: <<parameters.aws-cli-version>>
 
   - when:

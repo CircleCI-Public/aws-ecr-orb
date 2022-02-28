@@ -206,7 +206,7 @@ steps:
             docker_layer_caching: <<parameters.remote-docker-layer-caching>>
   - ecr-login:
       profile-name: <<parameters.profile-name>>
-      # region: <<parameters.region>>
+      region: <<parameters.region>>
       registry-id: <<parameters.registry-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

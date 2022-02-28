@@ -187,8 +187,8 @@ parameters:
 steps:
   - checkout
   - run: |
-       export AWS_DEFAULT_REGION=<<parameters.region>>
-       aws configure set region "$AWS_DEFAULT_REGION"
+       export AWS_REGION=<<parameters.region>>
+      #  aws configure set region "${AWS_REGION}"
   - when:
       condition: <<parameters.attach-workspace>>
       steps:
@@ -210,7 +210,7 @@ steps:
 
   - ecr-login:
       profile-name: <<parameters.profile-name>>
-      # region: ${AWS_REGION}
+      region: ${AWS_REGION}
       account-id: <<parameters.account-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

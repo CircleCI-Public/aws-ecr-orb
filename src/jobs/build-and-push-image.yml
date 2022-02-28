@@ -14,7 +14,8 @@ parameters:
     default: amd64
 
   registry-id:
-    type: string
+    type: env_var_name
+    default: AWS_ECR_REGISTRY_ID
     description: >
       The 12 digit AWS id associated with the ECR account.
       This field is required

@@ -13,12 +13,11 @@ parameters:
     type: executor
     default: amd64
 
-  account-id:
+  registry-id:
     type: string
-    default: AWS_ECR_ACCOUNT_ID
     description: >
       The 12 digit AWS id associated with the ECR account.
-      defaults to AWS_ECR_ACCOUNT_ID
+      This field is required
 
   profile-name:
     type: string
@@ -186,8 +185,6 @@ parameters:
 
 steps:
   - checkout
-  # - run: |
-  #      export AWS_REGION=<<parameters.region>>
   - when:
       condition: <<parameters.attach-workspace>>
       steps:
@@ -206,12 +203,10 @@ steps:
         - setup_remote_docker:
             version: <<parameters.remote-docker-version>>
             docker_layer_caching: <<parameters.remote-docker-layer-caching>>
-
   - ecr-login:
       profile-name: <<parameters.profile-name>>
-      # region: ${AWS_REGION}
       region: <<parameters.region>>
-      account-id: <<parameters.account-id>>
+      registry-id: <<parameters.registry-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       aws-cli-version: <<parameters.aws-cli-version>>
@@ -237,7 +232,7 @@ steps:
             docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
 
   - build-image:
-      account-id: <<parameters.account-id>>
+      registry-id: <<parameters.registry-id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
       dockerfile: <<parameters.dockerfile>>

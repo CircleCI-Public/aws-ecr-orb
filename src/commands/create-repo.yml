@@ -11,8 +11,7 @@ parameters:
     type: string
     default: ""
     description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_REGION
+      AWS region of ECR repository.
 
   repo:
     type: string

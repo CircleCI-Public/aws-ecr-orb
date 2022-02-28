@@ -144,6 +144,7 @@ workflows:
           extra-build-args: --compress
           platform: linux/arm64
           region: us-west-2
+          registry-id: "122211685980"
           # public-registry: true
           # role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
           new-profile-name: bvu

@@ -1,12 +1,11 @@
 description: "Build a docker image with Docker Buildx"
 
 parameters:
-  account-id:
+  registry-id:
     type: string
-    default: AWS_ECR_ACCOUNT_ID
     description: >
-      The 12 digit AWS id associated with the ECR account.
-      defaults to AWS_ECR_ACCOUNT_ID
+      The 12 digit AWS Registry ID associated with the ECR account.
+      This field is required
 
   repo:
     type: string
@@ -60,8 +59,7 @@ parameters:
     type: string
     default: ""
     description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_REGION
+      AWS region of ECR repository.
 
   role-arn:
     type: string
@@ -117,22 +115,6 @@ parameters:
 
 steps:
 
-  # - when:
-  #     condition:
-  #       or:
-  #         - <<parameters.ecr-login>>
-  #         - <<parameters.skip-when-tags-exist>>
-  #     steps:
-  #       - ecr-login:
-  #           profile-name: <<parameters.profile-name>>
-  #           region: <<parameters.region>>
-  #           aws-access-key-id: <<parameters.aws-access-key-id>>
-  #           aws-secret-access-key: <<parameters.aws-secret-access-key>>
-  #           new-profile-name: <<parameters.new-profile-name>>
-  #           role-arn: <<parameters.role-arn>>
-  #           source-profile: <<parameters.source-profile>>
-  #           public-registry: <<parameters.public-registry>>
-
   - run:
       name: Build Docker Image with buildx
       environment:
@@ -143,7 +125,7 @@ steps:
         PARAM_PATH: <<parameters.path>>
         PARAM_DOCKERFILE: <<parameters.dockerfile>>
         PARAM_PROFILE_NAME: <<parameters.profile-name>>
-        PARAM_ACCOUNT_ID: <<parameters.account-id>>
+        PARAM_REGISTRY_ID: <<parameters.registry-id>>
         PARAM_REGION: <<parameters.region>>
         PARAM_PLATFORM: <<parameters.platform>>
         PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>

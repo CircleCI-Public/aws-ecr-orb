@@ -6,14 +6,13 @@ EXTRA_BUILD_ARGS=$(eval echo "${PARAM_EXTRA_BUILD_ARGS}")
 FILE_PATH=$(eval echo "${PARAM_PATH}")
 DOCKERFILE=$(eval echo "${PARAM_DOCKERFILE}")
 PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
-ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
+REGISTRY_ID=$(eval echo "${PARAM_REGISTRY_ID}")
 REGION=$(eval echo "${PARAM_REGION}")
-# REGION=$(eval echo "\$${AWS_REGION}")
 PLATFORM=$(eval echo "${PARAM_PLATFORM}")
 PUBLIC_REGISTRY=$(eval echo "${PARAM_PUBLIC_REGISTRY}")
 PUSH_IMAGE=$(eval echo "${PARAM_PUSH_IMAGE}")
 
-ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+ACCOUNT_URL="${REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 ECR_COMMAND="ecr"
@@ -21,13 +20,13 @@ ECR_COMMAND="ecr"
 if [ "$PUBLIC_REGISTRY" == "1" ]; then
     REGION="us-east-1"
     ECR_COMMAND="ecr-public"
-    ACCOUNT_URL="public.ecr.aws/${ACCOUNT_ID}"
+    ACCOUNT_URL="public.ecr.aws/${REGISTRY_ID}"
 fi
 
 IFS="," read -ra DOCKER_TAGS <<< "${TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${SKIP_WHEN_TAGS_EXIST}" = "1" ]; then
-      docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PROFILE_NAME}" --registry-id "${ACCOUNT_ID}" --region "${REGION}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
+      docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PROFILE_NAME}" --registry-id "${REGISTRY_ID}" --region "${REGION}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "1" ]; then
       docker pull "${ACCOUNT_URL}/${REPO}:${tag}"
       let "number_of_tags_in_ecr+=1"

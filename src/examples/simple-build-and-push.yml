@@ -27,8 +27,8 @@ usage:
             # name of env var storing your AWS region, defaults to AWS_REGION
             region: AWS_REGION_ENV_VAR_NAME
 
-            # name of env var storing your ECR account ID, defaults to AWS_ECR_ACCOUNT_ID
-            account-id: AWS_ECR_ACCOUNT_ID_ENV_VAR_NAME
+            # name of env var storing your ECR Registry ID
+            registry-id: AWS_ECR_REGISTRY_ID
 
             # name of your ECR repository
             repo: myECRRepository

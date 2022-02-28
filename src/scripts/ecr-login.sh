@@ -1,9 +1,9 @@
 #!/bin/bash
 REGION=$(eval echo "${PARAM_REGION}")
 PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
-ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
+REGISTRY_ID=$(eval echo "${PARAM_REGISTRY_ID}")
 PUBLIC_REGISTRY=$(eval echo "${PARAM_PUBLIC_REGISTRY}")
-ACCOUNT_URL="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+ACCOUNT_URL="${REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 
 if [ "$PUBLIC_REGISTRY" == "1" ]; then

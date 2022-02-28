@@ -171,7 +171,7 @@ workflows:
           new-profile-name: bvu
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
-          executor: ["arm64"]
+          executor: arm64
           matrix:
             parameters:
               region: ["us-west-2","us-west-1"]

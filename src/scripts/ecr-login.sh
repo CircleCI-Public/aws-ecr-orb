@@ -1,5 +1,5 @@
 #!/bin/bash
-REGION=$(eval echo "\$${PARAM_REGION}")
+REGION=$(eval echo "${PARAM_REGION}")
 PROFILE_NAME=$(eval echo "${PARAM_PROFILE_NAME}")
 ACCOUNT_ID=$(eval echo "\$${PARAM_ACCOUNT_ID}")
 PUBLIC_REGISTRY=$(eval echo "${PARAM_PUBLIC_REGISTRY}")

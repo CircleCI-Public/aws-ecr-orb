@@ -170,7 +170,7 @@ workflows:
           # role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
           new-profile-name: bvu
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.region>> --force
           executor: arm64
           matrix:
             parameters:
@@ -260,5 +260,8 @@ workflows:
             # - integration-tests-named-profile-amd64
             # - integration-tests-skip-when-tags-exist-amd64
             - integration-tests-default-profile-arm64
+            - integration-tests-multi-region-us-west-1
+            - integration-tests-multi-region-us-west-2
             # - integration-tests-named-profile-arm64
             # - integration-tests-skip-when-tags-exist-arm64
+            

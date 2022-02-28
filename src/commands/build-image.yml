@@ -117,21 +117,21 @@ parameters:
 
 steps:
 
-  # - when:
-  #     condition:
-  #       or:
-  #         - <<parameters.ecr-login>>
-  #         - <<parameters.skip-when-tags-exist>>
-  #     steps:
-  #       - ecr-login:
-  #           profile-name: <<parameters.profile-name>>
-  #           region: <<parameters.region>>
-  #           aws-access-key-id: <<parameters.aws-access-key-id>>
-  #           aws-secret-access-key: <<parameters.aws-secret-access-key>>
-  #           new-profile-name: <<parameters.new-profile-name>>
-  #           role-arn: <<parameters.role-arn>>
-  #           source-profile: <<parameters.source-profile>>
-  #           public-registry: <<parameters.public-registry>>
+  - when:
+      condition:
+        or:
+          - <<parameters.ecr-login>>
+          - <<parameters.skip-when-tags-exist>>
+      steps:
+        - ecr-login:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            aws-access-key-id: <<parameters.aws-access-key-id>>
+            aws-secret-access-key: <<parameters.aws-secret-access-key>>
+            new-profile-name: <<parameters.new-profile-name>>
+            role-arn: <<parameters.role-arn>>
+            source-profile: <<parameters.source-profile>>
+            public-registry: <<parameters.public-registry>>
 
   - run:
       name: Build Docker Image with buildx

@@ -67,6 +67,7 @@ steps:
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       version: <<parameters.aws-cli-version>>
+      region: <<parameters.region>>
 
   - when:
       condition: <<parameters.role-arn>>

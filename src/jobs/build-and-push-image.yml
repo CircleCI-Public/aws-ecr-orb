@@ -246,8 +246,3 @@ steps:
       platform: <<parameters.platform>>
       region: <<parameters.region>>
       public-registry: <<parameters.public-registry>>
-  - store_artifacts:
-      path: test.txt
-
-
-      # this should only have checkout build and push.  Copy GCP Orb

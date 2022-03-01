@@ -78,25 +78,25 @@ workflows:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
 
-      # - aws-ecr/build-and-push-image:
-      #     name: integration-tests-default-profile-<<matrix.platform>>
-      #     attach-workspace: true
-      #     workspace-root: workspace
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>>
-      #     create-repo: true
-      #     context: [CPE_ORBS_AWS]
-      #     tag: integration,myECRRepoTag
-      #     dockerfile: sample/Dockerfile
-      #     path: workspace
-      #     extra-build-args: --compress
-      #     executor: amd64
-      #     public-registry: true
-      #     post-steps:
-      #       - run: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
-      #     matrix:
-      #       parameters:
-      #         platform: ["linux/arm64", "linux/amd64"]
-      #     requires: [pre-integration]
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-default-profile-<<matrix.platform>>
+          attach-workspace: true
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>>
+          create-repo: true
+          context: [CPE_ORBS_AWS]
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          executor: amd64
+          public-registry: true
+          post-steps:
+            - run: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
+          matrix:
+            parameters:
+              platform: ["linux/arm64", "linux/amd64"]
+          requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile
@@ -121,49 +121,49 @@ workflows:
           source-tag: integration
           target-tag: latest
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
           requires:
             - integration-tests-named-profile
 
-      # - aws-ecr/build-and-push-image:
-      #     name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
-      #     attach-workspace: true
-      #     context: [CPE_ORBS_AWS]
-      #     workspace-root: workspace
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
-      #     create-repo: true
-      #     tag: integration,myECRRepoTag
-      #     dockerfile: sample/Dockerfile
-      #     path: workspace
-      #     extra-build-args: --compress
-      #     skip-when-tags-exist: true
-      #     region: us-west-2
-      #     matrix:
-      #       parameters:
-      #         executor: ["amd64", "arm64"]
-      #     requires: [pre-integration]
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
+          attach-workspace: true
+          context: [CPE_ORBS_AWS]
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
+          create-repo: true
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          skip-when-tags-exist: true
+          region: us-west-2
+          matrix:
+            parameters:
+              executor: ["amd64", "arm64"]
+          requires: [pre-integration]
 
-      # - aws-ecr/build-and-push-image:
-      #     name: integration-tests-skip-when-tags-exist-<<matrix.executor>>
-      #     attach-workspace: true
-      #     context: [CPE_ORBS_AWS]
-      #     workspace-root: workspace
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
-      #     tag: integration,myECRRepoTag
-      #     dockerfile: sample/Dockerfile
-      #     path: workspace
-      #     extra-build-args: --compress
-      #     skip-when-tags-exist: true
-      #     aws-cli-version: 2.4.10
-      #     region: us-west-2
-      #     post-steps:
-      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
-      #     matrix:
-      #       parameters:
-      #         executor: ["amd64", "arm64"]
-      #     requires:
-      #       - integration-tests-skip-when-tags-exist-populate-image-amd64
-      #       - integration-tests-skip-when-tags-exist-populate-image-arm64
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-skip-when-tags-exist-<<matrix.executor>>
+          attach-workspace: true
+          context: [CPE_ORBS_AWS]
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          skip-when-tags-exist: true
+          aws-cli-version: 2.4.10
+          region: us-west-2
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
+          matrix:
+            parameters:
+              executor: ["amd64", "arm64"]
+          requires:
+            - integration-tests-skip-when-tags-exist-populate-image-amd64
+            - integration-tests-skip-when-tags-exist-populate-image-arm64
 
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr
@@ -178,9 +178,9 @@ workflows:
             branches:
               only: master
           requires:
-            # - integration-tests-default-profile-linux/arm64
-            # - integration-tests-default-profile-linux/amd64
+            - integration-tests-default-profile-linux/arm64
+            - integration-tests-default-profile-linux/amd64
+            - integration-tests-skip-when-tags-exist-amd64
+            - integration-tests-skip-when-tags-exist-arm64
             - integration-tests-named-profile
             - integration-tests-tag-existing-image
-            # - integration-tests-skip-when-tags-exist-amd64
-            # - integration-tests-skip-when-tags-exist-arm64

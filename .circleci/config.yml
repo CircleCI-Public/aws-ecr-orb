@@ -54,27 +54,6 @@ jobs:
           source-tag: <<parameters.source-tag>>
           target-tag: <<parameters.target-tag>>
 
-  # build-and-push-to-many-regions:
-  #   executor: amd64
-  #   steps:
-  #     - attach_workspace:
-  #         at: .
-  #     - aws-ecr/create-repo:
-  #         profile-name: default
-  #     - aws-ecr/build-image:
-  #         repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region
-  #         tag: multi-region
-  #         dockerfile: sample/Dockerfile
-  #         path: workspace
-  #     - aws-ecr/push-image:
-  #         repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region
-  #         tag: multi-region
-  #         matrix:
-  #           parameters:
-  #             region: ["us-west-1", "us-west-2"]
-  #         post-steps:
-  #           - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region --force
-
 workflows:
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
@@ -99,24 +78,6 @@ workflows:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
 
-      # - aws-ecr/build-and-push-image:
-      #     name: integration-tests-default-profile-<<matrix.executor>>
-      #     attach-workspace: true
-      #     workspace-root: workspace
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>>
-      #     create-repo: true
-      #     context: [CPE_ORBS_AWS]
-      #     tag: integration,myECRRepoTag
-      #     dockerfile: sample/Dockerfile
-      #     path: workspace
-      #     extra-build-args: --compress
-      #     post-steps:
-      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
-      #     matrix:
-      #       parameters:
-      #         executor: ["amd64"]
-      #     requires: [pre-integration]
-
       - aws-ecr/build-and-push-image:
           name: integration-tests-default-profile-<<matrix.platform>>
           attach-workspace: true
@@ -129,7 +90,6 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
-          region: us-east-1
           public-registry: true
           post-steps:
             - run: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
@@ -138,35 +98,38 @@ workflows:
               platform: ["linux/arm64", "linux/amd64"]
           requires: [pre-integration]
 
-      # - tag-ecr-image:
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64
-      #     context: [CPE_ORBS_AWS]
-      #     source-tag: integration
-      #     target-tag: latest
-      #     post-steps:
-      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-arm64 --force
-      #     requires:
-      #       - integration-tests-default-profile-arm64
+      - aws-ecr/build-and-push-image:
+          name: integration-tests-named-profile-<<matrix.executor>>
+          attach-workspace: true
+          context: [CPE_ORBS_AWS]
+          workspace-root: workspace
+          profile-name: testing
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>>
+          create-repo: true
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: --compress
+          region: us-west-2
+          matrix:
+            parameters:
+              executor: ["amd64", "arm64"]
+          requires: [pre-integration]
 
-      # - aws-ecr/build-and-push-image:
-      #     name: integration-tests-named-profile-<<matrix.executor>>
-      #     attach-workspace: true
-      #     context: [CPE_ORBS_AWS]
-      #     workspace-root: workspace
-      #     profile-name: testing
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>>
-      #     create-repo: true
-      #     tag: integration,myECRRepoTag
-      #     dockerfile: sample/Dockerfile
-      #     path: workspace
-      #     extra-build-args: --compress
-      #     region: us-west-2
-      #     post-steps:
-      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>> --force
-      #     matrix:
-      #       parameters:
-      #         executor: ["amd64", "arm64"]
-      #     requires: [pre-integration]
+      - tag-ecr-image:
+          name: integration-tests-tag-existing-image-<<matrix.executor>>
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>>
+          context: [CPE_ORBS_AWS]
+          source-tag: integration
+          target-tag: latest
+          matrix:
+            parameters:
+              executor: ["amd64", "arm64"]
+          post-steps:
+            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.executor>>
+          requires:
+            - integration-tests-named-profile-arm64
+            - integration-tests-named-profile-amd64
 
       # - aws-ecr/build-and-push-image:
       #     name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
@@ -221,9 +184,11 @@ workflows:
             branches:
               only: master
           requires:
-            - integration-tests-default-profile-linux/arm64
-            - integration-tests-default-profile-linux/amd64
-            # - integration-tests-named-profile-amd64
-            # - integration-tests-named-profile-arm64
+            # - integration-tests-default-profile-linux/arm64
+            # - integration-tests-default-profile-linux/amd64
+            - integration-tests-named-profile-amd64
+            - integration-tests-named-profile-arm64
+            - integration-tests-tag-existing-image-amd64
+            - integration-tests-tag-existing-image-arm64
             # - integration-tests-skip-when-tags-exist-amd64
             # - integration-tests-skip-when-tags-exist-arm64

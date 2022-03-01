@@ -48,6 +48,5 @@ if [ "${SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${SKIP_WHEN_TAGS_EXIST}" = "1" -a $
     --platform "${PLATFORM}" \
     --progress plain \
     "$@" \
-    "${FILE_PATH}" 
-    
+    "${FILE_PATH}"     
 fi

@@ -11,7 +11,7 @@ parameters:
     type: string
     default: ${AWS_REGION}
     description: >
-      AWS region of ECR repository.
+      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
 
   repo:
     type: string

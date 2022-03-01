@@ -91,8 +91,10 @@ workflows:
           extra-build-args: --compress
           executor: amd64
           public-registry: true
-          post-steps:
-            - run: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
+          post-steps: 
+            - run: 
+                name: "Delete repository"
+                command: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
           matrix:
             parameters:
               platform: ["linux/arm64", "linux/amd64"]
@@ -110,7 +112,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          region: us-west-2
+          region: ${AWS_REGION}
           executor: amd64
           requires: [pre-integration]
 
@@ -121,7 +123,9 @@ workflows:
           source-tag: integration
           target-tag: latest
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
+            - run: 
+                name: "Delete repository"
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
           requires:
             - integration-tests-named-profile
 
@@ -137,7 +141,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
-          region: us-west-2
+          region: ${AWS_REGION}
           matrix:
             parameters:
               executor: ["amd64", "arm64"]
@@ -155,9 +159,13 @@ workflows:
           extra-build-args: --compress
           skip-when-tags-exist: true
           aws-cli-version: 2.4.10
-          region: us-west-2
+          region: ${AWS_REGION}
           post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
+            - run: 
+                name: "Delete repository"
+                command: |
+                  delete-repositoryaws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
+                  delete-repositoryaws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-populate-image-<<matrix.executor>> --force
           matrix:
             parameters:
               executor: ["amd64", "arm64"]

@@ -12,7 +12,7 @@ usage:
         image: ubuntu-2004:202101-01
         docker_layer_caching: true
       resource_class: arm.medium
-  
+
   workflows:
     build_and_push_image:
       jobs:

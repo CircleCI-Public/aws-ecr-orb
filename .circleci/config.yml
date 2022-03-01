@@ -40,6 +40,9 @@ jobs:
   tag-ecr-image:
     executor: <<parameters.executor>>
     parameters:
+      executor:
+        type: executor
+        default: amd64
       repo:
         type: string
       source-tag:

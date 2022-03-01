@@ -38,8 +38,7 @@ jobs:
           paths: [sample/Dockerfile]
 
   tag-ecr-image:
-    docker:
-      - image: cimg/base:stable
+    executor: <<parameters.executor>>
     parameters:
       repo:
         type: string

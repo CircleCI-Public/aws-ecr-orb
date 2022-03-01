@@ -78,25 +78,25 @@ workflows:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-default-profile-<<matrix.platform>>
-          attach-workspace: true
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>>
-          create-repo: true
-          context: [CPE_ORBS_AWS]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          executor: amd64
-          public-registry: true
-          post-steps:
-            - run: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
-          matrix:
-            parameters:
-              platform: ["linux/arm64", "linux/amd64"]
-          requires: [pre-integration]
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-default-profile-<<matrix.platform>>
+      #     attach-workspace: true
+      #     workspace-root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>>
+      #     create-repo: true
+      #     context: [CPE_ORBS_AWS]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     executor: amd64
+      #     public-registry: true
+      #     post-steps:
+      #       - run: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
+      #     matrix:
+      #       parameters:
+      #         platform: ["linux/arm64", "linux/amd64"]
+      #     requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile
@@ -180,9 +180,7 @@ workflows:
           requires:
             # - integration-tests-default-profile-linux/arm64
             # - integration-tests-default-profile-linux/amd64
-            - integration-tests-named-profile-amd64
-            - integration-tests-named-profile-arm64
-            - integration-tests-tag-existing-image-amd64
-            - integration-tests-tag-existing-image-arm64
+            - integration-tests-named-profile
+            - integration-tests-tag-existing-image
             # - integration-tests-skip-when-tags-exist-amd64
             # - integration-tests-skip-when-tags-exist-arm64

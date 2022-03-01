@@ -120,6 +120,7 @@ workflows:
           context: [CPE_ORBS_AWS]
           source-tag: integration
           target-tag: latest
+          region: us-west-2
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           requires:

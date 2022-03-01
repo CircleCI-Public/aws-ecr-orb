@@ -91,8 +91,8 @@ workflows:
           extra-build-args: --compress
           executor: amd64
           public-registry: true
-          post-steps: 
-            - run: 
+          post-steps:
+            - run:
                 name: "Delete repository"
                 command: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
           matrix:
@@ -123,7 +123,7 @@ workflows:
           source-tag: integration
           target-tag: latest
           post-steps:
-            - run: 
+            - run:
                 name: "Delete repository"
                 command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
           requires:
@@ -161,7 +161,7 @@ workflows:
           aws-cli-version: 2.4.10
           region: ${AWS_REGION}
           post-steps:
-            - run: 
+            - run:
                 name: "Delete repository"
                 command: |
                   delete-repositoryaws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force

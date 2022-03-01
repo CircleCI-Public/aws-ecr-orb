@@ -9,7 +9,7 @@ parameters:
 
   region:
     type: string
-    default: ""
+    default: "us-west-2"
     description: >
       AWS region of ECR repository.
 

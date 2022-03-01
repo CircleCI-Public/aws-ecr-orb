@@ -18,7 +18,6 @@ docker_tag_args=""
 ECR_COMMAND="ecr"
 
 if [ "$PUBLIC_REGISTRY" == "1" ]; then
-    REGION="us-east-1"
     ECR_COMMAND="ecr-public"
     ACCOUNT_URL="public.ecr.aws/${REGISTRY_ID}"
 fi

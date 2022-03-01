@@ -11,7 +11,7 @@ if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
     ACCOUNT_URL="public.ecr.aws/${PARAM_REGISTRY_ID}"
 fi
 
-IFS="," read -ra DOCKER_TAGS <<< "${PARAM_TAG}"
+IFS="," read -ra DOCKER_TAGS <<< "${!PARAM_TAG}"
 for tag in "${PARAM_DOCKER_TAGS[@]}"; do
   if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" ]; then
       docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PARAM_PROFILE_NAME}" --registry-id "${PARAM_REGISTRY_ID}" --region "${REGION}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")

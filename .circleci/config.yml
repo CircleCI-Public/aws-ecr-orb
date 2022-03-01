@@ -129,7 +129,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
-          region: us-west-2
+          region: us-east-1
           public-registry: true
           post-steps:
             - run: aws ecr-public delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.platform>> --force
@@ -198,6 +198,7 @@ workflows:
           extra-build-args: --compress
           skip-when-tags-exist: true
           aws-cli-version: 2.4.10
+          region: us-west-2
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
           matrix:

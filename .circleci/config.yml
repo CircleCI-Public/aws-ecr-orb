@@ -132,7 +132,6 @@ workflows:
           requires:
             - integration-tests-named-profile-arm64
             - integration-tests-named-profile-amd64
-
       # - aws-ecr/build-and-push-image:
       #     name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
       #     attach-workspace: true

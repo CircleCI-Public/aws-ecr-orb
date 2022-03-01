@@ -32,8 +32,9 @@ parameters:
     default: "default"
 
   new-profile-name:
-    description: Name of new profile associated with role arn.
     type: string
+    default: ""
+    description: Name of new profile associated with role arn.
 
   aws-access-key-id:
     type: env_var_name

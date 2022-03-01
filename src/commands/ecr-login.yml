@@ -27,13 +27,13 @@ parameters:
     description: Role ARN that the profile should take.
 
   source-profile:
-      description: Source profile containing credentials to assume the role with role-arn.
-      type: string
-      default: "default"
+    description: Source profile containing credentials to assume the role with role-arn.
+    type: string
+    default: "default"
 
   new-profile-name:
-      description: Name of new profile associated with role arn.
-      type: string
+    description: Name of new profile associated with role arn.
+    type: string
 
   aws-access-key-id:
     type: env_var_name
@@ -62,14 +62,12 @@ parameters:
     default: false
 
 steps:
-  # - run: |
-  #     export AWS_REGION="us-west-2"
+
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
       version: <<parameters.aws-cli-version>>
-      # region: ${AWS_REGION}
 
   - when:
       condition: <<parameters.role-arn>>

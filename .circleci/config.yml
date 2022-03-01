@@ -100,20 +100,6 @@ workflows:
           name: pre-integration
 
       # - aws-ecr/build-and-push-image:
-      #     name: integration-tests-default-multi-region
-      #     attach-workspace: true
-      #     workspace-root: workspace
-      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region
-      #     create-repo: true
-      #     tag: multi-region
-      #     dockerfile: sample/Dockerfile
-      #     path: workspace
-      #     post-steps:
-      #       - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-region --force
-      #     executor: amd64
-      #     requires: [pre-integration]
-
-      # - aws-ecr/build-and-push-image:
       #     name: integration-tests-default-profile-<<matrix.executor>>
       #     attach-workspace: true
       #     workspace-root: workspace
@@ -142,39 +128,13 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          platform: linux/arm64
+          # platform: linux/arm64
           region: us-west-2
-          # public-registry: true
-          # role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
-          new-profile-name: bvu
           post-steps:
             - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.executor>> --force
           matrix:
             parameters:
-              executor: ["arm64"]
-          requires: [pre-integration]
-
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-multi-region-<<matrix.region>>
-          attach-workspace: true
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.region>>
-          create-repo: true
-          context: [CPE_ORBS_AWS]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          platform: linux/arm64
-          # public-registry: true
-          # role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
-          new-profile-name: bvu
-          post-steps:
-            - run: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile-<<matrix.region>> --force
-          executor: arm64
-          matrix:
-            parameters:
-              region: ["us-west-2","us-west-1"]
+              executor: ["arm64", "amd64"]
           requires: [pre-integration]
 
       # - tag-ecr-image:
@@ -260,7 +220,6 @@ workflows:
             # - integration-tests-named-profile-amd64
             # - integration-tests-skip-when-tags-exist-amd64
             - integration-tests-default-profile-arm64
-            - integration-tests-multi-region-us-west-1
-            - integration-tests-multi-region-us-west-2
+            - integration-tests-default-profile-amd64
             # - integration-tests-named-profile-arm64
             # - integration-tests-skip-when-tags-exist-arm64

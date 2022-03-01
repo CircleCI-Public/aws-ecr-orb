@@ -29,6 +29,13 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@x.y.z
+  
+executors:
+  arm64:
+    machine:
+      image: ubuntu-2004:202101-01
+      docker_layer_caching: true
+    resource_class: arm.medium
 
 workflows:
   complete_build_and_push:
@@ -36,74 +43,75 @@ workflows:
       # build and push image to ECR
       - aws-ecr/build-and-push-image:
 
-          # required if any necessary secrets are stored via Contexts
-          context: myContext
+            # select exectuor defined above
+            executor: arm64
 
-          # AWS profile name, defaults to "default"
-          profile-name: myProfileName
+            # name of your ECR repository
+            repo: myECRRepository
 
-          # AWS role profile should assume
-          role-arn: arn:aws:iam::123456789:role/some-role
+            # set this to true to create the repository if it does not already exist, defaults to "false"
+            create-repo: true
 
-          # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID
-          aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
+            # required if any necessary secrets are stored via Contexts
+            context: myContext
 
-          # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
-          aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
+            # AWS profile name, defaults to "default"
+            profile-name: myProfileName
 
-          # name of env var storing your AWS region, defaults to AWS_REGION
-          region: AWS_REGION_ENV_VAR_NAME
+            # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID
+            aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
 
-          # name of env var storing your ECR account URL, defaults to AWS_ECR_ACCOUNT_URL
-          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+            # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
+            aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
 
-          # name of your ECR repository
-          repo: myECRRepository
+            # Name of new profile associated with role arn.
+            new-profile-name: newProfileName
 
-          # set this to use CircleCI's remote Docker environment for Docker and docker-compose commands,
-          # defaults to "false"
-          setup-remote-docker: true
+            # Source profile containing credentials to assume the role with role-arn.
+            source-profile: sourceProfileName
 
-          # when setup-remote-docker is true, customize docker engine version (default is `19.03.13`)
-          remote-docker-version: 19.03.13
+            # Role ARN that new profile should take
+            role-arn: arn:aws:iam::123456789012:role/some-role
 
-          # set this to enable Docker layer caching if using remote Docker engine.
-          # defaults to "false"
-          remote-docker-layer-caching: true
+            #Your AWS region
+            region: AWS_REGION
 
-          # set this to enable dockerhub authenticated pulls, defaults to false.
-          docker-login: true
+            # name of env var storing your ECR Registry ID
+            registry-id: AWS_ECR_REGISTRY_ID
 
-          # name of env var storing your dockerhub username, defaults to DOCKERHUB_USERNAME.
-          dockerhub-username: DOCKERHUB_USERNAME
+            # ECR image tags (comma separated string), defaults to "latest"
+            tag: latest,myECRRepoTag
 
-          # name of env var storing your dockerhub password, defaults to DOCKERHUB_PASSWORD.
-          dockerhub-password: DOCKERHUB_PASSWORD
+            # name of Dockerfile to use, defaults to "Dockerfile"
+            dockerfile: myDockerfile
 
-          # set this to true to create the repository if it does not already exist, defaults to "false"
-          create-repo: true
+            # path to Dockerfile, defaults to . (working directory)
+            path: pathToMyDockerfile
 
-          # set this to true to scan the created repository for CVEs on push, defaults to "true"
-          repo-scan-on-push: true
+            # Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+            aws-cli-version: latest
 
-          # ECR image tags (comma-separated string), defaults to "latest"
-          tag: latest,myECRRepoTag
+            # Boolean value if pushing to public registry. Defaults to true.
+            public-registry: false
 
-          # name of Dockerfile to use, defaults to "Dockerfile"
-          dockerfile: myDockerfile
+            # Security scans repository on push.  Defaults to true.
+            repo-scan-on-push: true
 
-          # path to Dockerfile, defaults to . (working directory)
-          path: pathToMyDockerfile
+            # The amount of time to allow the docker build command to run before timing out, defaults to "10m"
+            no-output-timeout: 20m
 
-          # The amount of time to allow the docker build command to run before timing out (default is `10m`)
-          no-output-timeout: 15m
+            # Extra docker buildx build arguments
+            extra-build-args: --compress
 
-          # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
-          # you are tagging with the git commit hash. Specially useful for faster code reverts.
-          skip-when-tags-exist: false
+            # Specify platform targets for built docker image.
+            platform: linux/amd64
 
-          # Set the resource_class option on the executor, defaults to "medium"
-          resource-class: medium
+            # Push image to repository after building.  Defaults to true
+            push-image: true
+
+            # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
+            # you are tagging with the git commit hash. Specially useful for faster code reverts.
+            skip-when-tags-exist: false
 ```
 
 ## Contributing

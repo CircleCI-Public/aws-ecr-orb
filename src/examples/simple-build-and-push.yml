@@ -6,12 +6,20 @@ usage:
   orbs:
     aws-ecr: circleci/aws-ecr@<<pipeline.parameters.dev-orb-version>>
 
+  executors:
+    arm64:
+      machine:
+        image: ubuntu-2004:202101-01
+        docker_layer_caching: true
+      resource_class: arm.medium
+  
   workflows:
     build_and_push_image:
       jobs:
         # build and push image to ECR
         - aws-ecr/build-and-push-image:
-
+            # Select executor defined above
+            executor: arm64
             # name of your ECR repository
             repo: myECRRepository
 

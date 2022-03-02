@@ -1,15 +1,15 @@
 #!/bin/bash
 REGION=$(eval echo "${PARAM_REGION}")
 REPO=$(eval echo "${PARAM_REPO}")
-TAG=$(eval echo "$PARAM_TAG")
-ACCOUNT_URL="${PARAM_REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
+TAG=$(eval echo "${PARAM_TAG}")
+ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 ECR_COMMAND="ecr"
 
 if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
     ECR_COMMAND="ecr-public"
-    ACCOUNT_URL="public.ecr.aws/${PARAM_REGISTRY_ID}"
+    ACCOUNT_URL="public.ecr.aws/${!PARAM_REGISTRY_ID}"
 fi
 
 IFS="," read -ra DOCKER_TAGS <<< "${TAG}"
@@ -24,6 +24,7 @@ for tag in "${PARAM_DOCKER_TAGS[@]}"; do
   docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"
 done
 
+  echo "${docker_tag_args}" >> test.txt
 if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
     if [ "$PARAM_PUSH_IMAGE" == "1" ]; then
       set -- "$@" --push

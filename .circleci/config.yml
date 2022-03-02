@@ -165,7 +165,6 @@ workflows:
                 name: "Delete repository"
                 command: |
                   aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
-                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-populate-image-<<matrix.executor>> --force
           matrix:
             parameters:
               executor: ["amd64", "arm64"]

@@ -35,7 +35,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
 done
 echo "tag arfs ${docker_tag_args}" >> test.txt
 if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
-    if [ "$PARAM _PUSH_IMAGE" == "1" ]; then
+    if [ "$PARAM_PUSH_IMAGE" == "1" ]; then
       set -- "$@" --push
     fi 
     if [ -n "$PARAM_EXTRA_BUILD_ARGS" ]; then

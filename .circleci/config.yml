@@ -186,9 +186,9 @@ workflows:
             branches:
               only: master
           requires:
-            - integration-tests-default-profile-linux/arm64
-            - integration-tests-default-profile-linux/amd64
-            - integration-tests-skip-when-tags-exist-amd64
-            - integration-tests-skip-when-tags-exist-arm64
+            # - integration-tests-default-profile-linux/arm64
+            # - integration-tests-default-profile-linux/amd64
+            # - integration-tests-skip-when-tags-exist-amd64
+            # - integration-tests-skip-when-tags-exist-arm64
             - integration-tests-named-profile
             - integration-tests-tag-existing-image

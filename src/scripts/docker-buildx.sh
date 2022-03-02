@@ -12,7 +12,7 @@ REGION=$(eval echo "${PARAM_REGION}")
 PUBLIC_REGISTRY=$(eval echo "${PARAM_PUBLIC_REGISTRY}")
 # PUSH_IMAGE=$(eval echo "${PARAM_PUSH_IMAGE}")
 
-ACCOUNT_URL="${!REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
+ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 ECR_COMMAND="ecr"

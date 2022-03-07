@@ -95,7 +95,7 @@ workflows:
             - run:
                 name: "Delete repository"
                 command: aws ecr-public delete-repository --repository-name --region us-east-1 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
-          platform: linux/amd64,linux/arm64          
+          platform: linux/amd64,linux/arm64     
           # matrix:
           #   parameters:
           #     platform: ["linux/arm64", "linux/amd64"]

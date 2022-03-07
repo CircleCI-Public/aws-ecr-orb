@@ -13,8 +13,9 @@ if [ -n "${PARAM_PROFILE_NAME}" ]; then
     set -- "$@" --profile "${PARAM_PROFILE_NAME}"
 fi
 
-if [ -f ~/.docker/config.json ]; then
-    echo "Credential helper is already installed"
-else
+# if [ -f ~/.docker/config.json ]; then
+#     echo "Credential helper is already installed"
+# else
+#     aws "${ECR_COMMAND}" get-login-password --region "${REGION}" "$@" | docker login --username AWS --password-stdin "${ACCOUNT_URL}"
+# fi
     aws "${ECR_COMMAND}" get-login-password --region "${REGION}" "$@" | docker login --username AWS --password-stdin "${ACCOUNT_URL}"
-fi

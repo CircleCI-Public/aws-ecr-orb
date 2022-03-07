@@ -33,9 +33,9 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}
     if [ -n "$PARAM_EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${PARAM_EXTRA_BUILD_ARGS}"
     fi
+    
     docker buildx create --name docker-multiarch --platform linux/386,linux/amd64,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64,linux/mips64le,linux/ppc64le,linux/riscv64,linux/s390x \
     docker buildx inspect --builder docker-multiarch --bootstrap \
-    docker buildx use docker-multiarch \
     docker buildx build \
     -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
     ${docker_tag_args} \

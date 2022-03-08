@@ -90,7 +90,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
-          public-repo: true
+          public-repository: true
           post-steps:
             - run:
                 name: "Delete repository"

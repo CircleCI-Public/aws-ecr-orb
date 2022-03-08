@@ -78,59 +78,59 @@ workflows:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-default-profile
-          attach-workspace: true
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
-          create-repo: true
-          context: [CPE_ORBS_AWS]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          executor: amd64
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
-          platform: linux/amd64,linux/arm64
-          requires: [pre-integration]
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-default-profile
+      #     attach-workspace: true
+      #     workspace-root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
+      #     create-repo: true
+      #     context: [CPE_ORBS_AWS]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     executor: amd64
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
+      #     platform: linux/amd64,linux/arm64
+      #     requires: [pre-integration]
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-pubic-registry
-          attach-workspace: true
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry
-          create-repo: true
-          context: [CPE_ORBS_AWS]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          executor: amd64
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry --force
-          platform: linux/amd64
-          requires: [pre-integration]
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-pubic-registry
+      #     attach-workspace: true
+      #     workspace-root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry
+      #     create-repo: true
+      #     context: [CPE_ORBS_AWS]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     executor: amd64
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry --force
+      #     platform: linux/amd64
+      #     requires: [pre-integration]
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-named-profile
-          attach-workspace: true
-          context: [CPE_ORBS_AWS]
-          workspace-root: workspace
-          profile-name: testing
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
-          create-repo: true
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          region: ${AWS_REGION}
-          executor: amd64
-          requires: [pre-integration]
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-named-profile
+      #     attach-workspace: true
+      #     context: [CPE_ORBS_AWS]
+      #     workspace-root: workspace
+      #     profile-name: testing
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+      #     create-repo: true
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     region: ${AWS_REGION}
+      #     executor: amd64
+      #     requires: [pre-integration]
 
       - tag-ecr-image:
           name: integration-tests-tag-existing-image
@@ -145,48 +145,48 @@ workflows:
           requires:
             - integration-tests-named-profile
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
-          attach-workspace: true
-          context: [CPE_ORBS_AWS]
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
-          create-repo: true
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          skip-when-tags-exist: true
-          region: ${AWS_REGION}
-          matrix:
-            parameters:
-              executor: ["amd64", "arm64"]
-          requires: [pre-integration]
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
+      #     attach-workspace: true
+      #     context: [CPE_ORBS_AWS]
+      #     workspace-root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
+      #     create-repo: true
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     skip-when-tags-exist: true
+      #     region: ${AWS_REGION}
+      #     matrix:
+      #       parameters:
+      #         executor: ["amd64", "arm64"]
+      #     requires: [pre-integration]
 
-      - aws-ecr/build-and-push-image:
-          name: integration-tests-skip-when-tags-exist-<<matrix.executor>>
-          attach-workspace: true
-          context: [CPE_ORBS_AWS]
-          workspace-root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra-build-args: --compress
-          skip-when-tags-exist: true
-          aws-cli-version: 2.4.10
-          region: ${AWS_REGION}
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: |
-                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
-          matrix:
-            parameters:
-              executor: ["amd64", "arm64"]
-          requires:
-            - integration-tests-skip-when-tags-exist-populate-image-amd64
-            - integration-tests-skip-when-tags-exist-populate-image-arm64
+      # - aws-ecr/build-and-push-image:
+      #     name: integration-tests-skip-when-tags-exist-<<matrix.executor>>
+      #     attach-workspace: true
+      #     context: [CPE_ORBS_AWS]
+      #     workspace-root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra-build-args: --compress
+      #     skip-when-tags-exist: true
+      #     aws-cli-version: 2.4.10
+      #     region: ${AWS_REGION}
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: |
+      #             aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>> --force
+      #     matrix:
+      #       parameters:
+      #         executor: ["amd64", "arm64"]
+      #     requires:
+      #       - integration-tests-skip-when-tags-exist-populate-image-amd64
+      #       - integration-tests-skip-when-tags-exist-populate-image-arm64
 
       - orb-tools/dev-promote-prod-from-commit-subject:
           orb-name: circleci/aws-ecr
@@ -201,9 +201,9 @@ workflows:
             branches:
               only: master
           requires:
-            - integration-tests-default-profile
+            # - integration-tests-default-profile
             - integration-tests-pubic-registry
-            - integration-tests-skip-when-tags-exist-amd64
-            - integration-tests-skip-when-tags-exist-arm64
-            - integration-tests-named-profile
-            - integration-tests-tag-existing-image
+            # - integration-tests-skip-when-tags-exist-amd64
+            # - integration-tests-skip-when-tags-exist-arm64
+            # - integration-tests-named-profile
+            # - integration-tests-tag-existing-image

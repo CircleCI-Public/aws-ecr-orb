@@ -7,7 +7,17 @@ ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 
+IFS="," read -ra PLATFORMS <<< "${PARAM_PLATFORM}"
+for architecture in "${PLATFORMS[@]}"; do
+    arch_count=$((arch_count+1))
+done
+
 if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
+    if [ $arch_count -gt 1 ]; then
+      echo "AWS ECR does not support multiple platfroms for public registries. Please specify only one platform and try again"
+      exit 1
+    fi
+
     ECR_COMMAND="ecr-public"
     ACCOUNT_URL="public.ecr.aws/${!PARAM_REGISTRY_ID}"
 fi

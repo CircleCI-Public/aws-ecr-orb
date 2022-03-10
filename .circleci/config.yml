@@ -109,12 +109,11 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
-          region: us-east-1
           public-registry: true
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry --force
+                command: aws ecr-public delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry --force
           platform: linux/amd64
           requires: [pre-integration]
 

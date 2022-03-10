@@ -42,14 +42,25 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}
     if [ -n "$PARAM_EXTRA_BUILD_ARGS" ]; then
        set -- "$@" "${PARAM_EXTRA_BUILD_ARGS}"
     fi
-    docker context create builder
-    docker run --privileged --rm tonistiigi/binfmt --install all
-    docker --context builder buildx create --use
-    docker --context builder buildx build \
-    -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
-    ${docker_tag_args} \
-    --platform "${PARAM_PLATFORM}" \
-    --progress plain \
-    "$@" \
-    "${PARAM_PATH}" 
+
+    if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
+        docker buildx build \
+        -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
+        ${docker_tag_args} \
+        --platform "${PARAM_PLATFORM}" \
+        --progress plain \
+        "$@" \
+        "${PARAM_PATH}" 
+    else
+        docker context create builder
+        docker run --privileged --rm tonistiigi/binfmt --install all
+        docker --context builder buildx create --use
+        docker --context builder buildx build \
+        -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
+        ${docker_tag_args} \
+        --platform "${PARAM_PLATFORM}" \
+        --progress plain \
+        "$@" \
+        "${PARAM_PATH}" 
+    fi
 fi

@@ -110,6 +110,7 @@ workflows:
           extra-build-args: --compress
           executor: amd64
           region: us-east-1
+          public-registry: true
           post-steps:
             - run:
                 name: "Delete repository"

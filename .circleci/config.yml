@@ -109,6 +109,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
+          region: us-east-1
           post-steps:
             - run:
                 name: "Delete repository"

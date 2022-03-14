@@ -8,11 +8,9 @@ number_of_tags_in_ecr=0
 docker_tag_args=""
 
 IFS="," read -ra PLATFORMS <<< "${PARAM_PLATFORM}"
-for architecture in "${PLATFORMS[@]}"; do
-    arch_count=$((arch_count+1))
-done
+arch_count=${#PLATFORMS[@]}
 
-if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
+if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
     if [ $arch_count -gt 1 ]; then
       echo "AWS ECR does not support multiple platforms for public registries. Please specify only one platform and try again"
       exit 1
@@ -28,14 +26,14 @@ for tag in "${DOCKER_TAGS[@]}"; do
       docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PARAM_PROFILE_NAME}" --registry-id "${!PARAM_REGISTRY_ID}" --region "${REGION}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "1" ]; then
       docker pull "${ACCOUNT_URL}/${REPO}:${tag}"
-      let "number_of_tags_in_ecr+=1"
+      number_of_tags_in_ecr=$((number_of_tags_in_ecr+=1))
     fi
   fi
   docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"
 done
 
-if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" -a ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]; then
-    if [ "$PARAM_PUSH_IMAGE" == "1" ]; then
+if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
+    if [ "${PARAM_PUSH_IMAGE}" == "1" ]; then
       set -- "$@" --push
     fi
 
@@ -43,7 +41,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}
        set -- "$@" "${PARAM_EXTRA_BUILD_ARGS}"
     fi
 
-    if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
+    if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
         docker buildx build \
         -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
         ${docker_tag_args} \

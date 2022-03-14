@@ -246,5 +246,6 @@ steps:
       platform: <<parameters.platform>>
       region: <<parameters.region>>
       public-registry: <<parameters.public-registry>>
+      push-image: <<parameters.push-image>>
   - store_artifacts:
       path: test.txt

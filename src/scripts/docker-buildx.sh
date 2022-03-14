@@ -8,9 +8,7 @@ number_of_tags_in_ecr=0
 docker_tag_args=""
 
 IFS="," read -ra PLATFORMS <<< "${PARAM_PLATFORM}"
-for architecture in "${PLATFORMS[@]}"; do
-    arch_count=$((arch_count+1))
-done
+arch_count=${#PLATFORMS[@]}
 
 if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
     if [ $arch_count -gt 1 ]; then
@@ -28,7 +26,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
       docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PARAM_PROFILE_NAME}" --registry-id "${!PARAM_REGISTRY_ID}" --region "${REGION}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "1" ]; then
       docker pull "${ACCOUNT_URL}/${REPO}:${tag}"
-      let "number_of_tags_in_ecr+=1"
+      number_of_tags_in_ecr=$((number_of_tags_in_ecr+=1))
     fi
   fi
   docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"

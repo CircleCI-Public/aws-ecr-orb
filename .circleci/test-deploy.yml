@@ -167,11 +167,11 @@ workflows:
             - orb-tools/review
             - orb-tools/pack
             - integration-tests-default-profile
-            - integration-tests-pubic-registry
-            - integration-tests-skip-when-tags-exist-amd64
-            - integration-tests-skip-when-tags-exist-arm64
-            - integration-tests-named-profile
-            - integration-tests-tag-existing-image
+            # - integration-tests-pubic-registry
+            # - integration-tests-skip-when-tags-exist-amd64
+            # - integration-tests-skip-when-tags-exist-arm64
+            # - integration-tests-named-profile
+            # - integration-tests-tag-existing-image
           context: orb-publisher
           filters:
             branches:

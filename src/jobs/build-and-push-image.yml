@@ -12,6 +12,7 @@ parameters:
     description: |
       Executor to use for this job.
     type: executor
+    default: default
 
   registry-id:
     type: env_var_name

@@ -30,6 +30,7 @@ workflows:
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           # Use a context to hold your publishing token.
+          github-token: GHI_TOKEN
           context: orb-publisher
           filters:
             tags:

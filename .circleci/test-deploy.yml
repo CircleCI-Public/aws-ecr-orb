@@ -192,6 +192,7 @@ workflows:
             - integration-tests-skip-when-tags-exist-arm64
             - integration-tests-named-profile
             - integration-tests-tag-existing-image
+          github-token: GHI_TOKEN          
           context: orb-publisher
           filters:
             branches:

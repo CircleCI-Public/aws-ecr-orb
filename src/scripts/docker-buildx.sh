@@ -11,7 +11,7 @@ IFS="," read -ra PLATFORMS <<< "${PARAM_PLATFORM}"
 arch_count=${#PLATFORMS[@]}
 
 if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
-    if [ $arch_count -gt 1 ]; then
+    if [ "$arch_count" -gt 1 ]; then
       echo "AWS ECR does not support multiple platforms for public registries. Please specify only one platform and try again"
       exit 1
     fi
@@ -44,7 +44,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
     if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
         docker buildx build \
         -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
-        ${docker_tag_args} \
+        "${docker_tag_args}" \
         --platform "${PARAM_PLATFORM}" \
         --progress plain \
         "$@" \
@@ -55,7 +55,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
         docker --context builder buildx create --use
         docker --context builder buildx build \
         -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
-        ${docker_tag_args} \
+        "${docker_tag_args}" \
         --platform "${PARAM_PLATFORM}" \
         --progress plain \
         "$@" \

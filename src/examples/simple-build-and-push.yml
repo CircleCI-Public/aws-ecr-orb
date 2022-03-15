@@ -4,7 +4,7 @@ usage:
   version: 2.1
 
   orbs:
-    aws-ecr: circleci/aws-ecr@<<pipeline.parameters.dev-orb-version>>
+    aws-ecr: circleci/aws-ecr@x.y
 
   executors:
     arm64:

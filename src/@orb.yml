@@ -5,6 +5,7 @@ description: >
 
 display:
   source_url: https://github.com/CircleCI-Public/aws-ecr-orb
+  home_url: https://aws.amazon.com/ecr
 
 orbs:
   aws-cli: circleci/aws-cli@2.1.0

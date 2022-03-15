@@ -12,7 +12,6 @@ parameters:
     description: |
       Executor to use for this job.
     type: executor
-    default: amd64
 
   registry-id:
     type: env_var_name

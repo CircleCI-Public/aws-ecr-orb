@@ -1,11 +1,10 @@
 description: >
   CircleCI's Ubuntu-based machine executor VM:
   https://circleci.com/docs/2.0/executor-types/#using-machine
-
 parameters:
   image:
     type: string
-    default: ubuntu-2004:202010-01
+    default: ubuntu-2004:202107-02
   use-docker-layer-caching:
     type: boolean
     default: false

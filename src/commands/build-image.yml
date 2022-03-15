@@ -1,12 +1,12 @@
-description: "Build a docker image"
+description: "Build a docker image with Docker Buildx"
 
 parameters:
-  account-url:
+  registry-id:
     type: env_var_name
-    default: AWS_ECR_ACCOUNT_URL
+    default: AWS_ECR_REGISTRY_ID
     description: >
-      The Amazon ECR account URL that maps to an AWS account,
-      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
+      The 12 digit AWS Registry ID associated with the ECR account.
+      This field is required
 
   repo:
     type: string
@@ -37,19 +37,7 @@ parameters:
     default: ""
     description: >
       Extra flags to pass to docker build. For examples, see
-      https://docs.docker.com/engine/reference/commandline/build
-
-  checkout:
-    type: boolean
-    default: false
-    description: >
-      Boolean for whether or not to checkout as a first step. Default is false.
-
-  ecr-login:
-    type: boolean
-    default: false
-    description: >
-      Boolean for whether or not to log in to ECR before building. Default is false.
+      https://docs.docker.com/engine/reference/commandline/buildx
 
   skip-when-tags-exist:
     type: boolean
@@ -57,12 +45,10 @@ parameters:
     description: Whether to skip image building if all specified tags already exist in ECR
 
   region:
-    type: env_var_name
-    default: AWS_REGION
+    type: string
+    default: ${AWS_REGION}
     description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_REGION. Only required when skip-when-tags-exist
-      or ecr-login are set to true.
+      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
 
   profile-name:
     type: string
@@ -71,66 +57,36 @@ parameters:
       AWS profile name to be configured. Only required when skip-when-tags-exist
       or ecr-login are set to true.
 
-  aws-access-key-id:
-    type: env_var_name
-    default: AWS_ACCESS_KEY_ID
-    description: >
-      AWS access key id for IAM role. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. AWS_ACCESS_KEY.
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
 
-  aws-secret-access-key:
-    type: env_var_name
-    default: AWS_SECRET_ACCESS_KEY
-    description: >
-      AWS secret key for IAM role. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. AWS_SECRET_ACCESS_KEY.
+  platform:
+    type: string
+    default: "linux/amd64"
+    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64.
+
+  push-image:
+    type: boolean
+    default: true
+    description: Set to false to build an image without pushing to repository.  Defaults to true.
 
 steps:
-  - when:
-      condition: <<parameters.checkout>>
-      steps:
-        - checkout
-
-  - when:
-      condition:
-        or:
-          - <<parameters.ecr-login>>
-          - <<parameters.skip-when-tags-exist>>
-      steps:
-        - ecr-login:
-            profile-name: <<parameters.profile-name>>
-            region: <<parameters.region>>
-            account-url: <<parameters.account-url>>
-            aws-access-key-id: <<parameters.aws-access-key-id>>
-            aws-secret-access-key: <<parameters.aws-secret-access-key>>
-
   - run:
-      name: Build docker image
-      command: |
-        registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
-        number_of_tags_in_ecr=0
-
-        docker_tag_args=""
-        IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
-        for tag in "${DOCKER_TAGS[@]}"; do
-          if [ "<<parameters.skip-when-tags-exist>>" = "true" ]; then
-            docker_tag_exists_in_ecr=$(aws ecr describe-images --profile <<parameters.profile-name>> --registry-id $registry_id --repository-name <<parameters.repo>> --query "contains(imageDetails[].imageTags[], '$tag')")
-            if [ "$docker_tag_exists_in_ecr" = "true" ]; then
-              docker pull $<<parameters.account-url>>/<<parameters.repo>>:${tag}
-              let "number_of_tags_in_ecr+=1"
-            fi
-          fi
-          docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
-        done
-        if [ "<<parameters.skip-when-tags-exist>>" = "false" ] || [ "<<parameters.skip-when-tags-exist>>" = "true" -a $number_of_tags_in_ecr -lt ${#DOCKER_TAGS[@]} ]; then
-          docker build \
-            <<#parameters.extra-build-args>><<parameters.extra-build-args>><</parameters.extra-build-args>> \
-            -f <<parameters.path>>/<<parameters.dockerfile>> \
-            $docker_tag_args \
-            <<parameters.path>>
-        fi
+      name: Build Docker Image with buildx
+      environment:
+        PARAM_TAG: << parameters.tag >>
+        PARAM_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
+        PARAM_REPO: << parameters.repo >>
+        PARAM_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
+        PARAM_PATH: <<parameters.path>>
+        PARAM_DOCKERFILE: <<parameters.dockerfile>>
+        PARAM_PROFILE_NAME: <<parameters.profile-name>>
+        PARAM_REGISTRY_ID: <<parameters.registry-id>>
+        PARAM_REGION: <<parameters.region>>
+        PARAM_PLATFORM: <<parameters.platform>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
+        PARAM_PUSH_IMAGE: <<parameters.push-image>>
+      command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>
-
-

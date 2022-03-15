@@ -1,27 +1,39 @@
 description: "Authenticate into the Amazon ECR service"
 
 parameters:
-  account-url:
+  registry-id:
     type: env_var_name
-    default: AWS_ECR_ACCOUNT_URL
+    default: AWS_ECR_REGISTRY_ID
     description: >
-      Env var storing Amazon ECR account URL that maps to an AWS account,
-      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
-      defaults to AWS_ECR_ACCOUNT_URL
+      The 12 digit AWS id associated with the ECR account.
+      This field is required
 
   region:
-    type: env_var_name
-    default: AWS_REGION
+    type: string
+    default: ${AWS_REGION}
     description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_REGION
+      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
 
   profile-name:
     type: string
-    default: "default"
+    default: ""
     description: >
       AWS profile name to be configured.
-      defaults to "default"
+
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
+
+  source-profile:
+    description: Source profile containing credentials to assume the role with role-arn.
+    type: string
+    default: "default"
+
+  new-profile-name:
+    type: string
+    default: ""
+    description: Name of new profile associated with role arn.
 
   aws-access-key-id:
     type: env_var_name
@@ -39,15 +51,36 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
+  aws-cli-version:
+    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+    default: latest
+    type: string
+
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
+
 steps:
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      aws-region: <<parameters.region>>
+      version: <<parameters.aws-cli-version>>
+
+  - when:
+      condition: <<parameters.role-arn>>
+      steps:
+        - aws-cli/role-arn-setup:
+            profile-name: <<parameters.new-profile-name>>
+            role-arn: <<parameters.role-arn>>
+            source-profile: <<parameters.source-profile>>
 
   - run:
       name: Log into Amazon ECR
-      command: |
-        # get-login-password returns a password that we pipe to the docker login command
-        aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
+      environment:
+        PARAM_PROFILE_NAME: <<parameters.profile-name>>
+        PARAM_REGISTRY_ID: <<parameters.registry-id>>
+        PARAM_REGION: <<parameters.region>>
+        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
+      command: <<include(scripts/ecr-login.sh)>>

@@ -5,13 +5,21 @@ description: >
   these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
   or in Contexts (https://circleci.com/docs/2.0/contexts).
 
-executor: <<parameters.executor>>
+executor: << parameters.executor >>
 
 parameters:
   executor:
+    description: |
+      Executor to use for this job.
     type: executor
     default: default
-    description: executor to use for this job
+
+  registry-id:
+    type: env_var_name
+    default: AWS_ECR_REGISTRY_ID
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      This field is required
 
   profile-name:
     type: string
@@ -34,20 +42,36 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
-  region:
-    type: env_var_name
-    default: AWS_REGION
-    description: >
-      Name of env var storing your AWS region information,
-      defaults to AWS_REGION
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
 
-  account-url:
-    type: env_var_name
-    default: AWS_ECR_ACCOUNT_URL
+  source-profile:
+    description: Source profile containing credentials to assume the role with role-arn.
+    type: string
+    default: "default"
+
+  new-profile-name:
+    description: Name of new profile associated with role arn.
+    type: string
+    default: ""
+
+  aws-cli-version:
+    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+    default: latest
+    type: string
+
+  region:
+    type: string
+    default: ${AWS_REGION}
     description: >
-      Env var storing Amazon ECR account URL that maps to an AWS account,
-      e.g. {awsAccountNum}.dkr.ecr.us-west-2.amazonaws.com
-      defaults to AWS_ECR_ACCOUNT_URL
+      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
+
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
 
   repo:
     type: string
@@ -58,16 +82,15 @@ parameters:
     default: false
     description: Should the repo be created if it does not exist?
 
+  repo-scan-on-push:
+    type: boolean
+    default: true
+    description: Should the created repo be security scanned on push?
+
   tag:
     type: string
     default: "latest"
     description: A comma-separated string containing docker image tags to build and push (default = latest)
-
-  checkout:
-    type: boolean
-    default: true
-    description: >
-      Boolean for whether or not to checkout as a first step. Default is true.
 
   attach-workspace:
     type: boolean
@@ -100,7 +123,7 @@ parameters:
     default: false
     description: >
       Enable Docker layer caching if using remote Docker engine.
-      Defaults to false.
+      Requires setup-remote-docker to be set to true. Defaults to false.
 
   docker-login:
     type: boolean
@@ -152,27 +175,77 @@ parameters:
     default: false
     description: Whether to skip image building if all specified tags already exist in ECR
 
+  platform:
+    type: string
+    default: "linux/amd64"
+    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
+
+  push-image:
+    type: boolean
+    default: true
+    description: Set to false to build an image without pushing to repository.  Defaults to true.
+
 steps:
-  - build-and-push-image:
+  - checkout
+  - when:
+      condition: <<parameters.attach-workspace>>
+      steps:
+        - attach_workspace:
+            at: <<parameters.workspace-root>>
+  - when:
+      condition:
+        and:
+          - <<parameters.remote-docker-layer-caching>>
+          - not: <<parameters.setup-remote-docker>>
+      steps:
+        - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
+  - when:
+      condition: <<parameters.setup-remote-docker>>
+      steps:
+        - setup_remote_docker:
+            version: <<parameters.remote-docker-version>>
+            docker_layer_caching: <<parameters.remote-docker-layer-caching>>
+  - ecr-login:
       profile-name: <<parameters.profile-name>>
-      setup-remote-docker: <<parameters.setup-remote-docker>>
-      remote-docker-version: <<parameters.remote-docker-version>>
-      remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
-      docker-login: <<parameters.docker-login>>
-      dockerhub-username: <<parameters.dockerhub-username>>
-      dockerhub-password: <<parameters.dockerhub-password>>
+      region: <<parameters.region>>
+      registry-id: <<parameters.registry-id>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      region: <<parameters.region>>
-      account-url: <<parameters.account-url>>
+      aws-cli-version: <<parameters.aws-cli-version>>
+      public-registry: <<parameters.public-registry>>
+      role-arn: <<parameters.role-arn>>
+      new-profile-name: <<parameters.new-profile-name>>
+      source-profile: <<parameters.source-profile>>
+
+  - when:
+      condition: <<parameters.create-repo>>
+      steps:
+        - create-repo:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            repo: <<parameters.repo>>
+            repo-scan-on-push: <<parameters.repo-scan-on-push>>
+            public-registry: <<parameters.public-registry>>
+
+  - when:
+      condition: <<parameters.docker-login>>
+      steps:
+        - run: |
+            docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
+
+  - build-image:
+      registry-id: <<parameters.registry-id>>
       repo: <<parameters.repo>>
-      create-repo: <<parameters.create-repo>>
       tag: <<parameters.tag>>
-      checkout: <<parameters.checkout>>
-      attach-workspace: <<parameters.attach-workspace>>
-      workspace-root: <<parameters.workspace-root>>
       dockerfile: <<parameters.dockerfile>>
       path: <<parameters.path>>
       extra-build-args: <<parameters.extra-build-args>>
       no-output-timeout: <<parameters.no-output-timeout>>
       skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+      profile-name: <<parameters.profile-name>>
+      platform: <<parameters.platform>>
+      region: <<parameters.region>>
+      public-registry: <<parameters.public-registry>>
+      push-image: <<parameters.push-image>>
+  - store_artifacts:
+      path: test.txt

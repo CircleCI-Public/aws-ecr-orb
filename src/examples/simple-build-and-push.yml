@@ -4,13 +4,21 @@ usage:
   version: 2.1
 
   orbs:
-    aws-ecr: circleci/aws-ecr@x.y.z
+    aws-ecr: circleci/aws-ecr@x.y
 
   workflows:
     build_and_push_image:
       jobs:
         # build and push image to ECR
         - aws-ecr/build-and-push-image:
+            # Select executor defined above
+            executor: aws-ecr/default
+
+            # name of your ECR repository
+            repo: myECRRepository
+
+            # set this to true to create the repository if it does not already exist, defaults to "false"
+            create-repo: true
 
             # required if any necessary secrets are stored via Contexts
             context: myContext
@@ -24,17 +32,20 @@ usage:
             # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
             aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
 
-            # name of env var storing your AWS region, defaults to AWS_REGION
-            region: AWS_REGION_ENV_VAR_NAME
+            # Name of new profile associated with role arn.
+            new-profile-name: newProfileName
 
-            # name of env var storing your ECR account URL, defaults to AWS_ECR_ACCOUNT_URL
-            account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+            # Source profile containing credentials to assume the role with role-arn.
+            source-profile: sourceProfileName
 
-            # name of your ECR repository
-            repo: myECRRepository
+            # Role ARN that new profile should take
+            role-arn: arn:aws:iam::123456789012:role/testing
 
-            # set this to true to create the repository if it does not already exist, defaults to "false"
-            create-repo: true
+            #Your AWS region
+            region: AWS_REGION
+
+            # name of env var storing your ECR Registry ID
+            registry-id: AWS_ECR_REGISTRY_ID
 
             # ECR image tags (comma separated string), defaults to "latest"
             tag: latest,myECRRepoTag
@@ -45,8 +56,26 @@ usage:
             # path to Dockerfile, defaults to . (working directory)
             path: pathToMyDockerfile
 
+            # Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+            aws-cli-version: latest
+
+            # Boolean value if pushing to public registry. Defaults to true.
+            public-registry: false
+
+            # Security scans repository on push.  Defaults to true.
+            repo-scan-on-push: true
+
             # The amount of time to allow the docker build command to run before timing out, defaults to "10m"
             no-output-timeout: 20m
+
+            # Extra docker buildx build arguments
+            extra-build-args: --compress
+
+            # Specify platform targets for built docker image.
+            platform: linux/amd64
+
+            # Push image to repository after building.  Defaults to true
+            push-image: true
 
             # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
             # you are tagging with the git commit hash. Specially useful for faster code reverts.

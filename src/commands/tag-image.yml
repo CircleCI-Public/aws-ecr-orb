@@ -1,0 +1,24 @@
+description: Add a tag to an existing published image
+
+parameters:
+  repo:
+    type: string
+    description: Name of an Amazon ECR repository
+
+  source-tag:
+    type: string
+    description: An existing Docker image tag
+
+  target-tag:
+    type: string
+    default: "latest"
+    description: A comma-separated string containing docker image tags (default = latest)
+
+steps:
+  - run:
+      name: <<parameters.target-tag>> tag to <<parameters.repo>>:<<parameters.source-tag>>
+      environment:
+        PARAM_REPO: <<parameters.repo>>
+        PARAM_SOURCE_TAG: <<parameters.source-tag>>
+        PARAM_TARGET_TAG: <<parameters.target-tag>>
+      command: <<include(scripts/tag-image.sh)>>

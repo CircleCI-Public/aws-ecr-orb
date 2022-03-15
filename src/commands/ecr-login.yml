@@ -1,7 +1,6 @@
 description: "Authenticate into the Amazon ECR service"
 
 parameters:
-
   registry-id:
     type: env_var_name
     default: AWS_ECR_REGISTRY_ID
@@ -63,7 +62,6 @@ parameters:
     default: false
 
 steps:
-
   - aws-cli/setup:
       profile-name: <<parameters.profile-name>>
       aws-access-key-id: <<parameters.aws-access-key-id>>

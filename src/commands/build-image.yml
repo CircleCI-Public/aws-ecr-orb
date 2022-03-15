@@ -73,7 +73,6 @@ parameters:
     description: Set to false to build an image without pushing to repository.  Defaults to true.
 
 steps:
-
   - run:
       name: Build Docker Image with buildx
       environment:

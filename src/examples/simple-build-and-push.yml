@@ -18,7 +18,6 @@ usage:
       jobs:
         # build and push image to ECR
         - aws-ecr/build-and-push-image:
-
             # Select executor defined above
             executor: arm64
 

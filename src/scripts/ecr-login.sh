@@ -18,4 +18,3 @@ if [ -f ~/.docker/config.json ]; then
 else
     aws "${ECR_COMMAND}" get-login-password --region "${REGION}" "$@" | docker login --username AWS --password-stdin "${ACCOUNT_URL}"
 fi
-   

@@ -33,6 +33,9 @@ workflows:
     jobs:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
+          filters:
+            tags:
+              only: /.*/
 
       - aws-ecr/build-and-push-image:
           name: integration-tests-default-profile
@@ -51,6 +54,9 @@ workflows:
                 name: "Delete repository"
                 command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           platform: linux/amd64,linux/arm64
+          filters:
+            tags:
+              only: /.*/
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -71,6 +77,9 @@ workflows:
                 name: "Delete repository"
                 command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry --force
           platform: linux/amd64
+          filters:
+            tags:
+              only: /.*/
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -87,6 +96,9 @@ workflows:
           extra-build-args: --compress
           region: ${AWS_REGION}
           executor: amd64
+          filters:
+            tags:
+              only: /.*/
           requires: [pre-integration]
 
       - tag-ecr-image:
@@ -99,6 +111,9 @@ workflows:
             - run:
                 name: "Delete repository"
                 command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force
+          filters:
+            tags:
+              only: /.*/
           requires:
             - integration-tests-named-profile
 
@@ -118,6 +133,9 @@ workflows:
           matrix:
             parameters:
               executor: ["amd64", "arm64"]
+          filters:
+            tags:
+              only: /.*/
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
@@ -141,6 +159,9 @@ workflows:
           matrix:
             parameters:
               executor: ["amd64", "arm64"]
+          filters:
+            tags:
+              only: /.*/
           requires:
             - integration-tests-skip-when-tags-exist-populate-image-amd64
             - integration-tests-skip-when-tags-exist-populate-image-arm64

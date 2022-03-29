@@ -75,12 +75,31 @@ steps:
             profile-name: <<parameters.new-profile-name>>
             role-arn: <<parameters.role-arn>>
             source-profile: <<parameters.source-profile>>
-
-  - run:
-      name: Log into Amazon ECR
-      environment:
-        PARAM_PROFILE_NAME: <<parameters.profile-name>>
-        PARAM_REGISTRY_ID: <<parameters.registry-id>>
-        PARAM_REGION: <<parameters.region>>
-        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
-      command: <<include(scripts/ecr-login.sh)>>
+  - when:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - run:
+            name: Log into Amazon ECR with profile <<parameters.new-profile-name>>
+            environment:
+              PARAM_PROFILE_NAME: <<parameters.new-profile-name>>
+              PARAM_REGISTRY_ID: <<parameters.registry-id>>
+              PARAM_REGION: <<parameters.region>>
+              PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
+            command: <<include(scripts/ecr-login.sh)>>
+  - unless:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - run:
+            name: Log into Amazon ECR with profile <<parameters.profile-name>>
+            environment:
+              PARAM_PROFILE_NAME: <<parameters.profile-name>>
+              PARAM_REGISTRY_ID: <<parameters.registry-id>>
+              PARAM_REGION: <<parameters.region>>
+              PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
+            command: <<include(scripts/ecr-login.sh)>>

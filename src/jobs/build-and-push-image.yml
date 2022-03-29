@@ -218,7 +218,24 @@ steps:
       source-profile: <<parameters.source-profile>>
 
   - when:
-      condition: <<parameters.create-repo>>
+      condition:
+        and:
+          - <<parameters.create-repo>>
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - create-repo:
+            profile-name: <<parameters.new-profile-name>>
+            region: <<parameters.region>>
+            repo: <<parameters.repo>>
+            repo-scan-on-push: <<parameters.repo-scan-on-push>>
+            public-registry: <<parameters.public-registry>>
+  - when:
+      condition:
+        and:
+          - not: <<parameters.role-arn>>
+          - not: <<parameters.new-profile-name>>
+          - <<parameters.create-repo>>
       steps:
         - create-repo:
             profile-name: <<parameters.profile-name>>
@@ -233,19 +250,43 @@ steps:
         - run: |
             docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
 
-  - build-image:
-      registry-id: <<parameters.registry-id>>
-      repo: <<parameters.repo>>
-      tag: <<parameters.tag>>
-      dockerfile: <<parameters.dockerfile>>
-      path: <<parameters.path>>
-      extra-build-args: <<parameters.extra-build-args>>
-      no-output-timeout: <<parameters.no-output-timeout>>
-      skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
-      profile-name: <<parameters.profile-name>>
-      platform: <<parameters.platform>>
-      region: <<parameters.region>>
-      public-registry: <<parameters.public-registry>>
-      push-image: <<parameters.push-image>>
-  - store_artifacts:
-      path: test.txt
+  - when:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - build-image:
+            registry-id: <<parameters.registry-id>>
+            repo: <<parameters.repo>>
+            tag: <<parameters.tag>>
+            dockerfile: <<parameters.dockerfile>>
+            path: <<parameters.path>>
+            extra-build-args: <<parameters.extra-build-args>>
+            no-output-timeout: <<parameters.no-output-timeout>>
+            skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+            profile-name: <<parameters.new-profile-name>>
+            platform: <<parameters.platform>>
+            region: <<parameters.region>>
+            public-registry: <<parameters.public-registry>>
+            push-image: <<parameters.push-image>>
+  - unless:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - build-image:
+            registry-id: <<parameters.registry-id>>
+            repo: <<parameters.repo>>
+            tag: <<parameters.tag>>
+            dockerfile: <<parameters.dockerfile>>
+            path: <<parameters.path>>
+            extra-build-args: <<parameters.extra-build-args>>
+            no-output-timeout: <<parameters.no-output-timeout>>
+            skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+            profile-name: <<parameters.profile-name>>
+            platform: <<parameters.platform>>
+            region: <<parameters.region>>
+            public-registry: <<parameters.public-registry>>
+            push-image: <<parameters.push-image>>

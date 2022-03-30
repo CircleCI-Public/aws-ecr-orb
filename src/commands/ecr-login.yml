@@ -16,7 +16,7 @@ parameters:
 
   profile-name:
     type: string
-    default: ""
+    default: "default"
     description: >
       AWS profile name to be configured.
 

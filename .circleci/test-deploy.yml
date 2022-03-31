@@ -49,7 +49,7 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
-          role-arn: arn:aws:iam::122211685980:role/aws-service-role/replication.ecr.amazonaws.com/AWSServiceRoleForECRReplication
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_ADMIN
           source-profile: default
           new-profile-name: bvu
           post-steps:

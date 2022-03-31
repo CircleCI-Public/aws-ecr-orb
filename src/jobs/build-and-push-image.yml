@@ -233,8 +233,9 @@ steps:
   - when:
       condition:
         and:
-          - <<parameters.create-repo>>
-          - <<parameters.profile-name>>
+          - not: <<parameters.create-repo>>
+          - not: <<parameters.role-arn>>
+          - not: <<parameters.new-profile-name>>
       steps:
         - create-repo:
             profile-name: <<parameters.profile-name>>

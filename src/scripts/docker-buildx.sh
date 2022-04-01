@@ -38,7 +38,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
   fi
 
   if [ -n "$PARAM_EXTRA_BUILD_ARGS" ]; then
-    set -- "$@" "${PARAM_EXTRA_BUILD_ARGS}"
+    set -- "$@" ${PARAM_EXTRA_BUILD_ARGS}
   fi
 
   if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then

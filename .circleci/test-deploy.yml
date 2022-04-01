@@ -49,6 +49,9 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_ADMIN
+          source-profile: default
+          new-profile-name: assume-role-test
           post-steps:
             - run:
                 name: "Delete repository"

@@ -35,6 +35,8 @@ done
 if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
   if [ "${PARAM_PUSH_IMAGE}" == "1" ]; then
     set -- "$@" --push
+  else
+    set -- "$@" --load
   fi
 
   if [ -n "$PARAM_EXTRA_BUILD_ARGS" ]; then

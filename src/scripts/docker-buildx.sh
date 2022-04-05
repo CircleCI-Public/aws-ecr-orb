@@ -1,8 +1,5 @@
 #!/bin/bash
-REPO=$(eval echo "${PARAM_REPO}")
-REGION=$(eval echo "${PARAM_REGION}")
-TAG=$(eval echo "${PARAM_TAG}")
-ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com"
+PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
@@ -17,19 +14,19 @@ if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
   fi
 
   ECR_COMMAND="ecr-public"
-  ACCOUNT_URL="public.ecr.aws/${!PARAM_REGISTRY_ID}"
+  PARAM_ACCOUNT_URL="public.ecr.aws/${!PARAM_REGISTRY_ID}"
 fi
 
-IFS="," read -ra DOCKER_TAGS <<<"${TAG}"
+IFS="," read -ra DOCKER_TAGS <<<"${PARAM_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" ]; then
-    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PARAM_PROFILE_NAME}" --registry-id "${!PARAM_REGISTRY_ID}" --region "${REGION}" --repository-name "${REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
+    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PARAM_PROFILE_NAME}" --registry-id "${!PARAM_REGISTRY_ID}" --region "${REGION}" --repository-name "${PARAM_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "1" ]; then
-      docker pull "${ACCOUNT_URL}/${REPO}:${tag}"
+      docker pull "${PARAM_ACCOUNT_URL}/${PARAM_REP}:${tag}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi
   fi
-  docker_tag_args="${docker_tag_args} -t ${ACCOUNT_URL}/${REPO}:${tag}"
+  docker_tag_args="${docker_tag_args} -t ${PARAM_ACCOUNT_URL}/${PARAM_REPO}:${tag}"
 done
 
 if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then

@@ -1,4 +1,5 @@
 #!/bin/bash
+PARAM_REGION=$(eval echo "${PARAM_REGION}")
 PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 

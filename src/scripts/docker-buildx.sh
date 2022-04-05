@@ -1,8 +1,12 @@
 #!/bin/bash
+PARAM_REGION=$(eval echo "${PARAM_REGION}")
+PARAM_REPO=$(eval echo "${PARAM_REPO}")
+PARAM_TAG=$(eval echo "${PARAM_TAG}")
 PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
+
 
 IFS="," read -ra PLATFORMS <<<"${PARAM_PLATFORM}"
 arch_count=${#PLATFORMS[@]}

@@ -1,4 +1,6 @@
 #!/bin/bash
+PARAM_REGION=$(eval echo "${PARAM_REGION}")
+PARAM_REPO=$(eval echo "${PARAM_REPO}")
 
 if [ "$PARAM_PUBLIC_REGISTRY" == "1" ]; then
     aws ecr-public describe-repositories --profile "${PARAM_PROFILE_NAME}" --region us-east-1 --repository-names "${PARAM_REPO}" >/dev/null 2>&1 ||

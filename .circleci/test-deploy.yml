@@ -52,6 +52,7 @@ workflows:
           role-arn: arn:aws:iam::122211685980:role/CPE_ECR_ADMIN
           source-profile: default
           new-profile-name: assume-role-test
+          lifecycle-policy-path: ./sample/policy.json
           post-steps:
             - run:
                 name: "Delete repository"

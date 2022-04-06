@@ -71,11 +71,11 @@ parameters:
     type: boolean
     default: true
     description: Set to false to build an image without pushing to repository.  Defaults to true.
-  
+
   lifecycle-policy-path:
     type: string
     default: ""
-    description: | 
+    description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
 

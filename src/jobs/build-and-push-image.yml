@@ -192,7 +192,7 @@ parameters:
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
 steps:
-  - build-image-push-image:
+  - build-and-push-image:
       registry-id: <<parameters.registry-id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>

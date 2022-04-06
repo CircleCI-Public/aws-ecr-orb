@@ -216,7 +216,7 @@ steps:
     source-profile: <<parameters.source-profile>>
     version: <<parameters.remote-docker-version>>
     docker_layer_caching: <<parameters.remote-docker-layer-caching>>
-    attach-workspace: <<parameters.attach-workspace>>
+    # attach-workspace: <<parameters.attach-workspace>>
     remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
     setup-remote-docker: <<parameters.setup-remote-docker>>
     remote-docker-version: <<parameters.remote-docker-version>>

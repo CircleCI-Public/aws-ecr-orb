@@ -71,6 +71,13 @@ parameters:
     type: boolean
     default: true
     description: Set to false to build an image without pushing to repository.  Defaults to true.
+  
+  lifecycle-policy-path:
+    type: string
+    default: ""
+    description: | 
+      The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
+
 
 steps:
   - run:
@@ -88,5 +95,6 @@ steps:
         PARAM_PLATFORM: <<parameters.platform>>
         PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
         PARAM_PUSH_IMAGE: <<parameters.push-image>>
+        PARAM_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

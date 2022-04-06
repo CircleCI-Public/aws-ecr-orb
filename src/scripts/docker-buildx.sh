@@ -7,7 +7,6 @@ ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 
-
 IFS="," read -ra PLATFORMS <<<"${PARAM_PLATFORM}"
 arch_count=${#PLATFORMS[@]}
 
@@ -36,6 +35,13 @@ done
 if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
   if [ "${PARAM_PUSH_IMAGE}" == "1" ]; then
     set -- "$@" --push
+
+    if [ -n "${PARAM_LIFECYCLE_POLICY_PATH}" ]; then
+      aws ecr put-lifecycle-policy \
+        --repository-name "${PARAM_REPO}" \
+        --lifecycle-policy-text "${PARAM_LIFECYCLE_POLICY_PATH}"
+    fi
+
   else
     set -- "$@" --load
   fi

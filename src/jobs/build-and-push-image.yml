@@ -214,8 +214,8 @@ steps:
       role-arn: <<parameters.role-arn>>
       new-profile-name: <<parameters.new-profile-name>>
       source-profile: <<parameters.source-profile>>
-      version: <<parameters.remote-docker-version>>
-      docker_layer_caching: <<parameters.remote-docker-layer-caching>>
+      # version: <<parameters.remote-docker-version>>
+      # docker_layer_caching: <<parameters.remote-docker-layer-caching>>
       attach-workspace: <<parameters.attach-workspace>>
       remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
       setup-remote-docker: <<parameters.setup-remote-docker>>

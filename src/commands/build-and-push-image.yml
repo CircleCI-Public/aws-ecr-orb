@@ -1,0 +1,307 @@
+description: >
+  Install AWS CLI, if needed, and configure. Log into Amazon ECR and push image
+  to repository. Requires environment variables for AWS_ACCESS_KEY_ID and
+  AWS_SECRET_ACCESS_KEY. We recommend these be saved in a Project
+  (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
+  or in Contexts (https://circleci.com/docs/2.0/contexts).
+parameters:
+  registry-id:
+    type: env_var_name
+    default: AWS_ECR_REGISTRY_ID
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      This field is required
+
+  profile-name:
+    default: default
+    description: AWS profile name to be configured.
+    type: string
+
+  aws-access-key-id:
+    default: AWS_ACCESS_KEY_ID
+    description: >
+      AWS access key id for IAM role. Set this to the name of the environment
+      variable you will set to hold this value, i.e. AWS_ACCESS_KEY.
+    type: env_var_name
+
+  aws-secret-access-key:
+    default: AWS_SECRET_ACCESS_KEY
+    description: >
+      AWS secret key for IAM role. Set this to the name of the environment
+      variable you will set to hold this value, i.e. AWS_SECRET_ACCESS_KEY.
+    type: env_var_name
+
+  role-arn:
+    type: string
+    default: ""
+    description: Role ARN that the profile should take.
+
+  source-profile:
+    description: Source profile containing credentials to assume the role with role-arn.
+    type: string
+    default: "default"
+
+  new-profile-name:
+    description: Name of new profile associated with role arn.
+    type: string
+    default: ""
+
+  aws-cli-version:
+    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+    default: latest
+    type: string
+
+  region:
+    default: ${AWS_REGION}
+    description: >
+      Name of env var storing your AWS region information, defaults to
+      AWS_REGION
+    type: string
+
+  public-registry:
+      type: boolean
+      description: > 
+        Set to true if building and pushing an image to a Public Registry on ECR.
+      default: false
+
+  repo:
+    description: Name of an Amazon ECR repository
+    type: string
+
+  create-repo:
+    default: false
+    description: Should the repo be created if it does not exist?
+    type: boolean
+
+  repo-scan-on-push:
+    default: true
+    description: Should the created repo be security scanned on push?
+    type: boolean
+
+  tag:
+    default: latest
+    description: >
+      A comma-separated string containing docker image tags to build and push
+      (default = latest)
+    type: string
+
+  attach-workspace:
+    default: false
+    description: >
+      Boolean for whether or not to attach to an existing workspace. Default is
+      false.
+    type: boolean
+
+  workspace-root:
+    default: .
+    description: >
+      Workspace root path that is either an absolute path or a path relative to
+      the working directory. Defaults to '.' (the working directory)
+    type: string
+
+  setup-remote-docker:
+    default: false
+    description: >
+      Setup and use CircleCI's remote Docker environment for Docker and
+      docker-compose commands? Not required if using the default executor
+    type: boolean
+
+  remote-docker-version:
+    default: 19.03.13
+    description: Specific remote docker version
+    type: string
+
+  remote-docker-layer-caching:
+    default: false
+    description: >
+      Enable Docker layer caching if using remote Docker engine. Defaults to
+      false.
+    type: boolean
+
+  docker-login:
+    default: false
+    description: |
+      Enable dockerhub authentication. Defaults to false.
+    type: boolean
+    
+  dockerhub-username:
+    default: DOCKERHUB_USERNAME
+    description: >
+      Dockerhub username to be configured. Set this to the name of the
+      environment variable you will set to hold this value, i.e.
+      DOCKERHUB_USERNAME.
+    type: env_var_name
+      
+  dockerhub-password:
+    default: DOCKERHUB_PASSWORD
+    description: >
+      Dockerhub password to be configured. Set this to the name of the
+      environment variable you will set to hold this value, i.e.
+      DOCKERHUB_PASSWORD.
+    type: env_var_name
+
+  dockerfile:
+    default: Dockerfile
+    description: Name of dockerfile to use. Defaults to Dockerfile.
+    type: string
+
+  path:
+    default: .
+    description: >-
+      Path to the directory containing your Dockerfile and build context.
+      Defaults to . (working directory).
+    type: string
+
+  extra-build-args:
+    default: ''
+    description: >
+      Extra flags to pass to docker build. For examples, see
+      https://docs.docker.com/engine/reference/commandline/build
+    type: string
+    
+  no-output-timeout:
+    default: 10m
+    description: >
+      The amount of time to allow the docker build command to run before timing
+      out (default is `10m`)
+    type: string
+
+  skip-when-tags-exist:
+    default: false
+    description: Whether to skip image building if all specified tags already exist in ECR
+    type: boolean
+
+  platform:
+      type: string
+      default: "linux/amd64"
+      description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
+
+  push-image:
+    type: boolean
+    default: true
+    description: Set to false to build an image without pushing to repository.  Defaults to true.
+
+  lifecycle-policy-path:
+    type: string
+    default: ""
+    description: |
+      The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
+
+  checkout:
+    default: true
+    description: |
+      Boolean for whether or not to checkout as a first step. Default is true.
+    type: boolean
+
+
+
+
+steps:
+  - when:
+      condition: <<parameters.checkout>>
+      steps:
+        - checkout
+  - when:
+      condition: <<parameters.attach-workspace>>
+      steps:
+        - attach_workspace:
+            at: <<parameters.workspace-root>>
+  - when:
+      condition: 
+        and:
+        - <<parameters.setup-remote-docker>>
+        - not: <<parameters.setup-remote-docker>>
+      teps:
+        - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
+  - when:
+      condition: <<parameters.setup-remote-docker>>        
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: <<parameters.remote-docker-layer-caching>>
+            version: <<parameters.remote-docker-version>>
+  - ecr-login:
+      profile-name: <<parameters.profile-name>>
+      region: <<parameters.region>>
+      registry-id: <<parameters.registry-id>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-cli-version: <<parameters.aws-cli-version>>
+      public-registry: <<parameters.public-registry>>
+      role-arn: <<parameters.role-arn>>
+      new-profile-name: <<parameters.new-profile-name>>
+      source-profile: <<parameters.source-profile>>
+
+  - when:
+      condition:
+        and:
+          - <<parameters.create-repo>>
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - create-repo:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            repo: <<parameters.repo>>
+            repo-scan-on-push: <<parameters.repo-scan-on-push>>
+            public-registry: <<parameters.public-registry>>
+  - when:
+      condition:
+        and:
+          - not: <<parameters.role-arn>>
+          - not: <<parameters.new-profile-name>>
+          - <<parameters.create-repo>>
+      steps:
+        - create-repo:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            repo: <<parameters.repo>>
+            repo-scan-on-push: <<parameters.repo-scan-on-push>>
+            public-registry: <<parameters.public-registry>>
+  - when:
+      condition: <<parameters.docker-login>>
+      steps:
+        - run: >
+            docker login -u $<<parameters.dockerhub-username>> -p
+            $<<parameters.dockerhub-password>>
+  - when:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - build-image:
+            registry-id: <<parameters.registry-id>>
+            repo: <<parameters.repo>>
+            tag: <<parameters.tag>>
+            dockerfile: <<parameters.dockerfile>>
+            path: <<parameters.path>>
+            extra-build-args: <<parameters.extra-build-args>>
+            no-output-timeout: <<parameters.no-output-timeout>>
+            skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+            profile-name: <<parameters.new-profile-name>>
+            platform: <<parameters.platform>>
+            region: <<parameters.region>>
+            public-registry: <<parameters.public-registry>>
+            push-image: <<parameters.push-image>>
+
+  - unless:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.new-profile-name>>
+      steps:
+        - build-image:
+            registry-id: <<parameters.registry-id>>
+            repo: <<parameters.repo>>
+            tag: <<parameters.tag>>
+            dockerfile: <<parameters.dockerfile>>
+            path: <<parameters.path>>
+            extra-build-args: <<parameters.extra-build-args>>
+            no-output-timeout: <<parameters.no-output-timeout>>
+            skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
+            profile-name: <<parameters.profile-name>>
+            platform: <<parameters.platform>>
+            region: <<parameters.region>>
+            public-registry: <<parameters.public-registry>>
+            push-image: <<parameters.push-image>>
+            lifecycle-policy-path: <<parameters.lifecycle-policy-path>>

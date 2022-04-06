@@ -59,10 +59,10 @@ parameters:
     type: string
 
   public-registry:
-      type: boolean
-      description: > 
-        Set to true if building and pushing an image to a Public Registry on ECR.
-      default: false
+    type: boolean
+    description: >
+      Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
 
   repo:
     description: Name of an Amazon ECR repository
@@ -123,7 +123,7 @@ parameters:
     description: |
       Enable dockerhub authentication. Defaults to false.
     type: boolean
-    
+
   dockerhub-username:
     default: DOCKERHUB_USERNAME
     description: >
@@ -131,7 +131,7 @@ parameters:
       environment variable you will set to hold this value, i.e.
       DOCKERHUB_USERNAME.
     type: env_var_name
-      
+
   dockerhub-password:
     default: DOCKERHUB_PASSWORD
     description: >
@@ -153,12 +153,12 @@ parameters:
     type: string
 
   extra-build-args:
-    default: ''
+    default: ""
     description: >
       Extra flags to pass to docker build. For examples, see
       https://docs.docker.com/engine/reference/commandline/build
     type: string
-    
+
   no-output-timeout:
     default: 10m
     description: >
@@ -172,9 +172,9 @@ parameters:
     type: boolean
 
   platform:
-      type: string
-      default: "linux/amd64"
-      description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
+    type: string
+    default: "linux/amd64"
+    description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
 
   push-image:
     type: boolean
@@ -193,9 +193,6 @@ parameters:
       Boolean for whether or not to checkout as a first step. Default is true.
     type: boolean
 
-
-
-
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -207,14 +204,14 @@ steps:
         - attach_workspace:
             at: <<parameters.workspace-root>>
   - when:
-      condition: 
+      condition:
         and:
-        - <<parameters.setup-remote-docker>>
-        - not: <<parameters.setup-remote-docker>>
-      teps:
+          - <<parameters.setup-remote-docker>>
+          - not: <<parameters.setup-remote-docker>>
+      steps:
         - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
   - when:
-      condition: <<parameters.setup-remote-docker>>        
+      condition: <<parameters.setup-remote-docker>>
       steps:
         - setup_remote_docker:
             docker_layer_caching: <<parameters.remote-docker-layer-caching>>

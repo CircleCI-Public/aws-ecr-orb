@@ -226,7 +226,6 @@ steps:
     docker-login: <<parameters.docker-login>>
     dockerhub-username: <<parameters.dockerhub-username>>
     dockerhub-password: <<parameters.dockerhub-password>>
-    
   # - when:
   #     condition: <<parameters.attach-workspace>>
   #     steps:

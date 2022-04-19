@@ -36,6 +36,16 @@ parameters:
     default: ""
     description: Role ARN that the profile should take.
 
+  role-session-name:
+    description: An identifier for the assumed role session
+    type: string
+    default: ${CIRCLE_JOB}
+
+  session-duration:
+    description: The duration of the session in seconds
+    type: string
+    default: '3600'
+
   source-profile:
     description: Source profile containing credentials to assume the role with role-arn.
     type: string
@@ -225,6 +235,8 @@ steps:
       aws-cli-version: <<parameters.aws-cli-version>>
       public-registry: <<parameters.public-registry>>
       role-arn: <<parameters.role-arn>>
+      role-session-name: <<parameters.role-session-name>>
+      session-duration: <<parameters.session-duration>>
       new-profile-name: <<parameters.new-profile-name>>
       source-profile: <<parameters.source-profile>>
 

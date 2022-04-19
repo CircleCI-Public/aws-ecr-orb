@@ -16,7 +16,7 @@ parameters:
 
   profile-name:
     type: string
-    default: ""
+    default: "default"
     description: >
       AWS profile name to be configured.
 
@@ -24,6 +24,16 @@ parameters:
     type: string
     default: ""
     description: Role ARN that the profile should take.
+
+  role-session-name:
+    description: An identifier for the assumed role session
+    type: string
+    default: ${CIRCLE_JOB}
+
+  session-duration:
+    description: The duration of the session in seconds
+    type: string
+    default: '3600'
 
   source-profile:
     description: Source profile containing credentials to assume the role with role-arn.
@@ -62,14 +72,36 @@ parameters:
     default: false
 
 steps:
-  - aws-cli/setup:
-      profile-name: <<parameters.profile-name>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      version: <<parameters.aws-cli-version>>
+  - when:
+      condition:
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.role-session-name>>
+      steps:
+        - aws-cli/setup:
+            profile-name: <<parameters.profile-name>>
+            version: <<parameters.aws-cli-version>>
+            role-arn: <<parameters.role-arn>>
+            role-session-name: <<parameters.role-session-name>>
+            session-duration: <<parameters.session-duration>>
+  - when:
+      condition:
+        and:
+          - not: <<parameters.role-arn>>
+          - not: <<parameters.role-session-name>>
+      steps:
+        - aws-cli/setup:
+            profile-name: <<parameters.profile-name>>
+            aws-access-key-id: <<parameters.aws-access-key-id>>
+            aws-secret-access-key: <<parameters.aws-secret-access-key>>
+            version: <<parameters.aws-cli-version>>
 
   - when:
-      condition: <<parameters.role-arn>>
+      condition: 
+        and:
+          - <<parameters.role-arn>>
+          - <<parameters.source-profile>>
+          - <<parameters.new-profile-name>>
       steps:
         - aws-cli/role-arn-setup:
             profile-name: <<parameters.new-profile-name>>

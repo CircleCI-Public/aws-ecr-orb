@@ -97,7 +97,7 @@ steps:
             version: <<parameters.aws-cli-version>>
 
   - when:
-      condition: 
+      condition:
         and:
           - <<parameters.role-arn>>
           - <<parameters.source-profile>>

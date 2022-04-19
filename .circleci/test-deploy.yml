@@ -69,6 +69,8 @@ workflows:
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry
           create-repo: true
+          # role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          # profile-name: "OIDC-User"
           context: [CPE_ORBS_AWS]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile

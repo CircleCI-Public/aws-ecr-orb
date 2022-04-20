@@ -87,7 +87,6 @@ steps:
   - when:
       condition:
         and:
-          - not: <<parameters.role-arn>>
           - not: <<parameters.role-session-name>>
       steps:
         - aws-cli/setup:

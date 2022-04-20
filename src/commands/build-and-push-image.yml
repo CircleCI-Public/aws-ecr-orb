@@ -269,8 +269,8 @@ steps:
   #           repo-scan-on-push: <<parameters.repo-scan-on-push>>
   #           public-registry: <<parameters.public-registry>>
   # - when:
-  #     condition: 
-  #       and: 
+  #     condition:
+  #       and:
   #         - <<parameters.create-repo>>
   #         - not: <<parameters.new-profile-name>>
   #     steps:

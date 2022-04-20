@@ -17,7 +17,6 @@ fi
 if [ -f ~/.docker/config.json ]; then
     echo "Credential helper is already installed"
 else
-    echo "aws \"${ECR_COMMAND}\" get-login-password --region \"${PARAM_REGION}\" \"$@\" | docker login --username AWS --password-stdin \"${PARAM_ACCOUNT_URL}\"" >> test.txt
     aws "${ECR_COMMAND}" get-login-password --region "${PARAM_REGION}" "$@" | docker login --username AWS --password-stdin "${PARAM_ACCOUNT_URL}"
 fi
 

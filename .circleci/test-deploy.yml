@@ -86,7 +86,7 @@ workflows:
           region: "us-west-2"
           assume-web-identity: true
           profile-name: "OIDC-User"
-          context: [CPE-OIDC] 
+          context: [CPE-OIDC]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
@@ -110,7 +110,7 @@ workflows:
           region: "us-west-2"
           assume-web-identity: true
           profile-name: "OIDC-User"
-          context: [CPE-OIDC] 
+          context: [CPE-OIDC]
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           create-repo: true
@@ -131,7 +131,7 @@ workflows:
           region: "us-west-2"
           assume-web-identity: true
           profile-name: "OIDC-User"
-          context: [CPE-OIDC] 
+          context: [CPE-OIDC]
           source-tag: integration
           target-tag: latest
           post-steps:
@@ -225,7 +225,7 @@ workflows:
             - integration-tests-skip-when-tags-exist-arm64
             - integration-tests-named-profile
             - integration-tests-tag-existing-image
-          github-token: GHI_TOKEN          
+          github-token: GHI_TOKEN
           context: orb-publisher
           filters:
             branches:

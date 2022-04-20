@@ -33,7 +33,7 @@ parameters:
   session-duration:
     description: The duration of the session in seconds
     type: string
-    default: '3600'
+    default: "3600"
 
   assume-web-identity:
     description: Set to true to configure a profile using short-term credentials
@@ -88,7 +88,7 @@ steps:
             session-duration: <<parameters.session-duration>>
   - when:
       condition:
-          not: <<parameters.assume-web-identity>>
+        not: <<parameters.assume-web-identity>>
       steps:
         - aws-cli/setup:
             profile-name: <<parameters.profile-name>>

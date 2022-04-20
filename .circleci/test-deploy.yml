@@ -28,11 +28,15 @@ jobs:
         type: string
       profile-name:
         type: string
+      assume-web-identity:
+        type: boolean
+        default: false
     steps:
       - aws-ecr/ecr-login:
           profile-name: <<parameters.profile-name>>
           role-arn: <<parameters.role-arn>>
           region: <<parameters.region>>
+          assume-web-identity: <<parameters.assume-web-identity>>
       - aws-ecr/tag-image:
           repo: <<parameters.repo>>
           source-tag: <<parameters.source-tag>>

@@ -81,6 +81,7 @@ workflows:
           role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           region: "us-west-2"
           profile-name: "OIDC-User"
+          role-session-name: ${CIRCLE_JOB}
           context: [CPE-OIDC] 
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
@@ -105,6 +106,7 @@ workflows:
           region: "us-west-2"
           profile-name: "OIDC-User"
           context: [CPE-OIDC] 
+          role-session-name: ${CIRCLE_JOB}
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           create-repo: true
@@ -125,6 +127,7 @@ workflows:
           region: "us-west-2"
           profile-name: "OIDC-User"
           context: [CPE-OIDC] 
+          role-session-name: ${CIRCLE_JOB}
           source-tag: integration
           target-tag: latest
           post-steps:
@@ -143,7 +146,8 @@ workflows:
           role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           region: "us-west-2"
           profile-name: "OIDC-User"
-          context: [CPE-OIDC] 
+          context: [CPE-OIDC]
+          role-session-name: ${CIRCLE_JOB}
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
           create-repo: true
@@ -166,7 +170,8 @@ workflows:
           role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           region: "us-west-2"
           profile-name: "OIDC-User"
-          context: [CPE-OIDC] 
+          context: [CPE-OIDC]
+          role-session-name: ${CIRCLE_JOB}
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
           tag: integration,myECRRepoTag

@@ -47,7 +47,7 @@ parameters:
     default: '3600'
 
   assume-web-identity:
-    decription: Set to true to configure a profile using short-term credentials
+    description: Set to true to configure a profile using short-term credentials
     type: boolean
     default: false
 

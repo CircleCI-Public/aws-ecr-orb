@@ -35,6 +35,11 @@ parameters:
     type: string
     default: '3600'
 
+  assume-web-identity:
+    description: Set to true to configure a profile using short-term credentials
+    type: boolean
+    default: false
+
   source-profile:
     description: Source profile containing credentials to assume the role with role-arn.
     type: string
@@ -73,10 +78,7 @@ parameters:
 
 steps:
   - when:
-      condition:
-        and:
-          - <<parameters.role-arn>>
-          - <<parameters.role-session-name>>
+      condition: <<parameters.assume-web-identity>>
       steps:
         - aws-cli/setup:
             profile-name: <<parameters.profile-name>>
@@ -86,9 +88,7 @@ steps:
             session-duration: <<parameters.session-duration>>
   - when:
       condition:
-        and:
-          - not: <<parameters.role-arn>>
-          - not: <<parameters.role-session-name>>
+          not: <<parameters.assume-web-identity>>
       steps:
         - aws-cli/setup:
             profile-name: <<parameters.profile-name>>

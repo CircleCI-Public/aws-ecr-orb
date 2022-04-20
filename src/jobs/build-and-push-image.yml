@@ -52,6 +52,11 @@ parameters:
     type: string
     default: ${CIRCLE_JOB}
 
+  assume-web-identity:
+    description: Set to true to configure a profile using short-term credentials
+    type: boolean
+    default: false
+
   session-duration:
     description: The duration of the session in seconds
     type: string
@@ -223,6 +228,7 @@ steps:
       aws-cli-version: <<parameters.aws-cli-version>>
       role-arn: <<parameters.role-arn>>
       role-session-name: <<parameters.role-session-name>>
+      assume-web-identity: <<parameters.assume-web-identity>>
       session-duration: <<parameters.session-duration>>
       new-profile-name: <<parameters.new-profile-name>>
       source-profile: <<parameters.source-profile>>

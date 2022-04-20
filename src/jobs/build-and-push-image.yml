@@ -50,7 +50,7 @@ parameters:
   role-session-name:
     description: An identifier for the assumed role session
     type: string
-    default: ${CIRCLE_JOB}
+    # default: ${CIRCLE_JOB}
 
   session-duration:
     description: The duration of the session in seconds

@@ -28,11 +28,14 @@ jobs:
         type: string
       profile-name:
         type: string
+      role-session-name:
+        type: string
     steps:
       - aws-ecr/ecr-login:
           profile-name: <<parameters.profile-name>>
           role-arn: <<parameters.role-arn>>
           region: <<parameters.region>>
+          role-session-name: <<parameters.role-session-name>>
       - aws-ecr/tag-image:
           repo: <<parameters.repo>>
           source-tag: <<parameters.source-tag>>

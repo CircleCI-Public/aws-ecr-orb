@@ -11,7 +11,6 @@ fi
 
 if [ -n "${PARAM_PROFILE_NAME}" ]; then
     set -- "$@" --profile "${PARAM_PROFILE_NAME}"
-    echo "$@" >> test.txt
 fi
 
 if [ -f ~/.docker/config.json ]; then

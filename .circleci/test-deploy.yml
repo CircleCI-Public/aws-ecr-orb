@@ -22,8 +22,17 @@ jobs:
         type: string
       target-tag:
         type: string
+      role-arn:
+        type: string
+      region:
+        type: string
+      profile-name:
+        type: string
     steps:
-      - aws-ecr/ecr-login
+      - aws-ecr/ecr-login:
+          profile-name: <<parameters.profile-name>>
+          role-arn: <<parameters.role-arn>>
+          region: <<parameters.region>>
       - aws-ecr/tag-image:
           repo: <<parameters.repo>>
           source-tag: <<parameters.source-tag>>

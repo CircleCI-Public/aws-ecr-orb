@@ -78,7 +78,6 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
-
 steps:
   - run:
       name: Build Docker Image with buildx

@@ -247,19 +247,6 @@ steps:
       source-profile: <<parameters.source-profile>>
 
   - when:
-      condition:
-        and:
-          - <<parameters.create-repo>>
-          - <<parameters.role-arn>>
-          - <<parameters.new-profile-name>>
-      steps:
-        - create-repo:
-            profile-name: <<parameters.profile-name>>
-            region: <<parameters.region>>
-            repo: <<parameters.repo>>
-            repo-scan-on-push: <<parameters.repo-scan-on-push>>
-            public-registry: <<parameters.public-registry>>
-  - when:
       condition: <<parameters.create-repo>>
       steps:
         - create-repo:
@@ -268,6 +255,31 @@ steps:
             repo: <<parameters.repo>>
             repo-scan-on-push: <<parameters.repo-scan-on-push>>
             public-registry: <<parameters.public-registry>>
+  # - when:
+  #     condition:
+  #       and:
+  #         - <<parameters.create-repo>>
+  #         - <<parameters.role-arn>>
+  #         - <<parameters.new-profile-name>>
+  #     steps:
+  #       - create-repo:
+  #           profile-name: <<parameters.profile-name>>
+  #           region: <<parameters.region>>
+  #           repo: <<parameters.repo>>
+  #           repo-scan-on-push: <<parameters.repo-scan-on-push>>
+  #           public-registry: <<parameters.public-registry>>
+  # - when:
+  #     condition: 
+  #       and: 
+  #         - <<parameters.create-repo>>
+  #         - not: <<parameters.new-profile-name>>
+  #     steps:
+  #       - create-repo:
+  #           profile-name: <<parameters.profile-name>>
+  #           region: <<parameters.region>>
+  #           repo: <<parameters.repo>>
+  #           repo-scan-on-push: <<parameters.repo-scan-on-push>>
+  #           public-registry: <<parameters.public-registry>>
   - when:
       condition: <<parameters.docker-login>>
       steps:

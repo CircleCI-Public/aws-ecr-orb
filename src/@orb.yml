@@ -8,4 +8,4 @@ display:
   home_url: https://aws.amazon.com/ecr/
 
 orbs:
-  aws-cli: circleci/aws-cli@dev:alpha
+  aws-cli: circleci/aws-cli@3.1

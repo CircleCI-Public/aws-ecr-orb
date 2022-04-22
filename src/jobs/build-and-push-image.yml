@@ -47,6 +47,21 @@ parameters:
     default: ""
     description: Role ARN that the profile should take.
 
+  role-session-name:
+    description: An identifier for the assumed role session
+    type: string
+    default: ${CIRCLE_JOB}
+
+  assume-web-identity:
+    description: Set to true to configure a profile using short-term credentials
+    type: boolean
+    default: false
+
+  session-duration:
+    description: The duration of the session in seconds
+    type: string
+    default: "3600"
+
   source-profile:
     description: Source profile containing credentials to assume the role with role-arn.
     type: string
@@ -185,55 +200,14 @@ parameters:
     default: true
     description: Set to false to build an image without pushing to repository.  Defaults to true.
 
+  lifecycle-policy-path:
+    type: string
+    default: ""
+    description: |
+      The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
+
 steps:
-  - checkout
-  - when:
-      condition: <<parameters.attach-workspace>>
-      steps:
-        - attach_workspace:
-            at: <<parameters.workspace-root>>
-  - when:
-      condition:
-        and:
-          - <<parameters.remote-docker-layer-caching>>
-          - not: <<parameters.setup-remote-docker>>
-      steps:
-        - run: echo "Docker Layer Caching requires Setup Remote Docker command" && exit 1
-  - when:
-      condition: <<parameters.setup-remote-docker>>
-      steps:
-        - setup_remote_docker:
-            version: <<parameters.remote-docker-version>>
-            docker_layer_caching: <<parameters.remote-docker-layer-caching>>
-  - ecr-login:
-      profile-name: <<parameters.profile-name>>
-      region: <<parameters.region>>
-      registry-id: <<parameters.registry-id>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
-      aws-cli-version: <<parameters.aws-cli-version>>
-      public-registry: <<parameters.public-registry>>
-      role-arn: <<parameters.role-arn>>
-      new-profile-name: <<parameters.new-profile-name>>
-      source-profile: <<parameters.source-profile>>
-
-  - when:
-      condition: <<parameters.create-repo>>
-      steps:
-        - create-repo:
-            profile-name: <<parameters.profile-name>>
-            region: <<parameters.region>>
-            repo: <<parameters.repo>>
-            repo-scan-on-push: <<parameters.repo-scan-on-push>>
-            public-registry: <<parameters.public-registry>>
-
-  - when:
-      condition: <<parameters.docker-login>>
-      steps:
-        - run: |
-            docker login -u $<<parameters.dockerhub-username>> -p $<<parameters.dockerhub-password>>
-
-  - build-image:
+  - build-and-push-image:
       registry-id: <<parameters.registry-id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
@@ -247,5 +221,23 @@ steps:
       region: <<parameters.region>>
       public-registry: <<parameters.public-registry>>
       push-image: <<parameters.push-image>>
-  - store_artifacts:
-      path: test.txt
+      lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
+      repo-scan-on-push: <<parameters.repo-scan-on-push>>
+      aws-access-key-id: <<parameters.aws-access-key-id>>
+      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      aws-cli-version: <<parameters.aws-cli-version>>
+      role-arn: <<parameters.role-arn>>
+      role-session-name: <<parameters.role-session-name>>
+      assume-web-identity: <<parameters.assume-web-identity>>
+      session-duration: <<parameters.session-duration>>
+      new-profile-name: <<parameters.new-profile-name>>
+      source-profile: <<parameters.source-profile>>
+      attach-workspace: <<parameters.attach-workspace>>
+      remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
+      setup-remote-docker: <<parameters.setup-remote-docker>>
+      remote-docker-version: <<parameters.remote-docker-version>>
+      workspace-root: <<parameters.workspace-root>>
+      create-repo: <<parameters.create-repo>>
+      docker-login: <<parameters.docker-login>>
+      dockerhub-username: <<parameters.dockerhub-username>>
+      dockerhub-password: <<parameters.dockerhub-password>>

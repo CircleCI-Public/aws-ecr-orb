@@ -22,8 +22,21 @@ jobs:
         type: string
       target-tag:
         type: string
+      role-arn:
+        type: string
+      region:
+        type: string
+      profile-name:
+        type: string
+      assume-web-identity:
+        type: boolean
+        default: false
     steps:
-      - aws-ecr/ecr-login
+      - aws-ecr/ecr-login:
+          profile-name: <<parameters.profile-name>>
+          role-arn: <<parameters.role-arn>>
+          region: <<parameters.region>>
+          assume-web-identity: <<parameters.assume-web-identity>>
       - aws-ecr/tag-image:
           repo: <<parameters.repo>>
           source-tag: <<parameters.source-tag>>
@@ -49,6 +62,10 @@ workflows:
           path: workspace
           extra-build-args: --compress
           executor: amd64
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_ADMIN
+          source-profile: default
+          new-profile-name: assume-role-test
+          lifecycle-policy-path: ./sample/policy.json
           post-steps:
             - run:
                 name: "Delete repository"
@@ -65,7 +82,11 @@ workflows:
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry
           create-repo: true
-          context: [CPE_ORBS_AWS]
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          region: "us-west-2"
+          assume-web-identity: true
+          profile-name: "OIDC-User"
+          context: [CPE-OIDC]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
@@ -85,16 +106,18 @@ workflows:
       - aws-ecr/build-and-push-image:
           name: integration-tests-named-profile
           attach-workspace: true
-          context: [CPE_ORBS_AWS]
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          region: "us-west-2"
+          assume-web-identity: true
+          profile-name: "OIDC-User"
+          context: [CPE-OIDC]
           workspace-root: workspace
-          profile-name: testing
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           create-repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
-          region: ${AWS_REGION}
           executor: amd64
           filters:
             tags:
@@ -104,7 +127,11 @@ workflows:
       - tag-ecr-image:
           name: integration-tests-tag-existing-image
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
-          context: [CPE_ORBS_AWS]
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          region: "us-west-2"
+          assume-web-identity: true
+          profile-name: "OIDC-User"
+          context: [CPE-OIDC]
           source-tag: integration
           target-tag: latest
           post-steps:
@@ -120,7 +147,11 @@ workflows:
       - aws-ecr/build-and-push-image:
           name: integration-tests-skip-when-tags-exist-populate-image-<<matrix.executor>>
           attach-workspace: true
-          context: [CPE_ORBS_AWS]
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          region: "us-west-2"
+          assume-web-identity: true
+          profile-name: "OIDC-User"
+          context: [CPE-OIDC]
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
           create-repo: true
@@ -129,7 +160,6 @@ workflows:
           path: workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
-          region: ${AWS_REGION}
           matrix:
             parameters:
               executor: ["amd64", "arm64"]
@@ -141,7 +171,11 @@ workflows:
       - aws-ecr/build-and-push-image:
           name: integration-tests-skip-when-tags-exist-<<matrix.executor>>
           attach-workspace: true
-          context: [CPE_ORBS_AWS]
+          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          region: "us-west-2"
+          assume-web-identity: true
+          profile-name: "OIDC-User"
+          context: [CPE-OIDC]
           workspace-root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip-when-tags-exist-<<matrix.executor>>
           tag: integration,myECRRepoTag
@@ -150,7 +184,6 @@ workflows:
           extra-build-args: --compress
           skip-when-tags-exist: true
           aws-cli-version: 2.4.10
-          region: ${AWS_REGION}
           post-steps:
             - run:
                 name: "Delete repository"
@@ -192,7 +225,7 @@ workflows:
             - integration-tests-skip-when-tags-exist-arm64
             - integration-tests-named-profile
             - integration-tests-tag-existing-image
-          github-token: GHI_TOKEN          
+          github-token: GHI_TOKEN
           context: orb-publisher
           filters:
             branches:

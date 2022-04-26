@@ -47,6 +47,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
   fi
 
   if [ -n "$PARAM_EXTRA_BUILD_ARGS" ]; then
+    PARAM_EXTRA_BUILD_ARGS=$(eval echo "${PARAM_EXTRA_BUILD_ARGS}")
     set -- "$@" ${PARAM_EXTRA_BUILD_ARGS}
   fi
 

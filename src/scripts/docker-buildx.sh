@@ -24,7 +24,7 @@ IFS="," read -ra DOCKER_TAGS <<<"${PARAM_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "1" ] || [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${PARAM_PROFILE_NAME}" --registry-id "${!PARAM_REGISTRY_ID}" --region "${PARAM_REGION}" --repository-name "${PARAM_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
-    if [ "${docker_tag_exists_in_ecr}" = "1" ]; then
+    if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       docker pull "${PARAM_ACCOUNT_URL}/${PARAM_REPO}:${tag}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi

@@ -2,6 +2,7 @@
 PARAM_REGION=$(eval echo "${PARAM_REGION}")
 PARAM_REPO=$(eval echo "${PARAM_REPO}")
 PARAM_TAG=$(eval echo "${PARAM_TAG}")
+PARAM_PATH=$(eval echo "${PARAM_PATH}")
 PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0

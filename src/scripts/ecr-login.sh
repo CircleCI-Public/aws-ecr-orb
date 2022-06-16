@@ -14,7 +14,7 @@ if [ -n "${PARAM_PROFILE_NAME}" ]; then
 fi
 
 #Shellcheck disable=SC2002
-if cat ~/.docker/config.json | grep "${PARAM_ACCOUNT_URL}" > /dev/null 2>&1 ; then
+if [ -f "$HOME/.docker/config.json" ] && cat ~/.docker/config.json | grep "${PARAM_ACCOUNT_URL}" > /dev/null 2>&1 ; then
     echo "Credential helper is already installed"
 else
     aws "${ECR_COMMAND}" get-login-password --region "${PARAM_REGION}" "$@" | docker login --username AWS --password-stdin "${PARAM_ACCOUNT_URL}"

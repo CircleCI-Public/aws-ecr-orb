@@ -79,7 +79,7 @@ parameters:
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
   retries:
-    type: number
+    type: integer
     default: 0
     description: The number of times to attempt an taging and pushing an image
 

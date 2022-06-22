@@ -208,6 +208,11 @@ parameters:
       Boolean for whether or not to checkout as a first step. Default is true.
     type: boolean
 
+  build-retries:
+    type: integer
+    default: 0
+    description: The number of times to attempt an building and pushing an image
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -282,6 +287,7 @@ steps:
             region: <<parameters.region>>
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
+            build-retries: <<parameters.build-retries>>
 
   - unless:
       condition:
@@ -304,3 +310,4 @@ steps:
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
             lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
+            build-retries: <<parameters.build-retries>>

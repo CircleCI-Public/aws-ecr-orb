@@ -80,3 +80,7 @@ usage:
             # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
             # you are tagging with the git commit hash. Specially useful for faster code reverts.
             skip-when-tags-exist: false
+
+            # Set a number other than 0 to add retries to the build-image step.  For use with unstable
+            # connections such as cn-northwest-1
+            build-retries: 3

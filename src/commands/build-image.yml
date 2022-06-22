@@ -81,7 +81,7 @@ parameters:
   retries:
     type: integer
     default: 0
-    description: The number of times to attempt an taging and pushing an image
+    description: The number of times to attempt an building and pushing an image
 
 steps:
   - run:

@@ -3,6 +3,7 @@ PARAM_REGION=$(eval echo "${PARAM_REGION}")
 PARAM_REPO=$(eval echo "${PARAM_REPO}")
 PARAM_TAG=$(eval echo "${PARAM_TAG}")
 PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
+PARAM_RETRIES=$(eval echo "${PARAM_RETRIES}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
@@ -51,24 +52,29 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
     set -- "$@" ${PARAM_EXTRA_BUILD_ARGS}
   fi
 
-  if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
-    docker buildx build \
-      -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
-      ${docker_tag_args} \
-      --platform "${PARAM_PLATFORM}" \
-      --progress plain \
-      "$@" \
-      "${PARAM_PATH}"
-  else
-    docker context create builder
-    docker run --privileged --rm tonistiigi/binfmt --install all
-    docker --context builder buildx create --use
-    docker --context builder buildx build \
-      -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
-      ${docker_tag_args} \
-      --platform "${PARAM_PLATFORM}" \
-      --progress plain \
-      "$@" \
-      "${PARAM_PATH}"
-  fi
+  x=0
+  while [ "$x" -le "${PARAM_RETRIES}" ]
+  do
+    if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
+      docker buildx build \
+        -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
+        ${docker_tag_args} \
+        --platform "${PARAM_PLATFORM}" \
+        --progress plain \
+        "$@" \
+        "${PARAM_PATH}"
+    else
+      docker context create builder
+      docker run --privileged --rm tonistiigi/binfmt --install all
+      docker --context builder buildx create --use
+      docker --context builder buildx build \
+        -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
+        ${docker_tag_args} \
+        --platform "${PARAM_PLATFORM}" \
+        --progress plain \
+        "$@" \
+        "${PARAM_PATH}"
+    fi
+  x=$(( "$x" + 1 ))
+  done
 fi

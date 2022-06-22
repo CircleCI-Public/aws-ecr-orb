@@ -78,6 +78,11 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
+  retries:
+    type: number
+    default: 0
+    description: The number of times to attempt an taging and pushing an image
+
 steps:
   - run:
       name: Build Docker Image with buildx
@@ -95,5 +100,6 @@ steps:
         PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
         PARAM_PUSH_IMAGE: <<parameters.push-image>>
         PARAM_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
+        PARAM_RETRIES: <<parameters.retries>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

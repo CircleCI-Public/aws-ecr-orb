@@ -155,6 +155,13 @@ parameters:
       DOCKERHUB_PASSWORD.
     type: env_var_name
 
+  docker-registry:
+    type: string
+    default: ""
+    description: >
+      If you want to login to a self-hosted registry you can specify
+      this by adding the server name.
+
   dockerfile:
     default: Dockerfile
     description: Name of dockerfile to use. Defaults to Dockerfile.
@@ -262,6 +269,7 @@ steps:
         - run: >
             docker login -u $<<parameters.dockerhub-username>> -p
             $<<parameters.dockerhub-password>>
+            <<parameters.docker-registry>>
   - when:
       condition:
         and:

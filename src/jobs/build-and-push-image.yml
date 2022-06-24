@@ -162,6 +162,13 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. DOCKERHUB_PASSWORD.
 
+  docker-registry:
+    type: string
+    default: ""
+    description: >
+      If you want to login to a self-hosted registry you can specify
+      this by adding the server name.
+
   dockerfile:
     type: string
     default: Dockerfile
@@ -241,3 +248,4 @@ steps:
       docker-login: <<parameters.docker-login>>
       dockerhub-username: <<parameters.dockerhub-username>>
       dockerhub-password: <<parameters.dockerhub-password>>
+      docker-registry: <<parameters.docker-registry>>

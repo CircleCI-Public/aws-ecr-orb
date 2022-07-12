@@ -205,6 +205,12 @@ parameters:
     default: ""
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
+  
+  checkout:
+    default: true
+    description: |
+      Boolean for whether or not to checkout as a first step of the build-and-push-image command. Default is true.
+    type: boolean
 
 steps:
   - build-and-push-image:
@@ -222,6 +228,7 @@ steps:
       public-registry: <<parameters.public-registry>>
       push-image: <<parameters.push-image>>
       lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
+      checkout: <<parameters.checkout>>
       repo-scan-on-push: <<parameters.repo-scan-on-push>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>

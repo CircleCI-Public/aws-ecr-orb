@@ -4,6 +4,7 @@ PARAM_REPO=$(eval echo "${PARAM_REPO}")
 PARAM_TAG=$(eval echo "${PARAM_TAG}")
 PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
 PARAM_RETRIES=$(eval echo "${PARAM_RETRIES}")
+PARAM_BUILD_PUSH_TIMEOUT=$(eval echo "${PARAM_BUILD_PUSH_TIMEOUT}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
@@ -52,6 +53,12 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
     set -- "$@" ${PARAM_EXTRA_BUILD_ARGS}
   fi
 
+  if [ "${PARAM_BUILD_PUSH_TIMEOUT}" != 0 ]; then
+    TIMEOUT_COMMAND="timeout ${PARAM_BUILD_PUSH_TIMEOUT}"
+  else
+    TIMEOUT_COMMAND=""
+  fi
+
   x=0
   while [ "$x" -le "${PARAM_RETRIES}" ]
   do
@@ -67,7 +74,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
       docker --context builder buildx create --use
-      docker --context builder buildx build \
+      "${TIMEOUT_COMMAND}" docker --context builder buildx build \
         -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
         ${docker_tag_args} \
         --platform "${PARAM_PLATFORM}" \

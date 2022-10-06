@@ -130,7 +130,7 @@ parameters:
 
   remote-docker-version:
     type: string
-    default: 19.03.13
+    default: ""
     description: Specific remote docker version
 
   remote-docker-layer-caching:

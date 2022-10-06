@@ -39,7 +39,7 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
     if [ -n "${PARAM_LIFECYCLE_POLICY_PATH}" ]; then
       aws ecr put-lifecycle-policy \
         --repository-name "${PARAM_REPO}" \
-        --lifecycle-policy-text "${PARAM_LIFECYCLE_POLICY_PATH}"
+        --lifecycle-policy-text "file://${PARAM_LIFECYCLE_POLICY_PATH}"
     fi
 
   else

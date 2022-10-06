@@ -122,7 +122,7 @@ parameters:
     type: boolean
 
   remote-docker-version:
-    default: 19.03.13
+    default: ""
     description: Specific remote docker version
     type: string
 

@@ -63,7 +63,7 @@ workflows:
           extra-build-args: --compress
           executor: amd64
           role-arn: arn:aws:iam::122211685980:role/CPE_ECR_ADMIN
-          lifecycle-policy-path: ./sample/policy.json
+          lifecycle-policy-path: ./project/sample/policy.json
           post-steps:
             - run:
                 name: "Delete repository"

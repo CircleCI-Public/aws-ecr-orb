@@ -158,7 +158,6 @@ workflows:
           path: workspace
           extra-build-args: --compress
           skip-when-tags-exist: true
-          setup-remote-docker: true
           matrix:
             parameters:
               executor: ["amd64", "arm64"]

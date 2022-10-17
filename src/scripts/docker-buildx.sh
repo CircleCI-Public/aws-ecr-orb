@@ -61,16 +61,14 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
       "${PARAM_PATH}"
   else
 
+    if ! docker context ls | grep builder; then
+      # We need to skip the creation of the builder context if it's already present
+      # otherwise the command will fail when called more than once in the same job.
+
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
       docker --context builder buildx create --use
-    # if ! docker context ls | grep builder; then
-    #   # We need to skip the creation of the builder context if it's already present
-    #   # otherwise the command will fail when called more than once in the same job.
-    #   docker context create builder
-    #   docker run --privileged --rm tonistiigi/binfmt --install all
-    #   docker --context builder buildx create --use
-    # fi
+    fi
 
     docker --context builder buildx build \
       -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \

@@ -1,4 +1,4 @@
-FROM cimg/node:18.11
+FROM cimg/node
 
 WORKDIR /app
 ADD . /app

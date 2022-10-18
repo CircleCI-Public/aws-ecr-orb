@@ -51,10 +51,10 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
     set -- "$@" ${PARAM_EXTRA_BUILD_ARGS}
   fi
 
-      # ${docker_tag_args} \
   if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
     docker buildx build \
       -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
+      ${docker_tag_args} \
       --platform "${PARAM_PLATFORM}" \
       --progress plain \
       "$@" \

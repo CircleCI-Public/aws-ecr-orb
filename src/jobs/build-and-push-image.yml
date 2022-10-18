@@ -241,3 +241,5 @@ steps:
       docker-login: <<parameters.docker-login>>
       dockerhub-username: <<parameters.dockerhub-username>>
       dockerhub-password: <<parameters.dockerhub-password>>
+  - store_artifacts:
+      path: test.txt

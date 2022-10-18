@@ -1,4 +1,4 @@
-FROM cimg/node:41530b8efde8b71bb5439ac33f02dbcc9b92d65dd3e7e47430cac6513e5a1edf
+FROM cimg/node:current
 
 WORKDIR /app
 ADD . /app

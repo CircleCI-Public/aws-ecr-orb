@@ -17,7 +17,7 @@ if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
   fi
 
   ECR_COMMAND="ecr-public"
-  PARAM_ACCOUNT_URL="public.ecr.aws/${!PARAM_REGISTRY_ID}"
+  PARAM_ACCOUNT_URL="public.ecr.aws/${!PARAM_PUBLIC_REGISTRY_ALIAS}"
 fi
 
 IFS="," read -ra DOCKER_TAGS <<<"${PARAM_TAG}"

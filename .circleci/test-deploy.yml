@@ -234,9 +234,7 @@ executors:
   amd64:
     machine:
       image: ubuntu-2004:202107-02
-      docker_layer_caching: true
   arm64:
     machine:
       image: ubuntu-2004:202101-01
-      docker_layer_caching: true
     resource_class: arm.medium

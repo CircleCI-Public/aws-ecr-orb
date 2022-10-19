@@ -102,6 +102,6 @@ steps:
         PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
         PARAM_PUSH_IMAGE: <<parameters.push-image>>
         PARAM_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
-        PARAM_PUBLIC_REGISTRY_ALIAS: <<public-registry-alias>>
+        PARAM_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

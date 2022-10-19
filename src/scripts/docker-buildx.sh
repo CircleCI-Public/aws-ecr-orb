@@ -3,6 +3,7 @@ PARAM_REGION=$(eval echo "${PARAM_REGION}")
 PARAM_REPO=$(eval echo "${PARAM_REPO}")
 PARAM_TAG=$(eval echo "${PARAM_TAG}")
 PARAM_ACCOUNT_URL="${!PARAM_REGISTRY_ID}.dkr.ecr.${PARAM_REGION}.amazonaws.com"
+PARAM_PUBLIC_REGISTRY_ALIAS=$(eval echo "${PARAM_PUBLIC_REGISTRY_ALIAS}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
@@ -17,7 +18,7 @@ if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
   fi
 
   ECR_COMMAND="ecr-public"
-  PARAM_ACCOUNT_URL="public.ecr.aws/${!PARAM_PUBLIC_REGISTRY_ALIAS}"
+  PARAM_ACCOUNT_URL="public.ecr.aws/${PARAM_PUBLIC_REGISTRY_ALIAS}"
 fi
 
 IFS="," read -ra DOCKER_TAGS <<<"${PARAM_TAG}"

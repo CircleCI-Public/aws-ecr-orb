@@ -54,7 +54,6 @@ if [ "${PARAM_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${PARAM_SKIP_WHEN_TAGS_EXIST
   fi
 
   if [ "${PARAM_PUBLIC_REGISTRY}" == "1" ]; then
-    echo "docker tag args: ${docker_tag_args}" >> test.txt
     docker buildx build \
       -f "${PARAM_PATH}"/"${PARAM_DOCKERFILE}" \
       ${docker_tag_args} \

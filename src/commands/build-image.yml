@@ -66,12 +66,12 @@ parameters:
     type: string
     default: "linux/amd64"
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64.
-  
+
   public-registry-alias:
     type: string
     default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
-    description: > 
-      The public registry alias for your public repositories. It can be found in the Amazon ECR console 
+    description: >
+      The public registry alias for your public repositories. It can be found in the Amazon ECR console
       > Public Registries.
 
   push-image:

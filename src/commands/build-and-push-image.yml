@@ -194,8 +194,8 @@ parameters:
   public-registry-alias:
     type: string
     default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
-    description: > 
-      The public registry alias for your public repositories. It can be found in the Amazon ECR console 
+    description: >
+      The public registry alias for your public repositories. It can be found in the Amazon ECR console
       > Public Registries.
 
   push-image:

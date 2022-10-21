@@ -117,7 +117,7 @@ steps:
             name: Log into Amazon ECR with profile <<parameters.new-profile-name>>
             environment:
               ORB_VAL_PROFILE_NAME: <<parameters.new-profile-name>>
-              ORB_VAL_REGISTRY_ID: <<parameters.registry-id>>
+              ORB_ENV_REGISTRY_ID: <<parameters.registry-id>>
               ORB_EVAL_REGION: <<parameters.region>>
               ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
             command: <<include(scripts/ecr-login.sh)>>

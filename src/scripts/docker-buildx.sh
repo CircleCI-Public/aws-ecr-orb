@@ -31,7 +31,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi
   fi
-  docker_tag_args="${docker_tag_args} -t ${ORB_EVAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
+  docker_tag_args="${docker_tag_args} -t ${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
 done
 
 if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
@@ -41,7 +41,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     if [ -n "${ORB_VAL_LIFECYCLE_POLICY_PATH}" ]; then
       aws ecr put-lifecycle-policy \
         --repository-name "${ORB_EVAL_REPO}" \
-        --lifecycle-policy-text "file://${ORB_EVAL_LIFECYCLE_POLICY_PATH}"
+        --lifecycle-policy-text "file://${ORB_VAL_LIFECYCLE_POLICY_PATH}"
     fi
 
   else

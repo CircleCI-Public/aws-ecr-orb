@@ -1,6 +1,6 @@
 #!/bin/bash
 ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
-ORB_VAL_ACCOUNT_URL=$(eval echo "${ORB_EVAL_REGISTRY_ID}".dkr.ecr."${ORB_EVAL_REGION}".amazonaws.com)
+ORB_VAL_ACCOUNT_URL=$(eval echo "${ORB_EVAL_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com")
 ECR_COMMAND="ecr"
 
 if [ "$ORB_VAL_PUBLIC_REGISTRY" == "1" ]; then

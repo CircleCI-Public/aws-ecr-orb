@@ -116,10 +116,10 @@ steps:
         - run:
             name: Log into Amazon ECR with profile <<parameters.new-profile-name>>
             environment:
-              ORB_EVAL_PROFILE_NAME: <<parameters.new-profile-name>>
-              ORB_EVAL_REGISTRY_ID: <<parameters.registry-id>>
+              ORB_VAL_PROFILE_NAME: <<parameters.new-profile-name>>
+              ORB_VAL_REGISTRY_ID: <<parameters.registry-id>>
               ORB_EVAL_REGION: <<parameters.region>>
-              ORB_EVAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
+              ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
             command: <<include(scripts/ecr-login.sh)>>
   - unless:
       condition:
@@ -130,8 +130,8 @@ steps:
         - run:
             name: Log into Amazon ECR with profile <<parameters.profile-name>>
             environment:
-              ORB_EVAL_PROFILE_NAME: <<parameters.profile-name>>
-              ORB_EVAL_REGISTRY_ID: <<parameters.registry-id>>
+              ORB_VAL_PROFILE_NAME: <<parameters.profile-name>>
+              ORB_VAL_REGISTRY_ID: <<parameters.registry-id>>
               ORB_EVAL_REGION: <<parameters.region>>
-              ORB_EVAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
+              ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
             command: <<include(scripts/ecr-login.sh)>>

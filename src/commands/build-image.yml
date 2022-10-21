@@ -96,7 +96,7 @@ steps:
         ORB_EVAL_PATH: <<parameters.path>>
         ORB_VAL_DOCKERFILE: <<parameters.dockerfile>>
         ORB_VAL_PROFILE_NAME: <<parameters.profile-name>>
-        ORB_EVAL_REGISTRY_ID: <<parameters.registry-id>>
+        ORB_ENV_REGISTRY_ID: <<parameters.registry-id>>
         ORB_EVAL_REGION: <<parameters.region>>
         ORB_VAL_PLATFORM: <<parameters.platform>>
         ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>

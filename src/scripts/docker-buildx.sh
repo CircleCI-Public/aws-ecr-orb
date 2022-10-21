@@ -3,7 +3,7 @@ ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
 ORB_EVAL_REPO=$(eval echo "${ORB_EVAL_REPO}")
 ORB_EVAL_TAG=$(eval echo "${ORB_EVAL_TAG}")
 ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
-ORB_VAL_ACCOUNT_URL="${!ORB_EVAL_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
+ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
@@ -25,7 +25,7 @@ fi
 IFS="," read -ra DOCKER_TAGS <<<"${ORB_EVAL_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "1" ] || [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
-    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_VAL_PROFILE_NAME}" --registry-id "${!ORB_EVAL_REGISTRY_ID}" --region "${ORB_EVAL_REGION}" --repository-name "${ORB_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
+    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_VAL_PROFILE_NAME}" --registry-id "${!ORB_ENV_REGISTRY_ID}" --region "${ORB_EVAL_REGION}" --repository-name "${ORB_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       docker pull "${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))

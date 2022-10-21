@@ -89,19 +89,19 @@ steps:
   - run:
       name: Build Docker Image with buildx
       environment:
-        PARAM_TAG: << parameters.tag >>
-        PARAM_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
-        PARAM_REPO: << parameters.repo >>
-        PARAM_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
-        PARAM_PATH: <<parameters.path>>
-        PARAM_DOCKERFILE: <<parameters.dockerfile>>
-        PARAM_PROFILE_NAME: <<parameters.profile-name>>
-        PARAM_REGISTRY_ID: <<parameters.registry-id>>
-        PARAM_REGION: <<parameters.region>>
-        PARAM_PLATFORM: <<parameters.platform>>
-        PARAM_PUBLIC_REGISTRY: <<parameters.public-registry>>
-        PARAM_PUSH_IMAGE: <<parameters.push-image>>
-        PARAM_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
-        PARAM_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
+        ORB_EVAL_TAG: << parameters.tag >>
+        ORB_EVAL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
+        ORB_EVAL_REPO: << parameters.repo >>
+        ORB_EVAL_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
+        ORB_EVAL_PATH: <<parameters.path>>
+        ORB_EVAL_DOCKERFILE: <<parameters.dockerfile>>
+        ORB_EVAL_PROFILE_NAME: <<parameters.profile-name>>
+        ORB_EVAL_REGISTRY_ID: <<parameters.registry-id>>
+        ORB_EVAL_REGION: <<parameters.region>>
+        ORB_EVAL_PLATFORM: <<parameters.platform>>
+        ORB_EVAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
+        ORB_EVAL_PUSH_IMAGE: <<parameters.push-image>>
+        ORB_EVAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
+        ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

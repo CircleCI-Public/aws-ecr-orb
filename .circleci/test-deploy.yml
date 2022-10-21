@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@dev:<<pipeline.git.revision>>
-  orb-tools: circleci/orb-tools@11.3
+  orb-tools: circleci/orb-tools@11.4
 jobs:
   pre-integration-checkout-workspace-job:
     docker:

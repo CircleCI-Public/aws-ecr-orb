@@ -18,7 +18,7 @@ steps:
   - run:
       name: <<parameters.target-tag>> tag to <<parameters.repo>>:<<parameters.source-tag>>
       environment:
-        PARAM_REPO: <<parameters.repo>>
-        PARAM_SOURCE_TAG: <<parameters.source-tag>>
-        PARAM_TARGET_TAG: <<parameters.target-tag>>
+        ORB_EVAL_REPO: <<parameters.repo>>
+        ORB_EVAL_SOURCE_TAG: <<parameters.source-tag>>
+        ORB_EVAL_TARGET_TAG: <<parameters.target-tag>>
       command: <<include(scripts/tag-image.sh)>>

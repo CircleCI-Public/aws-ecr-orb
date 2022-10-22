@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@dev:<<pipeline.git.revision>>
-  orb-tools: circleci/orb-tools@11.1
+  orb-tools: circleci/orb-tools@11.4
 jobs:
   pre-integration-checkout-workspace-job:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:current
     resource_class: small
     steps:
       - checkout
@@ -14,7 +14,7 @@ jobs:
           paths: [sample/Dockerfile]
   tag-ecr-image:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:current
     parameters:
       repo:
         type: string
@@ -233,10 +233,8 @@ workflows:
 executors:
   amd64:
     machine:
-      image: ubuntu-2004:202107-02
-      docker_layer_caching: true
+      image: ubuntu-2204:2022.07.1
   arm64:
     machine:
-      image: ubuntu-2004:202101-01
-      docker_layer_caching: true
+      image: ubuntu-2204:2022.07.1
     resource_class: arm.medium

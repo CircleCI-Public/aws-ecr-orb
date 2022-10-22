@@ -21,7 +21,7 @@ parameters:
     default: AWS_ACCESS_KEY_ID
     description: >
       AWS access key id for IAM role. Set this to the name of the environment
-      variable you will set to hold this value, i.e. AWS_ACCESS_KEY.
+      variable you will set to hold this value, i.e. AWS_ACCESS_KEY_ID.
     type: env_var_name
 
   aws-secret-access-key:
@@ -191,6 +191,13 @@ parameters:
     default: "linux/amd64"
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64
 
+  public-registry-alias:
+    type: string
+    default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
+    description: >
+      The public registry alias for your public repositories. This parameter is required if pushing to a public repository
+      It can be found in the Amazon ECR console > Public Registries.
+
   push-image:
     type: boolean
     default: true
@@ -282,6 +289,7 @@ steps:
             region: <<parameters.region>>
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
+            public-registry-alias: <<parameters.public-registry-alias>>
 
   - unless:
       condition:
@@ -304,3 +312,4 @@ steps:
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
             lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
+            public-registry-alias: <<parameters.public-registry-alias>>

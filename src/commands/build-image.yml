@@ -85,6 +85,13 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
+  remote-docker-layer-caching:
+    default: false
+    description: >
+      Enable Docker layer caching if using remote Docker engine. Defaults to
+      false.
+    type: boolean
+
 steps:
   - run:
       name: Build Docker Image with buildx
@@ -104,4 +111,13 @@ steps:
         ORB_VAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
       command: <<include(scripts/docker-buildx.sh)>>
+      no_output_timeout: <<parameters.no-output-timeout>>
+  - run:
+      name: Clean up multi-architecture image build artifacts
+      environment:
+      when:
+        condition:
+          and:
+            - equal: [ true, <<parameters.remote-docker-layer-caching>> ]
+      command: <<include(scripts/docker-buildx-cleanup.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

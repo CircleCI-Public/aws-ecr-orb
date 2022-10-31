@@ -290,6 +290,7 @@ steps:
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
             public-registry-alias: <<parameters.public-registry-alias>>
+            remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
 
   - unless:
       condition:

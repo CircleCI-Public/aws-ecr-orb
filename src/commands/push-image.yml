@@ -10,13 +10,13 @@ parameters:
     type: string
     default: ${AWS_REGION}
     description: >
-      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}      
+      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
   repo:
     description: Name of an Amazon ECR repository
     type: string
   tag:
     default: latest
-    description: A comma-separated string containing docker image tags (default = latest)    
+    description: A comma-separated string containing docker image tags (default = latest)
     type: string
 steps:
   name: Push image to AWS ECR
@@ -24,4 +24,4 @@ steps:
     ORB_EVAL_REPO: << parameters.repo >>
     ORB_EVAL_REGION: << parameters.region >>
     ORB_EVAL_TAG: << parameters.tag >>
-  command: << include(src/push-image.sh) >>  
+  command: << include(scripts/push-image.sh) >>

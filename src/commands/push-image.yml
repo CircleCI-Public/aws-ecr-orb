@@ -19,9 +19,10 @@ parameters:
     description: A comma-separated string containing docker image tags (default = latest)
     type: string
 steps:
-  name: Push image to AWS ECR
-  environment:
-    ORB_EVAL_REPO: << parameters.repo >>
-    ORB_EVAL_REGION: << parameters.region >>
-    ORB_EVAL_TAG: << parameters.tag >>
-  command: << include(scripts/push-image.sh) >>
+  - run:
+      name: Push image to AWS ECR
+      environment:
+        ORB_EVAL_REPO: << parameters.repo >>
+        ORB_EVAL_REGION: << parameters.region >>
+        ORB_EVAL_TAG: << parameters.tag >>
+      command: << include(scripts/push-image.sh) >>

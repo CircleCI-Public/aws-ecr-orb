@@ -18,6 +18,16 @@ parameters:
     default: latest
     description: A comma-separated string containing docker image tags (default = latest)
     type: string
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
+  public-registry-alias:
+    type: string
+    default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
+    description: >
+      The public registry alias for your public repositories. This parameter is required if pushing to a public repository
+      It can be found in the Amazon ECR console > Public Registries.
 steps:
   - run:
       name: Push image to AWS ECR
@@ -25,4 +35,6 @@ steps:
         ORB_EVAL_REPO: << parameters.repo >>
         ORB_EVAL_REGION: << parameters.region >>
         ORB_EVAL_TAG: << parameters.tag >>
+        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
+        ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
       command: << include(scripts/push-image.sh) >>

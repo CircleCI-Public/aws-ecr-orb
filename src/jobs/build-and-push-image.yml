@@ -172,6 +172,13 @@ parameters:
     default: .
     description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
 
+  dockerfile_path:
+    type: string
+    default: .
+    description: >-
+      Path to the directory containing your Dockerfile. Use when the dockerfile is in a different location than the 
+      build directory. Defaults to . (working directory). 
+
   extra-build-args:
     type: string
     default: ""

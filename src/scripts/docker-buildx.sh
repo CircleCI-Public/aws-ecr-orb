@@ -3,11 +3,17 @@ ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
 ORB_EVAL_REPO=$(eval echo "${ORB_EVAL_REPO}")
 ORB_EVAL_TAG=$(eval echo "${ORB_EVAL_TAG}")
 ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
+ORB_EVAL_DOCKERFILE_PATH=$(eval echo "${ORB_EVAL_DOCKERFILE_PATH}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
+
+dockerfile_path=$ORB_EVAL_PATH
+if [ "${ORB_EVAL_DOCKERFILE_PATH}" != "." ]; then
+  dockerfile_path=$ORB_EVAL_DOCKERFILE_PATH
+fi
 
 IFS="," read -ra PLATFORMS <<<"${ORB_VAL_PLATFORM}"
 arch_count=${#PLATFORMS[@]}
@@ -55,7 +61,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
 
   if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
     docker buildx build \
-      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+      -f "${dockerfile_path}"/"${ORB_VAL_DOCKERFILE}" \
       ${docker_tag_args} \
       --platform "${ORB_VAL_PLATFORM}" \
       --progress plain \
@@ -73,7 +79,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     fi
 
     docker --context builder buildx build \
-      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+      -f "${dockerfile_path}"/"${ORB_VAL_DOCKERFILE}" \
       ${docker_tag_args} \
       --platform "${ORB_VAL_PLATFORM}" \
       --progress plain \

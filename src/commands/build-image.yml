@@ -27,6 +27,13 @@ parameters:
     default: .
     description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
 
+  dockerfile_path:
+    default: .
+    description: >-
+      Path to the directory containing your Dockerfile. Use when the dockerfile is in a different location than the 
+      build directory. Defaults to . (working directory).
+    type: string
+
   no-output-timeout:
     type: string
     default: 10m
@@ -94,6 +101,7 @@ steps:
         ORB_EVAL_REPO: << parameters.repo >>
         ORB_VAL_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
         ORB_EVAL_PATH: <<parameters.path>>
+        ORB_EVAL_DOCKERFILE_PATH: <<parameters.dockerfile_path>>
         ORB_VAL_DOCKERFILE: <<parameters.dockerfile>>
         ORB_VAL_PROFILE_NAME: <<parameters.profile-name>>
         ORB_ENV_REGISTRY_ID: <<parameters.registry-id>>

@@ -53,8 +53,12 @@ usage:
             # name of Dockerfile to use, defaults to "Dockerfile"
             dockerfile: myDockerfile
 
-            # path to Dockerfile, defaults to . (working directory)
-            path: pathToMyDockerfile
+            # path to build directory which is assumed to contain dockerfile if dockerfile_path is unused, defaults
+            # to . (working directory)
+            path: pathToMyBuildDirectory
+
+            # path to dockerfile, defaults to . (working directory)
+            dockerfile_path: pathToMyDockerfile
 
             # Select a specific version of the AWS v2 CLI. By default the latest version will be used.
             aws-cli-version: latest

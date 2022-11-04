@@ -167,6 +167,13 @@ parameters:
       Defaults to . (working directory).
     type: string
 
+  dockerfile_path:
+    default: .
+    description: >-
+      Path to the directory containing your Dockerfile. Use when the dockerfile is in a different location than the 
+      build directory. Defaults to . (working directory).
+    type: string
+
   extra-build-args:
     default: ""
     description: >
@@ -281,6 +288,7 @@ steps:
             tag: <<parameters.tag>>
             dockerfile: <<parameters.dockerfile>>
             path: <<parameters.path>>
+            dockerfile_path: <<parameters.dockerfile_path>>
             extra-build-args: <<parameters.extra-build-args>>
             no-output-timeout: <<parameters.no-output-timeout>>
             skip-when-tags-exist: <<parameters.skip-when-tags-exist>>
@@ -303,6 +311,7 @@ steps:
             tag: <<parameters.tag>>
             dockerfile: <<parameters.dockerfile>>
             path: <<parameters.path>>
+            dockerfile_path: <<parameters.dockerfile_path>>
             extra-build-args: <<parameters.extra-build-args>>
             no-output-timeout: <<parameters.no-output-timeout>>
             skip-when-tags-exist: <<parameters.skip-when-tags-exist>>

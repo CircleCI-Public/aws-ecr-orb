@@ -109,7 +109,7 @@ steps:
         ORB_VAL_PUSH_IMAGE: <<parameters.push-image>>
         ORB_VAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
-        ORB_VAL_REMOTE_DOCKER_LAYER_CACHING: <<parameters.remote-docker-layer-caching>
+        ORB_VAL_REMOTE_DOCKER_LAYER_CACHING: <<parameters.remote-docker-layer-caching>>
       command: <<include(scripts/docker-buildx.sh)>>
   #     no_output_timeout: <<parameters.no-output-timeout>>
   # - run:

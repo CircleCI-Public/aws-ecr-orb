@@ -53,15 +53,15 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" ${ORB_VAL_EXTRA_BUILD_ARGS}
   fi
 
-  if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
-    docker buildx build \
-      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-      ${docker_tag_args} \
-      --platform "${ORB_VAL_PLATFORM}" \
-      --progress plain \
-      "$@" \
-      "${ORB_EVAL_PATH}"
-  else
+  # if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
+  #   docker buildx build \
+  #     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+  #     ${docker_tag_args} \
+  #     --platform "${ORB_VAL_PLATFORM}" \
+  #     --progress plain \
+  #     "$@" \
+  #     "${ORB_EVAL_PATH}"
+  # else
 
     if ! docker context ls | grep builder; then
       # We need to skip the creation of the builder context if it's already present
@@ -79,5 +79,10 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       --progress plain \
       "$@" \
       "${ORB_EVAL_PATH}"
+      if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
+        # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to
+        # saving updated cache
+        docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
+      fi 
   fi
-fi
+# fi

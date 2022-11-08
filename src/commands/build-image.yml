@@ -82,19 +82,18 @@ parameters:
   lifecycle-policy-path:
     type: string
     default: ""
-    description: |
+    description: >
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
   remote-docker-layer-caching:
     default: false
     description: >
-      Enable Docker layer caching if using remote Docker engine. Defaults to
-      false.
+      Enable Docker layer caching if using remote Docker engine. Defaults to false.
     type: boolean
 
 steps:
   - run:
-      name: Build Docker Image with buildx
+      name: Build Docker Image with docker buildx
       environment:
         ORB_EVAL_TAG: << parameters.tag >>
         ORB_VAL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
@@ -110,14 +109,15 @@ steps:
         ORB_VAL_PUSH_IMAGE: <<parameters.push-image>>
         ORB_VAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
+        ORB_VAL_REMOTE_DOCKER_LAYER_CACHING: <<parameters.remote-docker-layer-caching>
       command: <<include(scripts/docker-buildx.sh)>>
-      no_output_timeout: <<parameters.no-output-timeout>>
-  - run:
-      name: Clean up multi-architecture image build artifacts
-      environment:
-      when:
-        condition:
-          and:
-            - equal: [ true, <<parameters.remote-docker-layer-caching>> ]
-      command: <<include(scripts/docker-buildx-cleanup.sh)>>
-      no_output_timeout: <<parameters.no-output-timeout>>
+  #     no_output_timeout: <<parameters.no-output-timeout>>
+  # - run:
+  #     name: Clean up multi-architecture image build artifacts
+  #     environment:
+  #     when:
+  #       condition:
+  #         and:
+  #           - equal: [ true, <<parameters.remote-docker-layer-caching>> ]
+  #     command: <<include(scripts/docker-buildx-cleanup.sh)>>
+  #     no_output_timeout: <<parameters.no-output-timeout>>

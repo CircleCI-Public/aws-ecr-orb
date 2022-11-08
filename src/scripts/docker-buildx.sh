@@ -9,14 +9,14 @@ ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 
-IFS="," read -ra PLATFORMS <<<"${ORB_VAL_PLATFORM}"
-arch_count=${#PLATFORMS[@]}
+# IFS="," read -ra PLATFORMS <<<"${ORB_VAL_PLATFORM}"
+# arch_count=${#PLATFORMS[@]}
 
 if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
-  if [ "$arch_count" -gt 1 ]; then
-    echo "AWS ECR does not support multiple platforms for public registries. Please specify only one platform and try again"
-    exit 1
-  fi
+  # if [ "$arch_count" -gt 1 ]; then
+  #   echo "AWS ECR does not support multiple platforms for public registries. Please specify only one platform and try again"
+  #   exit 1
+  # fi
 
   ECR_COMMAND="ecr-public"
   ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}"

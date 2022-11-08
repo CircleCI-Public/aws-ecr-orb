@@ -37,4 +37,5 @@ steps:
         ORB_EVAL_TAG: << parameters.tag >>
         ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
+        ORB_ENV_REGISTRY_ID: << parameters.registry-id >>
       command: << include(scripts/push-image.sh) >>

@@ -1,0 +1,17 @@
+{
+    "Version": "2008-10-17",
+    "Statement": [
+      {
+        "Sid": "Allow Sample Account 123456789012",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": [
+            "arn:aws:iam::123456789012:root"
+          ]
+        },
+        "Action": [
+          "ecr:*"
+        ]
+      }
+    ]
+  }

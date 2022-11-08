@@ -213,6 +213,17 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
+  set-repo-policy:
+    default: false
+    description: Should a repository policy be set?
+    type: boolean
+
+  repo-policy-path:
+    type: string
+    default: ""
+    description: |
+      The path to the .json file containing the repository policy to be applied to a specified repository in AWS ECR.
+
 steps:
   - build-and-push-image:
       registry-id: <<parameters.registry-id>>
@@ -249,3 +260,5 @@ steps:
       dockerhub-username: <<parameters.dockerhub-username>>
       dockerhub-password: <<parameters.dockerhub-password>>
       public-registry-alias: <<parameters.public-registry-alias>>
+      set-repo-policy: <<parameters.set-repo-policy>>
+      repo-policy-path: <<parameters.repo-policy-path>>

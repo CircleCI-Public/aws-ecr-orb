@@ -215,6 +215,17 @@ parameters:
       Boolean for whether or not to checkout as a first step. Default is true.
     type: boolean
 
+  set-repo-policy:
+    default: false
+    description: Should a repository policy be set?
+    type: boolean
+
+  repo-policy-path:
+    type: string
+    default: ""
+    description: |
+      The path to the .json file containing the repository policy to be applied to a specified repository in AWS ECR.
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -262,6 +273,16 @@ steps:
             repo: <<parameters.repo>>
             repo-scan-on-push: <<parameters.repo-scan-on-push>>
             public-registry: <<parameters.public-registry>>
+
+  - when:
+      condition: <<parameters.set-repo-policy>>
+      steps:
+        - set-repo-policy:
+            profile-name: <<parameters.profile-name>>
+            region: <<parameters.region>>
+            repo: <<parameters.repo>>
+            public-registry: <<parameters.public-registry>>
+            repo-policy-path: <<parameters.repo-policy-path>>
 
   - when:
       condition: <<parameters.docker-login>>

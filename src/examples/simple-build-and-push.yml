@@ -80,3 +80,9 @@ usage:
             # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
             # you are tagging with the git commit hash. Specially useful for faster code reverts.
             skip-when-tags-exist: false
+
+            # set this along wih `repo-policy-path` to true to set a repository policy, defaults to "false"
+            set-repo-policy: true
+
+            # requires `set-repo-policy: true`, pass in a file with the repo permissions policy
+            repo-policy-path: repo-policy.json

@@ -1,0 +1,41 @@
+description: Push a container image to the Amazon ECR registry
+parameters:
+  registry-id:
+    type: env_var_name
+    default: AWS_ECR_REGISTRY_ID
+    description: >
+      The 12 digit AWS Registry ID associated with the ECR account.
+      This field is required
+  region:
+    type: string
+    default: ${AWS_REGION}
+    description: >
+      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
+  repo:
+    description: Name of an Amazon ECR repository
+    type: string
+  tag:
+    default: latest
+    description: A comma-separated string containing docker image tags (default = latest)
+    type: string
+  public-registry:
+    type: boolean
+    description: Set to true if building and pushing an image to a Public Registry on ECR.
+    default: false
+  public-registry-alias:
+    type: string
+    default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
+    description: >
+      The public registry alias for your public repositories. This parameter is required if pushing to a public repository
+      It can be found in the Amazon ECR console > Public Registries.
+steps:
+  - run:
+      name: Push image to AWS ECR
+      environment:
+        ORB_EVAL_REPO: << parameters.repo >>
+        ORB_EVAL_REGION: << parameters.region >>
+        ORB_EVAL_TAG: << parameters.tag >>
+        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
+        ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
+        ORB_ENV_REGISTRY_ID: << parameters.registry-id >>
+      command: << include(scripts/push-image.sh) >>

@@ -92,6 +92,7 @@ workflows:
           executor: amd64
           public-registry: true
           docker_layer_caching: true
+          setup-remote-docker: true
           post-steps:
             - run:
                 name: "Delete repository"
@@ -236,9 +237,7 @@ executors:
     machine:
       image: ubuntu-2204:2022.07.1
     resource_class: medium
-    docker_layer_caching: true
   arm64:
     machine:
       image: ubuntu-2204:2022.07.1
     resource_class: arm.medium
-    docker_layer_caching: true

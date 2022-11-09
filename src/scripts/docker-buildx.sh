@@ -42,7 +42,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
 
   if [ -n "$ORB_VAL_EXTRA_BUILD_ARGS" ]; then
     ORB_VAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_VAL_EXTRA_BUILD_ARGS}")
-    set -- "$@" "${ORB_VAL_EXTRA_BUILD_ARGS}"
+    set -- "$@" ${ORB_VAL_EXTRA_BUILD_ARGS}
   fi
 
   if ! docker context ls | grep builder; then

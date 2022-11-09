@@ -42,7 +42,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
 
   if [ -n "$ORB_VAL_EXTRA_BUILD_ARGS" ]; then
     ORB_VAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_VAL_EXTRA_BUILD_ARGS}")
-    set -- "$@" ${ORB_VAL_EXTRA_BUILD_ARGS}
+    set -- "$@" "${ORB_VAL_EXTRA_BUILD_ARGS}"
   fi
 
   if ! docker context ls | grep builder; then
@@ -56,7 +56,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
 
   docker --context builder buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-    "${docker_tag_args}" \
+    ${docker_tag_args} \
     --platform "${ORB_VAL_PLATFORM}" \
     --progress plain \
     "$@" \

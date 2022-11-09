@@ -5,7 +5,7 @@ parameters:
   image:
     type: string
     default: ubuntu-2004:202107-02
-  use-docker-layer-caching:
+  remote-docker-layer-caching:
     type: boolean
     default: false
   resource-class:

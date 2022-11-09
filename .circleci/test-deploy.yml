@@ -88,9 +88,10 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
-          extra-build-args: --compress
+          extra-build-args: "--compress"
           executor: amd64
           public-registry: true
+          docker_layer_caching: true
           post-steps:
             - run:
                 name: "Delete repository"
@@ -234,7 +235,10 @@ executors:
   amd64:
     machine:
       image: ubuntu-2204:2022.07.1
+    resource_class: medium
+    docker_layer_caching: <<pipeline.parameters.remote-docker-layer-caching>>
   arm64:
     machine:
       image: ubuntu-2204:2022.07.1
     resource_class: arm.medium
+    docker_layer_caching: <<pipeline.parameters.remote-docker-layer-caching>>

@@ -9,15 +9,7 @@ ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 
-# IFS="," read -ra PLATFORMS <<<"${ORB_VAL_PLATFORM}"
-# arch_count=${#PLATFORMS[@]}
-
 if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
-  # if [ "$arch_count" -gt 1 ]; then
-  #   echo "AWS ECR does not support multiple platforms for public registries. Please specify only one platform and try again"
-  #   exit 1
-  # fi
-
   ECR_COMMAND="ecr-public"
   ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}"
 fi
@@ -53,36 +45,25 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" "${ORB_VAL_EXTRA_BUILD_ARGS}"
   fi
 
-  # if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
-  #   docker buildx build \
-  #     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-  #     ${docker_tag_args} \
-  #     --platform "${ORB_VAL_PLATFORM}" \
-  #     --progress plain \
-  #     "$@" \
-  #     "${ORB_EVAL_PATH}"
-  # else
+  if ! docker context ls | grep builder; then
+    # We need to skip the creation of the builder context if it's already present
+    # otherwise the command will fail when called more than once in the same job.
 
-    if ! docker context ls | grep builder; then
-      # We need to skip the creation of the builder context if it's already present
-      # otherwise the command will fail when called more than once in the same job.
-
-      docker context create builder
-      docker run --privileged --rm tonistiigi/binfmt --install all
-      docker --context builder buildx create --use
-    fi
-
-    docker --context builder buildx build \
-      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-      ${docker_tag_args} \
-      --platform "${ORB_VAL_PLATFORM}" \
-      --progress plain \
-      "$@" \
-      "${ORB_EVAL_PATH}"
-      if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
-        # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to
-        # saving updated cache
-        docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
-      fi 
+    docker context create builder
+    docker run --privileged --rm tonistiigi/binfmt --install all
+    docker --context builder buildx create --use
   fi
-# fi
+
+  docker --context builder buildx build \
+    -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+    ${docker_tag_args} \
+    --platform "${ORB_VAL_PLATFORM}" \
+    --progress plain \
+    "$@" \
+    "${ORB_EVAL_PATH}"
+    if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
+      # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to
+      # saving updated cache
+      docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
+    fi 
+fi

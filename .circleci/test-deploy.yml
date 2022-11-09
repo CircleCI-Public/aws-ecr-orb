@@ -236,7 +236,7 @@ executors:
   amd64:
     machine:
       image: ubuntu-2204:2022.07.1
-      docker_layer_caching: <<parameters.remote-docker-layer-caching>>
+      docker_layer_caching: <<pipeline.parameters.remote-docker-layer-caching>>
     resource_class: medium
   arm64:
     machine:

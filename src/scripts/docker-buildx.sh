@@ -61,9 +61,10 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     --progress plain \
     "$@" \
     "${ORB_EVAL_PATH}"
-    if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
-      # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to
-      # saving updated cache
-      docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
-    fi 
+  docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
+    # if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
+    #   # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to
+    #   # saving updated cache
+    #   docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
+    # fi 
 fi

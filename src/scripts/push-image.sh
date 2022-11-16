@@ -5,6 +5,11 @@ ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 
+if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
+  echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
+  exit 1
+fi
+
 if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
   ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}"
 fi

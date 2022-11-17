@@ -9,6 +9,11 @@ ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 
+if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
+  echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
+  exit 1
+fi
+
 if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
   ECR_COMMAND="ecr-public"
   ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}"

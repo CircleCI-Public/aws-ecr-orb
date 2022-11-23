@@ -92,7 +92,7 @@ steps:
         ORB_EVAL_TAG: << parameters.tag >>
         ORB_VAL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
         ORB_EVAL_REPO: << parameters.repo >>
-        ORB_VAL_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
+        ORB_EVAL_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
         ORB_EVAL_PATH: <<parameters.path>>
         ORB_VAL_DOCKERFILE: <<parameters.dockerfile>>
         ORB_VAL_PROFILE_NAME: <<parameters.profile-name>>

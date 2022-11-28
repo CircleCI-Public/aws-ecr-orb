@@ -42,6 +42,12 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. AWS_SECRET_ACCESS_KEY.
 
+  checkout:
+    default: true
+    description: |
+      Boolean for whether or not to checkout as a first step. Default is true.
+    type: boolean
+
   role-arn:
     type: string
     default: ""
@@ -232,6 +238,7 @@ steps:
       repo-scan-on-push: <<parameters.repo-scan-on-push>>
       aws-access-key-id: <<parameters.aws-access-key-id>>
       aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      checkout: <<parameters.checkout>>
       aws-cli-version: <<parameters.aws-cli-version>>
       role-arn: <<parameters.role-arn>>
       role-session-name: <<parameters.role-session-name>>

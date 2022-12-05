@@ -7,8 +7,12 @@ ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaw
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
 ECR_COMMAND="ecr"
+DOCKER_COMMAND=""
 number_of_tags_in_ecr=0
 docker_tag_args=""
+
+IFS=', ' read -ra platform <<<"${ORB_VAL_PLATFORM}"
+number_of_platforms="${#platform[@]}"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
   echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
@@ -47,20 +51,23 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
   fi
 
   if [ -n "${ORB_EVAL_EXTRA_BUILD_ARGS}" ]; then
-    ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
     set -- "$@" "${ORB_EVAL_EXTRA_BUILD_ARGS}"
   fi
 
-  if ! docker context ls | grep builder; then
-    # We need to skip the creation of the builder context if it's already present
-    # otherwise the command will fail when called more than once in the same job.
+  if [ "${number_of_platforms}" -gt 1 ] || [ "${ORB_VAL_PLATFORM}" != "linux/amd64" ]; then
 
-    docker context create builder
-    docker run --privileged --rm tonistiigi/binfmt --install all
-    docker --context builder buildx create --use
-  fi
+    if ! docker context ls | grep builder; then
+      # We need to skip the creation of the builder context if it's already present
+      # otherwise the command will fail when called more than once in the same job.
 
-  docker --context builder buildx build \
+      docker context create builder
+      docker run --privileged --rm tonistiigi/binfmt --install all
+      docker --context builder buildx create --use
+    fi
+    DOCKER_COMMAND="--context builder"
+  fi 
+  
+  docker "${DOCKER_COMMAND}" buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     ${docker_tag_args} \
     --platform "${ORB_VAL_PLATFORM}" \

@@ -8,7 +8,7 @@ ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ECR_COMMAND="ecr"
 DOCKER_CONTEXT=""
 number_of_tags_in_ecr=0
-docker_tag_args=""
+docker_tag_args="--context builder"
 
 if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
   ECR_COMMAND="ecr-public"

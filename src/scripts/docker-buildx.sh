@@ -6,6 +6,7 @@ ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ECR_COMMAND="ecr"
+DOCKER_CONTEXT=""
 number_of_tags_in_ecr=0
 docker_tag_args=""
 
@@ -53,9 +54,9 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     docker run --privileged --rm tonistiigi/binfmt --install all
     docker --context builder buildx create --use
   fi
-
+  
   # docker --context builder buildx build \
-    docker buildx build \
+    docker "${DOCKER_CONTEXT}" buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     ${docker_tag_args} \
     --platform "${ORB_VAL_PLATFORM}" \

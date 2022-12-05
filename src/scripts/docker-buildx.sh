@@ -54,14 +54,15 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     docker --context builder buildx create --use
   fi
 
-  docker --context builder buildx build \
+  # docker --context builder buildx build \
+    docker buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     ${docker_tag_args} \
     --platform "${ORB_VAL_PLATFORM}" \
     --progress plain \
     "$@" \
     "${ORB_EVAL_PATH}"
-  docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
+  # docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
     # if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
     #   # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to
     #   # saving updated cache

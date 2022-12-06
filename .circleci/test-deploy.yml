@@ -94,10 +94,10 @@ workflows:
           platform: linux/arm64
           # remote-docker-layer-caching: true
           # setup-remote-docker: true
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registrys --force
+          # post-steps:
+          #   - run:
+          #       name: "Delete repository"
+          #       command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registrys --force
           filters:
             tags:
               only: /.*/

@@ -89,7 +89,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: "--compress"
-          executor: arm64
+          executor: amd64
           public-registry: true
           platform: linux/arm64
           # remote-docker-layer-caching: true

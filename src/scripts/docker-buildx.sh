@@ -6,7 +6,7 @@ ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ECR_COMMAND="ecr"
-DOCKER_CONTEXT="--context builder"
+# DOCKER_CONTEXT="--context builder"
 number_of_tags_in_ecr=0
 docker_tag_args=""
 

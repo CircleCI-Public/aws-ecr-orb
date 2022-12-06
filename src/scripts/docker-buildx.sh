@@ -53,12 +53,11 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" "${ORB_EVAL_EXTRA_BUILD_ARGS}"
   fi
 
-  if [ "${number_of_platforms}" -gt 1 ] || [ "${ORB_VAL_PLATFORM}" != "linux/amd64" ]; then
+  if [ "${number_of_platforms}" -gt 1 ]; then
 
     if ! docker context ls | grep builder; then
       # We need to skip the creation of the builder context if it's already present
       # otherwise the command will fail when called more than once in the same job.
-
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
       docker --context builder buildx create --use
@@ -72,6 +71,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       "$@" \
       "${ORB_EVAL_PATH}"
 
+    echo "WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds"
   else
 
     docker buildx build \

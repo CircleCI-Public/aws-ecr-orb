@@ -64,14 +64,24 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       docker run --privileged --rm tonistiigi/binfmt --install all
       docker --context builder buildx create --use
     fi
-    DOCKER_COMMAND="--context builder"
+
+    docker --context builder buildx build \
+      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+      ${docker_tag_args} \
+      --platform "${ORB_VAL_PLATFORM}" \
+      --progress plain \
+      "$@" \
+      "${ORB_EVAL_PATH}"
+
+  else
+
+    docker buildx build \
+      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+      ${docker_tag_args} \
+      --platform "${ORB_VAL_PLATFORM}" \
+      --progress plain \
+      "$@" \
+      "${ORB_EVAL_PATH}"
   fi 
   
-  docker "${DOCKER_COMMAND}" buildx build \
-    -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-    ${docker_tag_args} \
-    --platform "${ORB_VAL_PLATFORM}" \
-    --progress plain \
-    "$@" \
-    "${ORB_EVAL_PATH}"
 fi

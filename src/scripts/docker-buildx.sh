@@ -71,7 +71,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       "$@" \
       "${ORB_EVAL_PATH}"
 
-    echo -e "\n \n WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds,. \n \n"
+    echo -e "\n \n WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds. \n \n"
   else
 
     docker buildx build \

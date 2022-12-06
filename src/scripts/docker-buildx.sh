@@ -54,7 +54,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     docker run --privileged --rm tonistiigi/binfmt --install all
     docker --context builder buildx create --use
   fi
-  DOCKER_COMMAND=$(eval echo "docker ${DOCKER_CONTEXT} buildx build")
+  # DOCKER_COMMAND=$(eval echo "docker ${DOCKER_CONTEXT} buildx build")
   #  docker "${DOCKER_CONTEXT}" buildx build \
     # "${DOCKER_COMMAND}" \
   docker --context builder buildx build \

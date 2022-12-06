@@ -91,7 +91,7 @@ workflows:
           extra-build-args: "--compress"
           executor: amd64
           public-registry: true
-          platform: linux/arm64
+          platform: linux/arm64,linux/amd64
           # remote-docker-layer-caching: true
           # setup-remote-docker: true
           # post-steps:

@@ -7,7 +7,6 @@ ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaw
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
 ECR_COMMAND="ecr"
-DOCKER_COMMAND=""
 number_of_tags_in_ecr=0
 docker_tag_args=""
 

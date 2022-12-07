@@ -1,17 +1,15 @@
 {
-    "Version": "2008-10-17",
-    "Statement": [
+  "Version" : "2008-10-17",
+  "Statement" : [
       {
-        "Sid": "Allow Sample Account 123456789012",
-        "Effect": "Allow",
-        "Principal": {
-          "AWS": [
-            "arn:aws:iam::123456789012:root"
+          "Sid" : "allow public pull",
+          "Effect" : "Allow",
+          "Principal" : "*",
+          "Action" : [
+              "ecr:BatchCheckLayerAvailability",
+              "ecr:BatchGetImage",
+              "ecr:GetDownloadUrlForLayer"
           ]
-        },
-        "Action": [
-          "ecr:*"
-        ]
       }
-    ]
-  }
+  ]
+}

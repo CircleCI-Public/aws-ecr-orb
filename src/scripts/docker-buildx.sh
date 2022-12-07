@@ -46,7 +46,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" "${ORB_VAL_EXTRA_BUILD_ARGS}"
   fi
 
-  context_args=""
+  # context_args=""
 
   if ! docker context ls | grep builder; then
     # We need to skip the creation of the builder context if it's already present
@@ -55,7 +55,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     docker context create builder
     docker run --privileged --rm tonistiigi/binfmt --install all
     docker --context builder buildx create --use
-    # context_args="--context builder"
+    # context_args=--context builder
   fi
   # DOCKER_COMMAND=$(eval echo "docker ${DOCKER_CONTEXT} buildx build")
     # docker \

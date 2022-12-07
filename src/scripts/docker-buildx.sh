@@ -55,13 +55,13 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     docker context create builder
     docker run --privileged --rm tonistiigi/binfmt --install all
     docker --context builder buildx create --use
-    # context_args=--context builder
+    context_args="--context builder"
   fi
   # DOCKER_COMMAND=$(eval echo "docker ${DOCKER_CONTEXT} buildx build")
-    # docker \
-    # buildx build \
-    # ${context_args:+"$context_args"} \
-  docker --context builder buildx build \
+  # docker \ --context builder buildx build \
+    docker \
+    buildx build \
+    ${context_args} \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     $docker_tag_args \
     --platform "${ORB_VAL_PLATFORM}" \

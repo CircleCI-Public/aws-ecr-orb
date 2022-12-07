@@ -54,6 +54,8 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
   fi
 
   if [ "${number_of_platforms}" -gt 1 ]; then
+    # In order to build multi-architecture images, a context with binfmt installed must be used. 
+    # However, Docker Layer Caching with multi-architecture builds is not currently supported
 
     if ! docker context ls | grep builder; then
       # We need to skip the creation of the builder context if it's already present
@@ -63,6 +65,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       docker --context builder buildx create --use
     fi
 
+    set -x
     docker --context builder buildx build \
       -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
       ${docker_tag_args} \
@@ -70,10 +73,12 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       --progress plain \
       "$@" \
       "${ORB_EVAL_PATH}"
-
+    set +x
     echo -e "\n \n WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds. \n \n"
+
   else
 
+    set -x
     docker buildx build \
       -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
       ${docker_tag_args} \
@@ -81,6 +86,8 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       --progress plain \
       "$@" \
       "${ORB_EVAL_PATH}"
+    set +x
+      
   fi 
   
 fi

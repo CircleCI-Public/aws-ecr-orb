@@ -9,7 +9,7 @@ ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 docker_tag_args=""
-
+context_args=""
 IFS=', ' read -ra platform <<<"${ORB_VAL_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
@@ -53,6 +53,8 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" "${ORB_EVAL_EXTRA_BUILD_ARGS}"
   fi
 
+
+
   if [ "${number_of_platforms}" -gt 1 ]; then
     # In order to build multi-architecture images, a context with binfmt installed must be used. 
     # However, Docker Layer Caching with multi-architecture builds is not currently supported
@@ -64,30 +66,20 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       docker run --privileged --rm tonistiigi/binfmt --install all
       docker --context builder buildx create --use
     fi
-
-    set -x
-    docker --context builder buildx build \
-      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-      ${docker_tag_args} \
-      --platform "${ORB_VAL_PLATFORM}" \
-      --progress plain \
-      "$@" \
-      "${ORB_EVAL_PATH}"
-    set +x
+    context_args="--context builder"
     echo -e "\n \n WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds. \n \n"
-
-  else
-
-    set -x
-    docker buildx build \
-      -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
-      ${docker_tag_args} \
-      --platform "${ORB_VAL_PLATFORM}" \
-      --progress plain \
-      "$@" \
-      "${ORB_EVAL_PATH}"
-    set +x
-      
   fi 
+  
+  set -x
+  docker \
+    ${context_args} \
+    buildx build \
+    -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+    ${docker_tag_args} \
+    --platform "${ORB_VAL_PLATFORM}" \
+    --progress plain \
+    "$@" \
+    "${ORB_EVAL_PATH}"
+  set +x
   
 fi

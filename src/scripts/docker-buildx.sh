@@ -71,7 +71,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
 
   set -x
   docker \
-    ${context_arg:+$context_arg} \
+    ${context_args:+$context_args} \
     buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     ${docker_tag_args} \

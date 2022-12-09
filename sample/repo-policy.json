@@ -1,0 +1,15 @@
+{
+  "Version" : "2008-10-17",
+  "Statement" : [
+      {
+          "Sid" : "allow public pull",
+          "Effect" : "Allow",
+          "Principal" : "*",
+          "Action" : [
+              "ecr:BatchCheckLayerAvailability",
+              "ecr:BatchGetImage",
+              "ecr:GetDownloadUrlForLayer"
+          ]
+      }
+  ]
+}

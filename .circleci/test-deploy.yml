@@ -116,6 +116,8 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra-build-args: --compress
+          set-repo-policy: true
+          repo-policy-path: ./sample/repo-policy.json
           executor: amd64
           filters:
             tags:

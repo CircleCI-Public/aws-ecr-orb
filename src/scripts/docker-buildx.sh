@@ -8,8 +8,7 @@ ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
-docker_tag_args=""
-context_args=""
+
 IFS=', ' read -ra platform <<<"${ORB_VAL_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 

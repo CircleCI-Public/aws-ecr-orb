@@ -314,7 +314,7 @@ steps:
             region: <<parameters.region>>
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
-            lifecycle-policy-path: <<parameters.lifecycle-policy-path>>            
+            lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
             public-registry-alias: <<parameters.public-registry-alias>>
             build-path: <<parameters.build-path>>
 

@@ -23,9 +23,16 @@ parameters:
     description: Name of dockerfile to use. Defaults to Dockerfile.
 
   path:
-    type: string
     default: .
-    description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
+    description: >-
+      Path to the directory containing your Dockerfile. Defaults to . (working directory).
+    type: string
+
+  build-path:
+    default: .
+    description: >-
+      Path to the directory containing your build context. Defaults to . (working directory).
+    type: string
 
   no-output-timeout:
     type: string
@@ -103,5 +110,6 @@ steps:
         ORB_VAL_PUSH_IMAGE: <<parameters.push-image>>
         ORB_VAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
+        ORB_EVAL_BUILD_PATH: <<parameters.build-path>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

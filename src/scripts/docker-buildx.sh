@@ -52,10 +52,15 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     # We need to skip the creation of the builder context if it's already present
     # otherwise the command will fail when called more than once in the same job.
 
-    docker context create builder
-    docker run --privileged --rm tonistiigi/binfmt --install all
-    docker --context builder buildx create --use
-    context_args="--context builder"
+  docker buildx create \
+  --name builder \
+  --driver docker-container \
+  --driver-opt image=moby/buildkit:v0.10.3
+  
+  docker run --privileged --rm tonistiigi/binfmt --install all
+  docker --context builder buildx create --use
+    
+  context_args="--context builder"
   fi
   # DOCKER_COMMAND=$(eval echo "docker ${DOCKER_CONTEXT} buildx build")
   # docker \ --context builder buildx build \

@@ -86,8 +86,8 @@ workflows:
           profile-name: "OIDC-User"
           context: [CPE-OIDC]
           tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
+          dockerfile: Dockerfile
+          path: ./sample
           extra-build-args: "--compress"
           executor: amd64
           public-registry: true

@@ -163,10 +163,14 @@ parameters:
   path:
     default: .
     description: >-
-      Path to the directory containing your Dockerfile and build context.
-      Defaults to . (working directory).
+      Path to the directory containing your Dockerfile. Defaults to . (working directory).
     type: string
 
+  build-path:
+    default: .
+    description: >-
+      Path to the directory containing your build context. Defaults to . (working directory).
+    type: string
   extra-build-args:
     default: ""
     description: >
@@ -310,7 +314,9 @@ steps:
             region: <<parameters.region>>
             public-registry: <<parameters.public-registry>>
             push-image: <<parameters.push-image>>
+            lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
             public-registry-alias: <<parameters.public-registry-alias>>
+            build-path: <<parameters.build-path>>
 
   - unless:
       condition:
@@ -334,3 +340,4 @@ steps:
             push-image: <<parameters.push-image>>
             lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
             public-registry-alias: <<parameters.public-registry-alias>>
+            build-path: <<parameters.build-path>>

@@ -75,7 +75,7 @@ workflows:
       #     requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
-          pre-step:
+          pre-steps:
             - run:
                 name: "Export env_var"
                 command: echo 'export VAR="--compress"' >> "$BASH_ENV"

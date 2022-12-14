@@ -75,6 +75,10 @@ workflows:
       #     requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
+          pre-step:
+            - run:
+                name: "Export env_var"
+                command: echo 'export VAR="--compress"' >> "$BASH_ENV"
           name: integration-tests-pubic-registry
           attach-workspace: true
           workspace-root: workspace
@@ -88,10 +92,10 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: Dockerfile
           path: ./sample
-          extra-build-args: "--compress"
+          extra-build-args: '${VAR}'
           executor: amd64
           public-registry: true
-          platform: linux/arm64,linux/amd64
+          platform: linux/arm64
           # remote-docker-layer-caching: true
           # setup-remote-docker: true
           post-steps:

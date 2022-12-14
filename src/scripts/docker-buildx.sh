@@ -49,10 +49,6 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" --load
   fi
 
-  if [ -n "${ORB_EVAL_EXTRA_BUILD_ARGS}" ]; then
-    set -- "$@" "${ORB_EVAL_EXTRA_BUILD_ARGS}"
-  fi
-
   if [ "${number_of_platforms}" -gt 1 ]; then
     # In order to build multi-architecture images, a context with binfmt installed must be used.
 
@@ -74,6 +70,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     ${docker_tag_args:+$docker_tag_args} \
     --platform "${ORB_VAL_PLATFORM}" \
     --progress plain \
+    ${ORB_EVAL_EXTRA_BUILD_ARGS:+$ORB_EVAL_EXTRA_BUILD_ARGS} \
     "$@" \
     "${ORB_EVAL_BUILD_PATH}"
   set +x

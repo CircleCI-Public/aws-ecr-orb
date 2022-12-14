@@ -78,7 +78,7 @@ workflows:
           pre-steps:
             - run:
                 name: "Export env_var"
-                command: echo 'export VAR="--compress"' >> "$BASH_ENV"
+                command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"
           name: integration-tests-pubic-registry
           attach-workspace: true
           workspace-root: workspace
@@ -92,7 +92,7 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: Dockerfile
           path: ./sample
-          extra-build-args: '${VAR}'
+          extra-build-args: '--build-arg NPM_TOKEN=${NPM_TOKEN}'
           executor: amd64
           public-registry: true
           platform: linux/arm64

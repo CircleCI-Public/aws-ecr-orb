@@ -65,14 +65,16 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
  
 # Switch the Buildx Context to the new Builder
 #  context_args="--context zstd builder"
-
+set -x
+# shellcheck disable=SC2068
     docker buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     $docker_tag_args \
     --platform "${ORB_VAL_PLATFORM}" \
     --progress plain \
-    "$@" \
+    $@ \
     "${ORB_EVAL_PATH}"
+set +x    
   # docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
     # if [ "${ORB_VAL_REMOTE_DOCKER_LAYER_CACHING}" == "1" ]; then
     #   # to prevent filesystem corruption, clean up multi-arch binary format handlers from the host prior to

@@ -58,15 +58,15 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
   #   context_args="--context builder"
   # fi
 
-  docker buildx create \
-  --name zstd-builder \
-  --driver docker-container \
-  --driver-opt image=moby/buildkit:v0.10.3
+  # docker buildx create \
+  # --name zstd-builder \
+  # --driver docker-container \
+  # --driver-opt image=moby/buildkit:v0.10.3
  
 # Switch the Buildx Context to the new Builder
- context_args="--context zstd builder"
+#  context_args="--context zstd builder"
 
-    docker ${context_args} buildx build \
+    docker buildx build \
     -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
     $docker_tag_args \
     --platform "${ORB_VAL_PLATFORM}" \

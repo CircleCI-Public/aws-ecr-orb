@@ -5,6 +5,7 @@ ORB_EVAL_TAG=$(eval echo "${ORB_EVAL_TAG}")
 ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
+ORB_VAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_VAL_EXTRA_BUILD_ARGS}")
 ECR_COMMAND="ecr"
 # DOCKER_CONTEXT="--context builder"
 number_of_tags_in_ecr=0
@@ -41,10 +42,10 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" --load
   fi
 
-  if [ -n "$ORB_VAL_EXTRA_BUILD_ARGS" ]; then
-    ORB_VAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_VAL_EXTRA_BUILD_ARGS}")
-    set -- "$@" "${ORB_VAL_EXTRA_BUILD_ARGS}"
-  fi
+  # if [ -n "$ORB_VAL_EXTRA_BUILD_ARGS" ]; then
+  #   ORB_VAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_VAL_EXTRA_BUILD_ARGS}")
+  #   set -- "$@" "${ORB_VAL_EXTRA_BUILD_ARGS}"
+  # fi
 
   # context_args=""
 

@@ -73,7 +73,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     --platform "${ORB_VAL_PLATFORM}" \
     --progress plain \
     "$@" \
-    ${ORB_VAL_EXTRA_BUILD_ARGS:+$ORB_VAL_EXTRA_BUILD_ARGS} \
+    ${ORB_EVAL_EXTRA_BUILD_ARGS:+$ORB_EVAL_EXTRA_BUILD_ARGS} \
     "${ORB_EVAL_BUILD_PATH}"
   set +x
   

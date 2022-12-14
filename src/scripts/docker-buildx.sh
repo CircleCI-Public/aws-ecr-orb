@@ -10,6 +10,7 @@ ECR_COMMAND="ecr"
 # DOCKER_CONTEXT="--context builder"
 number_of_tags_in_ecr=0
 docker_tag_args=""
+context_args=""
 
 if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
   ECR_COMMAND="ecr-public"
@@ -84,7 +85,7 @@ set -x
     --progress plain \
     ${ORB_VAL_EXTRA_BUILD_ARGS:+$ORB_VAL_EXTRA_BUILD_ARGS} \
     "$@" \
-    "${ORB_EVAL_BUILD_PATH}"
+    .
 set +x
 
   # docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*

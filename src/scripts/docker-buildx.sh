@@ -24,6 +24,7 @@ if [ "${ORB_VAL_PUBLIC_REGISTRY}" == "1" ]; then
 fi
 
 IFS="," read -ra DOCKER_TAGS <<<"${ORB_EVAL_TAG}"
+set -x
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "1" ] || [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_VAL_PROFILE_NAME}" --registry-id "${!ORB_ENV_REGISTRY_ID}" --region "${ORB_EVAL_REGION}" --repository-name "${ORB_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
@@ -34,6 +35,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
   fi
   docker_tag_args="${docker_tag_args} -t ${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
 done
+set +x
 
 if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
   if [ "${ORB_VAL_PUSH_IMAGE}" == "1" ]; then

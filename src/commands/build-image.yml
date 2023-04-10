@@ -3,7 +3,7 @@ description: "Build a docker image with Docker Buildx"
 parameters:
   registry-id:
     type: env_var_name
-    default: AWS_ECR_REGISTRY_ID
+    default: AWS_ACCOUNT_ID
     description: >
       The 12 digit AWS Registry ID associated with the ECR account.
       This field is required
@@ -53,9 +53,9 @@ parameters:
 
   region:
     type: string
-    default: ${AWS_REGION}
+    default: ${AWS_DEFAULT_REGION}
     description: >
-      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
+      AWS region of ECR repository. Defaults to environment variable ${AWS_DEFAULT_REGION}
 
   profile-name:
     type: string
@@ -92,6 +92,14 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
+  builder-context-name:
+    type: string
+    default: "default-context"
+    description: |
+      The docker buildx command uses the builder-context to build multi-architecture images simultaneously. In order for
+      builders to be saved Docker Layer Caching, the context must be named. Specify a context name using this parameter.
+      This parameter defaults to "default-context" if none is provided.
+
 steps:
   - run:
       name: Build Docker Image with buildx
@@ -111,5 +119,6 @@ steps:
         ORB_VAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
         ORB_EVAL_BUILD_PATH: <<parameters.build-path>>
+        ORB_VAL_BUILDER_CONTEXT_NAME: <<parameters.builder-context-name>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

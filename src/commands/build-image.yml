@@ -3,7 +3,7 @@ description: "Build a docker image with Docker Buildx"
 parameters:
   registry-id:
     type: env_var_name
-    default: AWS_ECR_REGISTRY_ID
+    default: AWS_ACCOUNT_ID
     description: >
       The 12 digit AWS Registry ID associated with the ECR account.
       This field is required

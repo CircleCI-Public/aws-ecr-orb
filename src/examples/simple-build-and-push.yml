@@ -1,18 +1,36 @@
-description: Log into AWS, build and push image to Amazon ECR
+description: >
+  Log into AWS, build and push image to Amazon ECR using OIDC for authentication.
+  Import the aws-cli orb and authenticate using the aws-cli/setup command with a valid role-arn for OIDC authentication.
 
 usage:
   version: 2.1
 
   orbs:
-    aws-ecr: circleci/aws-ecr@x.y
+    aws-ecr: circleci/aws-ecr@9.0
+    # Importing aws-cli orb is required
+    aws-cli: circleci/aws-cli@3.1
+
+  executors:
+    base:
+      docker:
+        image: cimg/base:current
 
   workflows:
     build_and_push_image:
       jobs:
         # build and push image to ECR
         - aws-ecr/build-and-push-image:
+            auth:
+               # Add authentication step with OIDC using aws-cli/setup command
+              - aws-cli/setup:
+                  profile: "OIDC-USER"
+                  role-arn: "arn:aws:iam::123456789012:role/VALID_OIDC_ECR_ROLE"
+
+            # Must use same profile configured in aws-cli/setup command
+            profile-name: "OIDC-User"
+
             # Select executor defined above
-            executor: aws-ecr/default
+            executors: base
 
             # name of your ECR repository
             repo: myECRRepository
@@ -20,32 +38,14 @@ usage:
             # set this to true to create the repository if it does not already exist, defaults to "false"
             create-repo: true
 
-            # required if any necessary secrets are stored via Contexts
-            context: myContext
-
-            # AWS profile name, defaults to "default"
-            profile-name: myProfileName
-
-            # name of env var storing your AWS Access Key ID, defaults to AWS_ACCESS_KEY_ID
-            aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
-
-            # name of env var storing your AWS Secret Access Key, defaults to AWS_SECRET_ACCESS_KEY
-            aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
-
-            # Name of new profile associated with role arn.
-            new-profile-name: newProfileName
-
-            # Source profile containing credentials to assume the role with role-arn.
-            source-profile: sourceProfileName
-
-            # Role ARN that new profile should take
-            role-arn: arn:aws:iam::123456789012:role/testing
+            # Must use valid CircleCI context for OIDC authentication
+            context: CircleCI_OIDC_Token
 
             #Your AWS region
-            region: AWS_REGION
+            region: ${AWS_DEFAULT_REGION}
 
             # name of env var storing your ECR Registry ID
-            registry-id: AWS_ECR_REGISTRY_ID
+            registry-id: AWS_ACCOUNT_ID
 
             # ECR image tags (comma separated string), defaults to "latest"
             tag: latest,myECRRepoTag
@@ -55,9 +55,6 @@ usage:
 
             # path to Dockerfile, defaults to . (working directory)
             path: pathToMyDockerfile
-
-            # Select a specific version of the AWS v2 CLI. By default the latest version will be used.
-            aws-cli-version: latest
 
             # Boolean value if pushing to public registry. Defaults to true.
             public-registry: false

@@ -53,21 +53,17 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" "${ORB_EVAL_EXTRA_BUILD_ARGS}"
   fi
 
-
-
   if [ "${number_of_platforms}" -gt 1 ]; then
-    # In order to build multi-architecture images, a context with binfmt installed must be used. 
-    # However, Docker Layer Caching with multi-architecture builds is not currently supported
+    # In order to build multi-architecture images, a context with binfmt installed must be used.
 
     if ! docker context ls | grep builder; then
       # We need to skip the creation of the builder context if it's already present
       # otherwise the command will fail when called more than once in the same job.
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
-      docker --context builder buildx create --use
+      docker --context builder buildx create --name DLC_builder --use
     fi
     context_args="--context builder"
-    echo -e "\n \n WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds. \n \n"
   fi 
   
   set -x

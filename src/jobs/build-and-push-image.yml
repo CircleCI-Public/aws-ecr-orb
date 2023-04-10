@@ -26,21 +26,21 @@ parameters:
     default: "default"
     description: AWS profile name to be configured.
 
-  aws-access-key-id:
-    type: env_var_name
-    default: AWS_ACCESS_KEY_ID
-    description: >
-      AWS access key id for IAM role. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. AWS_ACCESS_KEY_ID.
+  # aws-access-key-id:
+  #   type: env_var_name
+  #   default: AWS_ACCESS_KEY_ID
+  #   description: >
+  #     AWS access key id for IAM role. Set this to the name of
+  #     the environment variable you will set to hold this
+  #     value, i.e. AWS_ACCESS_KEY_ID.
 
-  aws-secret-access-key:
-    type: env_var_name
-    default: AWS_SECRET_ACCESS_KEY
-    description: >
-      AWS secret key for IAM role. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. AWS_SECRET_ACCESS_KEY.
+  # aws-secret-access-key:
+  #   type: env_var_name
+  #   default: AWS_SECRET_ACCESS_KEY
+  #   description: >
+  #     AWS secret key for IAM role. Set this to the name of
+  #     the environment variable you will set to hold this
+  #     value, i.e. AWS_SECRET_ACCESS_KEY.
 
   checkout:
     default: true
@@ -48,40 +48,40 @@ parameters:
       Boolean for whether or not to checkout as a first step. Default is true.
     type: boolean
 
-  role-arn:
-    type: string
-    default: ""
-    description: Role ARN that the profile should take.
+  # role-arn:
+  #   type: string
+  #   default: ""
+  #   description: Role ARN that the profile should take.
 
-  role-session-name:
-    description: An identifier for the assumed role session
-    type: string
-    default: ${CIRCLE_JOB}
+  # role-session-name:
+  #   description: An identifier for the assumed role session
+  #   type: string
+  #   default: ${CIRCLE_JOB}
 
-  assume-web-identity:
-    description: Set to true to configure a profile using short-term credentials
-    type: boolean
-    default: false
+  # assume-web-identity:
+  #   description: Set to true to configure a profile using short-term credentials
+  #   type: boolean
+  #   default: false
 
-  session-duration:
-    description: The duration of the session in seconds
-    type: string
-    default: "3600"
+  # session-duration:
+  #   description: The duration of the session in seconds
+  #   type: string
+  #   default: "3600"
 
-  source-profile:
-    description: Source profile containing credentials to assume the role with role-arn.
-    type: string
-    default: "default"
+  # source-profile:
+  #   description: Source profile containing credentials to assume the role with role-arn.
+  #   type: string
+  #   default: "default"
 
-  new-profile-name:
-    description: Name of new profile associated with role arn.
-    type: string
-    default: ""
+  # new-profile-name:
+  #   description: Name of new profile associated with role arn.
+  #   type: string
+  #   default: ""
 
-  aws-cli-version:
-    description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
-    default: latest
-    type: string
+  # aws-cli-version:
+  #   description: Select a specific version of the AWS v2 CLI. By default the latest version will be used.
+  #   default: latest
+  #   type: string
 
   region:
     type: string
@@ -230,6 +230,12 @@ parameters:
     description: |
       The path to the .json file containing the repository policy to be applied to a specified repository in AWS ECR.
 
+  auth:
+    description: |
+      The authentication method used to access your AWS account. Import the aws-cli orb in your config and
+      provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
+    type: steps
+
 steps:
   - build-and-push-image:
       registry-id: <<parameters.registry-id>>
@@ -247,16 +253,16 @@ steps:
       push-image: <<parameters.push-image>>
       lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
       repo-scan-on-push: <<parameters.repo-scan-on-push>>
-      aws-access-key-id: <<parameters.aws-access-key-id>>
-      aws-secret-access-key: <<parameters.aws-secret-access-key>>
+      # aws-access-key-id: <<parameters.aws-access-key-id>>
+      # aws-secret-access-key: <<parameters.aws-secret-access-key>>
       checkout: <<parameters.checkout>>
-      aws-cli-version: <<parameters.aws-cli-version>>
-      role-arn: <<parameters.role-arn>>
-      role-session-name: <<parameters.role-session-name>>
-      assume-web-identity: <<parameters.assume-web-identity>>
-      session-duration: <<parameters.session-duration>>
-      new-profile-name: <<parameters.new-profile-name>>
-      source-profile: <<parameters.source-profile>>
+      # aws-cli-version: <<parameters.aws-cli-version>>
+      # role-arn: <<parameters.role-arn>>
+      # role-session-name: <<parameters.role-session-name>>
+      # assume-web-identity: <<parameters.assume-web-identity>>
+      # session-duration: <<parameters.session-duration>>
+      # new-profile-name: <<parameters.new-profile-name>>
+      # source-profile: <<parameters.source-profile>>
       attach-workspace: <<parameters.attach-workspace>>
       remote-docker-layer-caching: <<parameters.remote-docker-layer-caching>>
       setup-remote-docker: <<parameters.setup-remote-docker>>
@@ -269,3 +275,4 @@ steps:
       public-registry-alias: <<parameters.public-registry-alias>>
       set-repo-policy: <<parameters.set-repo-policy>>
       repo-policy-path: <<parameters.repo-policy-path>>
+      auth: <<parameters.auth>>

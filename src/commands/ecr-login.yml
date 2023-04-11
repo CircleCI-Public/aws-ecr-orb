@@ -10,9 +10,9 @@ parameters:
 
   region:
     type: string
-    default: ${AWS_REGION}
+    default: ${AWS_DEFAULT_REGION}
     description: >
-      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
+      AWS region of ECR repository. Defaults to environment variable ${AWS_DEFAULT_REGION}
 
   profile-name:
     type: string

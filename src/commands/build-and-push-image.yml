@@ -188,13 +188,13 @@ parameters:
       provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
     type: steps
 
-  builder-context-name:
+  builder-name:
     type: string
-    default: "default-context"
+    default: "default-builder"
     description: |
-      The docker buildx command uses the builder-context to build multi-architecture images simultaneously. In order for
-      builders to be saved Docker Layer Caching, the context must be named. Specify a context name using this parameter.
-      This parameter defaults to "default-context" if none is provided.
+      The docker buildx command uses a builder-context to build multi-architecture images simultaneously. In order for
+      buildx builders to be saved with Docker Layer Caching, the builder must explicitly be named.
+      Specify the a builder name with this parameter. This parameter defaults to "default-builder" if none is provided.
 
 steps:
   - when:
@@ -266,4 +266,4 @@ steps:
       lifecycle-policy-path: <<parameters.lifecycle-policy-path>>
       public-registry-alias: <<parameters.public-registry-alias>>
       build-path: <<parameters.build-path>>
-      builder-context-name: <<parameters.builder-context-name>>
+      builder-name: <<parameters.builder-name>>

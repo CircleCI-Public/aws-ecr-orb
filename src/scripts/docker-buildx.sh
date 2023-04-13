@@ -10,8 +10,8 @@ ORB_EVAL_BUILD_PATH=$(eval echo "${ORB_EVAL_BUILD_PATH}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 
-# IFS=', ' read -ra platform <<<"${ORB_VAL_PLATFORM}"
-# number_of_platforms="${#platform[@]}"
+IFS=', ' read -ra platform <<<"${ORB_VAL_PLATFORM}"
+number_of_platforms="${#platform[@]}"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
   echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
@@ -53,20 +53,18 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     set -- "$@" "${ORB_EVAL_EXTRA_BUILD_ARGS}"
   fi
 
-  # if [ "${number_of_platforms}" -gt 1 ]; then
-    # In order to build multi-architecture images, a context with binfmt installed must be used. 
-    # However, Docker Layer Caching with multi-architecture builds is not currently supported
+  if [ "${number_of_platforms}" -gt 1 ]; then
+    # In order to build multi-architecture images, a context with binfmt installed must be used.
 
     if ! docker context ls | grep builder; then
       # We need to skip the creation of the builder context if it's already present
       # otherwise the command will fail when called more than once in the same job.
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
-      docker --context builder buildx create --name "${ORB_VAL_BUILDER_CONTEXT_NAME}" --use
+      docker --context builder buildx create --name "${ORB_VAL_BUILDER_NAME}" --use
     fi
     context_args="--context builder"
-    echo -e "\n \n WARNING: Docker Layer Caching is currently not supported for multi-architecture image builds. \n \n"
-  # fi 
+  fi 
   
   set -x
   docker \

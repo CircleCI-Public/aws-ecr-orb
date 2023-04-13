@@ -91,13 +91,13 @@ workflows:
           dockerfile: Dockerfile
           path: ./sample
           extra-build-args: --compress
-          executor: amd64
+          executor: arm64
           public-registry: true
           post-steps:
             - run:
                 name: "Delete repository"
                 command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public-registry --force
-          platform: linux/arm64
+          platform: linux/arm64,linux/amd64
           filters: *filters
           requires: [pre-integration]
 
@@ -229,7 +229,9 @@ executors:
   amd64:
     machine:
       image: ubuntu-2204:2022.07.1
+      docker_layer_caching: true
   arm64:
     machine:
       image: ubuntu-2204:2022.07.1
+      docker_layer_caching: true
     resource_class: arm.medium

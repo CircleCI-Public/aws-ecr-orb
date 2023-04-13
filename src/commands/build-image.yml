@@ -92,13 +92,13 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
-  builder-context-name:
+  builder-name:
     type: string
-    default: "default-context"
+    default: "default-builder"
     description: |
-      The docker buildx command uses the builder-context to build multi-architecture images simultaneously. In order for
-      builders to be saved Docker Layer Caching, the context must be named. Specify a context name using this parameter.
-      This parameter defaults to "default-context" if none is provided.
+      The docker buildx command uses a builder-context to build multi-architecture images simultaneously. In order for
+      buildx builders to be saved with Docker Layer Caching, the builder must explicitly be named.
+      Specify the a builder name with this parameter. This parameter defaults to "default-builder" if none is provided.
 
 steps:
   - run:
@@ -119,6 +119,6 @@ steps:
         ORB_VAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
         ORB_EVAL_BUILD_PATH: <<parameters.build-path>>
-        ORB_VAL_BUILDER_CONTEXT_NAME: <<parameters.builder-context-name>>
+        ORB_VAL_BUILDER_NAME: <<parameters.builder-name>>
       command: <<include(scripts/docker-buildx.sh)>>
       no_output_timeout: <<parameters.no-output-timeout>>

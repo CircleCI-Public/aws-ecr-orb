@@ -101,32 +101,32 @@ workflows:
           filters: *filters
           requires: [pre-integration]
 
-- aws-ecr/build-and-push-image:
-    pre-steps:
-      - run:
-          name: "Export NPM_TOKEN"
-          command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"      
-    name: integration-tests-named-profile
-    auth:
-      - aws-cli/setup:
-          role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      - aws-ecr/build-and-push-image:
+          pre-steps:
+            - run:
+                name: "Export NPM_TOKEN"
+                command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"      
+          name: integration-tests-named-profile
+          auth:
+            - aws-cli/setup:
+                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile-name: "OIDC-User"
+          attach-workspace: true
+          region: "us-west-2"
           profile-name: "OIDC-User"
-    attach-workspace: true
-    region: "us-west-2"
-    profile-name: "OIDC-User"
-    context: [CPE-OIDC]
-    workspace-root: workspace
-    repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
-    create-repo: true
-    tag: integration,myECRRepoTag
-    dockerfile: sample/Dockerfile
-    path: workspace
-    extra-build-args: '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg=${CIRCLE_SHA1:0:7}'
-    set-repo-policy: true
-    repo-policy-path: ./sample/repo-policy.json
-    executor: amd64
-    filters: *filters
-    requires: [pre-integration]
+          context: [CPE-OIDC]
+          workspace-root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          create-repo: true
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra-build-args: '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg=${CIRCLE_SHA1:0:7}'
+          set-repo-policy: true
+          repo-policy-path: ./sample/repo-policy.json
+          executor: amd64
+          filters: *filters
+          requires: [pre-integration]
 
       - tag-ecr-image:
           name: integration-tests-tag-existing-image

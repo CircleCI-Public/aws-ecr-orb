@@ -121,7 +121,7 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
-          extra-build-args: '--build-arg NPM_TOKEN=${NPM_TOKEN}'
+          extra-build-args: --build-arg NPM_TOKEN=${NPM_TOKEN}
           set-repo-policy: true
           repo-policy-path: ./sample/repo-policy.json
           executor: amd64

@@ -5,7 +5,7 @@ ORB_EVAL_TAG=$(eval echo "${ORB_EVAL_TAG}")
 ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
-ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
+# ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
 ORB_EVAL_BUILD_PATH=$(eval echo "${ORB_EVAL_BUILD_PATH}")
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
@@ -75,9 +75,9 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     ${docker_tag_args:+$docker_tag_args} \
     --platform "${ORB_VAL_PLATFORM}" \
     --progress plain \
+    ${ORB_EVAL_EXTRA_BUILD_ARGS:+$ORB_EVAL_EXTRA_BUILD_ARGS} \
     "$@" \
     "${ORB_EVAL_BUILD_PATH}"
   set +x
-    # ${ORB_EVAL_EXTRA_BUILD_ARGS:+$ORB_EVAL_EXTRA_BUILD_ARGS} \
   
 fi

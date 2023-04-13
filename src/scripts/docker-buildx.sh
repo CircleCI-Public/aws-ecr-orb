@@ -61,7 +61,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
       # otherwise the command will fail when called more than once in the same job.
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
-      docker --context builder buildx create --name "${ORB_VAL_BUILDER_NAME}" --use
+      docker --context builder buildx create --name DLC_builder --use
     fi
     context_args="--context builder"
   fi 

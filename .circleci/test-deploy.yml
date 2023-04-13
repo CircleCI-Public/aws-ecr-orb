@@ -102,6 +102,10 @@ workflows:
           requires: [pre-integration]
 
       - aws-ecr/build-and-push-image:
+          pre-steps:
+            - run:
+                name: "Export NPM_TOKEN"
+                command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"      
           name: integration-tests-named-profile
           auth:
             - aws-cli/setup:
@@ -117,7 +121,7 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
-          extra-build-args: --compress
+          extra-build-args: '--build-arg NPM_TOKEN=${NPM_TOKEN}'
           set-repo-policy: true
           repo-policy-path: ./sample/repo-policy.json
           executor: amd64

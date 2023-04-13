@@ -2,15 +2,15 @@ description: Push a container image to the Amazon ECR registry
 parameters:
   registry-id:
     type: env_var_name
-    default: AWS_ECR_REGISTRY_ID
+    default: AWS_ACCOUNT_ID
     description: >
       The 12 digit AWS Registry ID associated with the ECR account.
       This field is required
   region:
     type: string
-    default: ${AWS_REGION}
+    default: ${AWS_DEFAULT_REGION}
     description: >
-      AWS region of ECR repository. Defaults to environment variable ${AWS_REGION}
+      AWS region of ECR repository. Defaults to environment variable ${AWS_DEFAULT_REGION}
   repo:
     description: Name of an Amazon ECR repository
     type: string

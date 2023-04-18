@@ -181,6 +181,11 @@ parameters:
     default: ""
     description: |
       The path to the .json file containing the repository policy to be applied to a specified repository in AWS ECR.
+  auth:
+    description: |
+      The authentication method used to access your AWS account. Import the aws-cli orb in your config and
+      provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
+    type: steps
 
   auth:
     description: |

@@ -4,7 +4,7 @@ description: >
 parameters:
   image:
     type: string
-    default: ubuntu-2004:202107-02
+    default: ubuntu-2004:2022.04.1
   use-docker-layer-caching:
     type: boolean
     default: false

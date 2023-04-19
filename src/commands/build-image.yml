@@ -92,6 +92,10 @@ parameters:
     description: |
       The path to the .json file containing the lifecycle policy to be applied to a specified repository in AWS ECR.
 
+      The docker buildx command uses a builder-context to build multi-architecture images simultaneously. In order for
+      buildx builders to be saved with Docker Layer Caching, the builder must explicitly be named.
+      Specify the a builder name with this parameter. This parameter defaults to "default-builder" if none is provided.
+
 steps:
   - run:
       name: Build Docker Image with buildx

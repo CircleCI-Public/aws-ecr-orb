@@ -1,9 +1,9 @@
 #!/bin/bash
-ORB_EVAL_REPO=$(eval echo "${ORB_EVAL_REPO}")
-ORB_EVAL_TAG=$(eval echo "${ORB_EVAL_TAG}")
-ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
+ORB_EVAL_REPO="$(circleci env subst "${ORB_EVAL_REPO}")"
+ORB_EVAL_TAG="$(circleci env subst "${ORB_EVAL_TAG}")"
+ORB_EVAL_REGION="$(circleci env subst "${ORB_EVAL_REGION}")"
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
-ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
+ORB_EVAL_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
   echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."

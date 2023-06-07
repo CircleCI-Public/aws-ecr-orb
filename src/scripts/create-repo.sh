@@ -1,7 +1,7 @@
 #!/bin/bash
-ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
-ORB_EVAL_REPO=$(eval echo "${ORB_EVAL_REPO}")
-ORB_EVAL_PROFILE_NAME=$(eval echo "${ORB_EVAL_PROFILE_NAME}")
+ORB_EVAL_REGION="$(circleci env subst "${ORB_EVAL_REGION}")"
+ORB_EVAL_REPO="$(circleci env subst "${ORB_EVAL_REPO}")"
+ORB_EVAL_PROFILE_NAME="$(circleci env subst "${ORB_EVAL_PROFILE_NAME}")"
 
 if [ "$ORB_VAL_PUBLIC_REGISTRY" == "1" ]; then
     aws ecr-public describe-repositories --profile "${ORB_EVAL_PROFILE_NAME}" --region us-east-1 --repository-names "${ORB_EVAL_REPO}" >/dev/null 2>&1 ||

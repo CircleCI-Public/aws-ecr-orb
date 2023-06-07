@@ -1,16 +1,17 @@
 #!/bin/bash
-ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
-ORB_EVAL_REPO=$(eval echo "${ORB_EVAL_REPO}")
-ORB_EVAL_TAG=$(eval echo "${ORB_EVAL_TAG}")
-ORB_EVAL_PATH=$(eval echo "${ORB_EVAL_PATH}")
+set -x
+ORB_EVAL_REGION="$(circleci env subst "${ORB_EVAL_REGION}")"
+ORB_EVAL_REPO="$(circleci env subst "${ORB_EVAL_REPO}")"
+ORB_EVAL_TAG="$(circleci env subst "${ORB_EVAL_TAG}")"
+ORB_EVAL_PATH="$(circleci env subst "${ORB_EVAL_PATH}")"
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
-ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
-ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
-ORB_EVAL_BUILD_PATH=$(eval echo "${ORB_EVAL_BUILD_PATH}")
-ORB_EVAL_DOCKERFILE=$(eval echo "${ORB_EVAL_DOCKERFILE}")
-ORB_EVAL_PROFILE_NAME=$(eval echo "${ORB_EVAL_PROFILE_NAME}")
-ORB_EVAL_PLATFORM=$(eval echo "${ORB_EVAL_PLATFORM}")
-ORB_EVAL_LIFECYCLE_POLICY_PATH=$(eval echo "${ORB_EVAL_LIFECYCLE_POLICY_PATH}")
+ORB_EVAL_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")"
+ORB_EVAL_EXTRA_BUILD_ARGS=$(echo "${ORB_EVAL_EXTRA_BUILD_ARGS}" | circleci env subst)
+ORB_EVAL_BUILD_PATH="$(circleci env subst "${ORB_EVAL_BUILD_PATH}")"
+ORB_EVAL_DOCKERFILE="$(circleci env subst "${ORB_EVAL_DOCKERFILE}")"
+ORB_EVAL_PROFILE_NAME="$(circleci env subst "${ORB_EVAL_PROFILE_NAME}")"
+ORB_EVAL_PLATFORM="$(circleci env subst "${ORB_EVAL_PLATFORM}")"
+ORB_EVAL_LIFECYCLE_POLICY_PATH="$(circleci env subst "${ORB_EVAL_LIFECYCLE_POLICY_PATH}")"
 
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
@@ -66,8 +67,8 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     fi
     context_args="--context builder"
   fi 
-  
-  set -x
+
+echo "extra args: ${ORB_EVAL_EXTRA_BUILD_ARGS}"
   docker \
     ${context_args:+$context_args} \
     buildx build \
@@ -78,6 +79,6 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     ${ORB_EVAL_EXTRA_BUILD_ARGS:+$ORB_EVAL_EXTRA_BUILD_ARGS} \
     "$@" \
     "${ORB_EVAL_BUILD_PATH}"
-  set +x
+set +x
   
 fi

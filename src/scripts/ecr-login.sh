@@ -1,6 +1,6 @@
 #!/bin/bash
-ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
-ORB_EVAL_PROFILE_NAME=$(eval echo "${ORB_EVAL_PROFILE_NAME}")
+ORB_EVAL_REGION="$(circleci env subst "${ORB_EVAL_REGION}")"
+ORB_EVAL_PROFILE_NAME="$(circleci env subst "${ORB_EVAL_PROFILE_NAME}")"
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 

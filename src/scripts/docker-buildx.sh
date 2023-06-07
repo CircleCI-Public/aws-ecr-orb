@@ -7,10 +7,15 @@ ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaw
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS=$(eval echo "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")
 ORB_EVAL_EXTRA_BUILD_ARGS=$(eval echo "${ORB_EVAL_EXTRA_BUILD_ARGS}")
 ORB_EVAL_BUILD_PATH=$(eval echo "${ORB_EVAL_BUILD_PATH}")
+ORB_EVAL_DOCKERFILE=$(eval echo "${ORB_EVAL_DOCKERFILE}")
+ORB_EVAL_PROFILE_NAME=$(eval echo "${ORB_EVAL_PROFILE_NAME}")
+ORB_EVAL_PLATFORM=$(eval echo "${ORB_EVAL_PLATFORM}")
+ORB_EVAL_LIFECYCLE_POLICY_PATH=$(eval echo "${ORB_EVAL_LIFECYCLE_POLICY_PATH}")
+
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 
-IFS=', ' read -ra platform <<<"${ORB_VAL_PLATFORM}"
+IFS=', ' read -ra platform <<<"${ORB_EVAL_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
@@ -26,7 +31,7 @@ fi
 IFS="," read -ra DOCKER_TAGS <<<"${ORB_EVAL_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "1" ] || [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
-    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_VAL_PROFILE_NAME}" --registry-id "${!ORB_ENV_REGISTRY_ID}" --region "${ORB_EVAL_REGION}" --repository-name "${ORB_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
+    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_EVAL_PROFILE_NAME}" --registry-id "${!ORB_ENV_REGISTRY_ID}" --region "${ORB_EVAL_REGION}" --repository-name "${ORB_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       docker pull "${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
@@ -39,10 +44,10 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
   if [ "${ORB_VAL_PUSH_IMAGE}" == "1" ]; then
     set -- "$@" --push
 
-    if [ -n "${ORB_VAL_LIFECYCLE_POLICY_PATH}" ]; then
+    if [ -n "${ORB_EVAL_LIFECYCLE_POLICY_PATH}" ]; then
       aws ecr put-lifecycle-policy \
         --repository-name "${ORB_EVAL_REPO}" \
-        --lifecycle-policy-text "file://${ORB_VAL_LIFECYCLE_POLICY_PATH}"
+        --lifecycle-policy-text "file://${ORB_EVAL_LIFECYCLE_POLICY_PATH}"
     fi
 
   else
@@ -66,9 +71,9 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
   docker \
     ${context_args:+$context_args} \
     buildx build \
-    -f "${ORB_EVAL_PATH}"/"${ORB_VAL_DOCKERFILE}" \
+    -f "${ORB_EVAL_PATH}"/"${ORB_EVAL_DOCKERFILE}" \
     ${docker_tag_args:+$docker_tag_args} \
-    --platform "${ORB_VAL_PLATFORM}" \
+    --platform "${ORB_EVAL_PLATFORM}" \
     --progress plain \
     ${ORB_EVAL_EXTRA_BUILD_ARGS:+$ORB_EVAL_EXTRA_BUILD_ARGS} \
     "$@" \

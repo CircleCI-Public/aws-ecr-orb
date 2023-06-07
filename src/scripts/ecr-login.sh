@@ -1,5 +1,6 @@
 #!/bin/bash
 ORB_EVAL_REGION=$(eval echo "${ORB_EVAL_REGION}")
+ORB_EVAL_PROFILE_NAME=$(eval echo "${ORB_EVAL_PROFILE_NAME}")
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ECR_COMMAND="ecr"
 
@@ -14,8 +15,8 @@ if [ "$ORB_VAL_PUBLIC_REGISTRY" == "1" ]; then
     ECR_COMMAND="ecr-public"
 fi
 
-if [ -n "${ORB_VAL_PROFILE_NAME}" ]; then
-    set -- "$@" --profile "${ORB_VAL_PROFILE_NAME}"
+if [ -n "${ORB_EVAL_PROFILE_NAME}" ]; then
+    set -- "$@" --profile "${ORB_EVAL_PROFILE_NAME}"
 fi
 
 #Shellcheck disable=SC2002

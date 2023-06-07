@@ -1,7 +1,7 @@
 description: "Authenticate into the Amazon ECR service"
 
 parameters:
-  registry-id:
+  registry_id:
     type: env_var_name
     default: AWS_ACCOUNT_ID
     description: >
@@ -14,23 +14,23 @@ parameters:
     description: >
       AWS region of ECR repository. Defaults to environment variable ${AWS_DEFAULT_REGION}
 
-  profile-name:
+  profile_name:
     type: string
     default: "default"
     description: >
       AWS profile name to be used for login.
 
-  public-registry:
+  public_registry:
     type: boolean
     description: Set to true if building and pushing an image to a Public Registry on ECR.
     default: false
 
 steps:
   - run:
-      name: Log into Amazon ECR with profile <<parameters.profile-name>>
+      name: Log into Amazon ECR with profile <<parameters.profile_name>>
       environment:
-        ORB_EVAL_PROFILE_NAME: <<parameters.profile-name>>
-        ORB_ENV_REGISTRY_ID: <<parameters.registry-id>>
+        ORB_EVAL_PROFILE_NAME: <<parameters.profile_name>>
+        ORB_ENV_REGISTRY_ID: <<parameters.registry_id>>
         ORB_EVAL_REGION: <<parameters.region>>
-        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
-      command: <<include(scripts/ecr-login.sh)>>
+        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+      command: <<include(scripts/ecr_login.sh)>>

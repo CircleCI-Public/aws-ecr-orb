@@ -1,7 +1,7 @@
-description: Sets a repository policy on a AWS ECR repository.
+description: Create a new AWS ECR repository.
 
 parameters:
-  profile-name:
+  profile_name:
     type: string
     default: "default"
     description: AWS profile name to be configured.
@@ -16,24 +16,23 @@ parameters:
     type: string
     description: Name of an Amazon ECR repository
 
-  public-registry:
+  repo_scan_on_push:
+    type: boolean
+    default: true
+    description: Should the created repo be security scanned on push?
+
+  public_registry:
     type: boolean
     description: Set to true if building and pushing an image to a Public Registry on ECR.
     default: false
 
-  repo-policy-path:
-    type: string
-    default: ""
-    description: |
-      The path to the .json file containing the repository policy to be applied to a specified repository in AWS ECR.
-
 steps:
   - run:
-      name: Set Repository Policy
+      name: Create Repository
       environment:
-        ORB_EVAL_PROFILE_NAME: <<parameters.profile-name>>
+        ORB_EVAL_PROFILE_NAME: <<parameters.profile_name>>
         ORB_EVAL_REGION: <<parameters.region>>
         ORB_EVAL_REPO: <<parameters.repo>>
-        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
-        ORB_EVAL_REPO_POLICY_PATH: <<parameters.repo-policy-path>>
-      command: <<include(scripts/set-repo-policy.sh)>>
+        ORB_VAL_REPO_SCAN_ON_PUSH: <<parameters.repo_scan_on_push>>
+        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+      command: <<include(scripts/create_repo.sh)>>

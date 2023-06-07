@@ -62,7 +62,7 @@ parameters:
     default: "default"
     description: >
       AWS profile name to be configured. Only required when skip_when_tags_exist
-      or ecr-login are set to true.
+      or ecr_login are set to true.
 
   public_registry:
     type: boolean

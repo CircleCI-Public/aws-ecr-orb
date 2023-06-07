@@ -8,7 +8,7 @@ usage:
   orbs:
     aws-ecr: circleci/aws-ecr@9.0
     # Importing aws-cli orb is required
-    aws-cli: circleci/aws-cli@3.1
+    aws-cli: circleci/aws-cli@4.0
 
   executors:
     base:
@@ -19,15 +19,15 @@ usage:
     build_and_push_image:
       jobs:
         # build and push image to ECR
-        - aws-ecr/build-and-push-image:
+        - aws-ecr/build_and_push_image:
             auth:
                # Add authentication step with OIDC using aws-cli/setup command
               - aws-cli/setup:
                   profile: "OIDC-USER"
-                  role-arn: "arn:aws:iam::123456789012:role/VALID_OIDC_ECR_ROLE"
+                  role_arn: "arn:aws:iam::123456789012:role/VALID_OIDC_ECR_ROLE"
 
             # Must use same profile configured in aws-cli/setup command
-            profile-name: "OIDC-User"
+            profile_name: "OIDC-User"
 
             # Select executor defined above
             executors: base
@@ -36,7 +36,7 @@ usage:
             repo: myECRRepository
 
             # set this to true to create the repository if it does not already exist, defaults to "false"
-            create-repo: true
+            create_repo: true
 
             # Must use valid CircleCI context for OIDC authentication
             context: CircleCI_OIDC_Token
@@ -45,7 +45,7 @@ usage:
             region: ${AWS_DEFAULT_REGION}
 
             # name of env var storing your ECR Registry ID
-            registry-id: AWS_ACCOUNT_ID
+            registry_id: AWS_ACCOUNT_ID
 
             # ECR image tags (comma separated string), defaults to "latest"
             tag: latest,myECRRepoTag
@@ -57,29 +57,29 @@ usage:
             path: pathToMyDockerfile
 
             # Boolean value if pushing to public registry. Defaults to true.
-            public-registry: false
+            public_registry: false
 
             # Security scans repository on push.  Defaults to true.
-            repo-scan-on-push: true
+            repo_scan_on_push: true
 
             # The amount of time to allow the docker build command to run before timing out, defaults to "10m"
-            no-output-timeout: 20m
+            no_output_timeout: 20m
 
             # Extra docker buildx build arguments
-            extra-build-args: --compress
+            extra_build_args: --compress
 
             # Specify platform targets for built docker image.
             platform: linux/amd64
 
             # Push image to repository after building.  Defaults to true
-            push-image: true
+            push_image: true
 
             # Set to true if you don't want to build the image if it already exists in the ECR repo, for example when
             # you are tagging with the git commit hash. Specially useful for faster code reverts.
-            skip-when-tags-exist: false
+            skip_when_tags_exist: false
 
-            # set this along wih `repo-policy-path` to true to set a repository policy, defaults to "false"
-            set-repo-policy: true
+            # set this along wih `repo_policy_path` to true to set a repository policy, defaults to "false"
+            set_repo_policy: true
 
-            # requires `set-repo-policy: true`, pass in a file with the repo permissions policy
-            repo-policy-path: repo-policy.json
+            # requires `set_repo_policy: true`, pass in a file with the repo permissions policy
+            repo_policy_path: repo-policy.json

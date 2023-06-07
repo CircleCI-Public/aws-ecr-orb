@@ -1,6 +1,6 @@
 description: Push a container image to the Amazon ECR registry
 parameters:
-  registry-id:
+  registry_id:
     type: env_var_name
     default: AWS_ACCOUNT_ID
     description: >
@@ -18,11 +18,11 @@ parameters:
     default: latest
     description: A comma-separated string containing docker image tags (default = latest)
     type: string
-  public-registry:
+  public_registry:
     type: boolean
     description: Set to true if building and pushing an image to a Public Registry on ECR.
     default: false
-  public-registry-alias:
+  public_registry_alias:
     type: string
     default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
     description: >
@@ -35,7 +35,7 @@ steps:
         ORB_EVAL_REPO: << parameters.repo >>
         ORB_EVAL_REGION: << parameters.region >>
         ORB_EVAL_TAG: << parameters.tag >>
-        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
-        ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
-        ORB_ENV_REGISTRY_ID: << parameters.registry-id >>
-      command: << include(scripts/push-image.sh) >>
+        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
+        ORB_ENV_REGISTRY_ID: << parameters.registry_id >>
+      command: << include(scripts/push_image.sh) >>

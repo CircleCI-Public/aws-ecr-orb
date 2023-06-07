@@ -9,7 +9,7 @@ CircleCI orb for interacting with Amazon's Elastic Container Registry (ECR).
 [CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using and creating CircleCI Orbs
 
 ### Examples
-Please visit the the Orb Registry's [usage examples](https://circleci.com/developer/orbs/orb/circleci/aws-ecr#usage-simple-build-and-push) for the `build-and-push-image` job.
+Please visit the the Orb Registry's [usage examples](https://circleci.com/developer/orbs/orb/circleci/aws-ecr#usage-simple-build-and-push) for the `build-and-push_image` job.
 
 
 ### How to Contribute

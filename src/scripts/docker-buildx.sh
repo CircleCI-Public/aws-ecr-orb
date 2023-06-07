@@ -1,12 +1,11 @@
 #!/bin/bash
-set -x
 ORB_EVAL_REGION="$(circleci env subst "${ORB_EVAL_REGION}")"
 ORB_EVAL_REPO="$(circleci env subst "${ORB_EVAL_REPO}")"
 ORB_EVAL_TAG="$(circleci env subst "${ORB_EVAL_TAG}")"
 ORB_EVAL_PATH="$(circleci env subst "${ORB_EVAL_PATH}")"
 ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}")"
-ORB_EVAL_EXTRA_BUILD_ARGS=$(echo "${ORB_EVAL_EXTRA_BUILD_ARGS}" | circleci env subst)
+ORB_EVAL_EXTRA_BUILD_ARGS="$(echo "${ORB_EVAL_EXTRA_BUILD_ARGS}" | circleci env subst)"
 ORB_EVAL_BUILD_PATH="$(circleci env subst "${ORB_EVAL_BUILD_PATH}")"
 ORB_EVAL_DOCKERFILE="$(circleci env subst "${ORB_EVAL_DOCKERFILE}")"
 ORB_EVAL_PROFILE_NAME="$(circleci env subst "${ORB_EVAL_PROFILE_NAME}")"
@@ -68,7 +67,7 @@ if [ "${ORB_VAL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_VAL_SKIP_WHEN_TAGS_E
     context_args="--context builder"
   fi 
 
-echo "extra args: ${ORB_EVAL_EXTRA_BUILD_ARGS}"
+set -x
   docker \
     ${context_args:+$context_args} \
     buildx build \

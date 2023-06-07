@@ -1,10 +1,16 @@
 version: 2.1
 orbs:
-  orb-tools: circleci/orb-tools@11.6
-  aws-cli: circleci/aws-cli@3.1
+  orb-tools: circleci/orb-tools@12.0
+  aws-cli: circleci/aws-cli@4.0
+  aws-ecr: {}
 filters: &filters
   tags:
     only: /.*/
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 jobs:
   pre-integration-checkout-workspace-job:
     docker:
@@ -50,7 +56,7 @@ workflows:
           name: integration-tests-default-profile
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
@@ -73,7 +79,7 @@ workflows:
           name: integration-tests-pubic-registry
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
           attach_workspace: true
           workspace_root: workspace
@@ -103,7 +109,7 @@ workflows:
           name: integration-tests-named-profile
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
           attach_workspace: true
           region: "us-west-2"
@@ -125,7 +131,7 @@ workflows:
           name: integration-tests-tag-existing-image
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
           region: "us-west-2"
@@ -144,7 +150,7 @@ workflows:
           name: integration-tests-skip_when_tags_exist-populate-image-<<matrix.executor>>
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
           attach_workspace: true
           region: "us-west-2"
@@ -167,7 +173,7 @@ workflows:
           name: integration-tests-skip_when_tags_exist-<<matrix.executor>>
           auth:
             - aws-cli/setup:
-                role-arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
           attach_workspace: true
           region: "us-west-2"
@@ -197,28 +203,16 @@ workflows:
       - orb-tools/pack:
           filters: *filters
       - orb-tools/review:
-          filters: *filters
+          filters: *release-filters
       - orb-tools/publish:
-          orb-name: circleci/aws-ecr
-          vcs-type: << pipeline.project.type >>
-          pub-type: production
-          requires:
-            - orb-tools/lint
-            - orb-tools/review
-            - orb-tools/pack
-            - integration-tests-default-profile
-            - integration-tests-pubic-registry
-            - integration-tests-skip_when_tags_exist-amd64
-            - integration-tests-skip_when_tags_exist-arm64
-            - integration-tests-named-profile
-            - integration-tests-tag-existing-image
-          github-token: GHI_TOKEN
+          orb_name: circleci/aws-ecr
+          vcs_type: << pipeline.project.type >>
+          pub_type: production
+          enable_pr_comment: true
+          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-tests-default-profile, integration-tests-pubic-registry, integration-tests-skip_when_tags_exist-amd64, integration-tests-skip_when_tags_exist-arm64, integration-tests-named-profile, integration-tests-tag-existing-image ]
+          github_token: GHI_TOKEN
           context: orb-publisher
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+          filters: *release-filters
 executors:
   amd64:
     machine:

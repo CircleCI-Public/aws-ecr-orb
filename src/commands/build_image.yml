@@ -115,5 +115,5 @@ steps:
         ORB_EVAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle_policy_path>>
         ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
         ORB_EVAL_BUILD_PATH: <<parameters.build_path>>
-      command: <<include(scripts/docker-buildx.sh)>>
+      command: <<include(scripts/docker_buildx.sh)>>
       no_output_timeout: <<parameters.no_output_timeout>>

@@ -19,7 +19,7 @@ if [ -n "${ORB_EVAL_PROFILE_NAME}" ]; then
     set -- "$@" --profile "${ORB_EVAL_PROFILE_NAME}"
 fi
 
-#Shellcheck disable=SC2002
+# shellcheck disable=SC2002
 if [ -f "$HOME/.docker/config.json" ] && cat ~/.docker/config.json | grep "${ORB_VAL_ACCOUNT_URL}" > /dev/null 2>&1 ; then
     echo "Credential helper is already installed"
 else

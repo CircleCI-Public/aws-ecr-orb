@@ -29,8 +29,8 @@ steps:
   - run:
       name: Log into Amazon ECR with profile <<parameters.profile_name>>
       environment:
-        ORB_EVAL_PROFILE_NAME: <<parameters.profile_name>>
+        ORB_STR_PROFILE_NAME: <<parameters.profile_name>>
         ORB_ENV_REGISTRY_ID: <<parameters.registry_id>>
-        ORB_EVAL_REGION: <<parameters.region>>
-        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        ORB_STR_REGION: <<parameters.region>>
+        ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
       command: <<include(scripts/ecr_login.sh)>>

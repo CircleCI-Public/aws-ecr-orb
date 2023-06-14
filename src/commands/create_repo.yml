@@ -30,9 +30,9 @@ steps:
   - run:
       name: Create Repository
       environment:
-        ORB_EVAL_PROFILE_NAME: <<parameters.profile_name>>
-        ORB_EVAL_REGION: <<parameters.region>>
-        ORB_EVAL_REPO: <<parameters.repo>>
-        ORB_VAL_REPO_SCAN_ON_PUSH: <<parameters.repo_scan_on_push>>
-        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        ORB_STR_PROFILE_NAME: <<parameters.profile_name>>
+        ORB_STR_REGION: <<parameters.region>>
+        ORB_STR_REPO: <<parameters.repo>>
+        ORB_BOOL_REPO_SCAN_ON_PUSH: <<parameters.repo_scan_on_push>>
+        ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
       command: <<include(scripts/create_repo.sh)>>

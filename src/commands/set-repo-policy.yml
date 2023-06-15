@@ -31,9 +31,9 @@ steps:
   - run:
       name: Set Repository Policy
       environment:
-        ORB_VAL_PROFILE_NAME: <<parameters.profile-name>>
+        ORB_EVAL_PROFILE_NAME: <<parameters.profile-name>>
         ORB_EVAL_REGION: <<parameters.region>>
         ORB_EVAL_REPO: <<parameters.repo>>
         ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
-        ORB_VAL_REPO_POLICY_PATH: <<parameters.repo-policy-path>>
+        ORB_EVAL_REPO_POLICY_PATH: <<parameters.repo-policy-path>>
       command: <<include(scripts/set-repo-policy.sh)>>

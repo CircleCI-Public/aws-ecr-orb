@@ -1,7 +1,7 @@
 description: "Build a docker image with Docker Buildx"
 
 parameters:
-  registry-id:
+  registry_id:
     type: env_var_name
     default: AWS_ACCOUNT_ID
     description: >
@@ -28,25 +28,25 @@ parameters:
       Path to the directory containing your Dockerfile. Defaults to . (working directory).
     type: string
 
-  build-path:
+  build_path:
     default: .
     description: >-
       Path to the directory containing your build context. Defaults to . (working directory).
     type: string
 
-  no-output-timeout:
+  no_output_timeout:
     type: string
     default: 10m
     description: The amount of time to allow the docker command to run before timing out.
 
-  extra-build-args:
+  extra_build_args:
     type: string
     default: ""
     description: >
       Extra flags to pass to docker build. For examples, see
       https://docs.docker.com/engine/reference/commandline/buildx
 
-  skip-when-tags-exist:
+  skip_when_tags_exist:
     type: boolean
     default: false
     description: Whether to skip image building if all specified tags already exist in ECR
@@ -57,14 +57,14 @@ parameters:
     description: >
       AWS region of ECR repository. Defaults to environment variable ${AWS_DEFAULT_REGION}
 
-  profile-name:
+  profile_name:
     type: string
     default: "default"
     description: >
-      AWS profile name to be configured. Only required when skip-when-tags-exist
-      or ecr-login are set to true.
+      AWS profile name to be configured. Only required when skip_when_tags_exist
+      or ecr_login are set to true.
 
-  public-registry:
+  public_registry:
     type: boolean
     description: Set to true if building and pushing an image to a Public Registry on ECR.
     default: false
@@ -74,19 +74,19 @@ parameters:
     default: "linux/amd64"
     description: Platform targets for the docker image, multi arch images. Ex. linux/amd64,linux/arm64.
 
-  public-registry-alias:
+  public_registry_alias:
     type: string
     default: ${AWS_ECR_PUBLIC_REGISTRY_ALIAS}
     description: >
       The public registry alias for your public repositories. This parameter is required if pushing to a public repository
       It can be found in the Amazon ECR console > Public Registries.
 
-  push-image:
+  push_image:
     type: boolean
     default: true
     description: Set to false to build an image without pushing to repository.  Defaults to true.
 
-  lifecycle-policy-path:
+  lifecycle_policy_path:
     type: string
     default: ""
     description: |
@@ -100,20 +100,20 @@ steps:
   - run:
       name: Build Docker Image with buildx
       environment:
-        ORB_EVAL_TAG: << parameters.tag >>
-        ORB_VAL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip-when-tags-exist>>
-        ORB_EVAL_REPO: << parameters.repo >>
-        ORB_EVAL_EXTRA_BUILD_ARGS: <<parameters.extra-build-args>>
+        ORB_STR_TAG: << parameters.tag >>
+        ORB_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
+        ORB_STR_REPO: << parameters.repo >>
+        ORB_STR_EXTRA_BUILD_ARGS: <<parameters.extra_build_args>>
         ORB_EVAL_PATH: <<parameters.path>>
-        ORB_EVAL_DOCKERFILE: <<parameters.dockerfile>>
-        ORB_EVAL_PROFILE_NAME: <<parameters.profile-name>>
-        ORB_ENV_REGISTRY_ID: <<parameters.registry-id>>
-        ORB_EVAL_REGION: <<parameters.region>>
-        ORB_EVAL_PLATFORM: <<parameters.platform>>
-        ORB_VAL_PUBLIC_REGISTRY: <<parameters.public-registry>>
-        ORB_VAL_PUSH_IMAGE: <<parameters.push-image>>
-        ORB_EVAL_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle-policy-path>>
-        ORB_EVAL_PUBLIC_REGISTRY_ALIAS: <<parameters.public-registry-alias>>
-        ORB_EVAL_BUILD_PATH: <<parameters.build-path>>
-      command: <<include(scripts/docker-buildx.sh)>>
-      no_output_timeout: <<parameters.no-output-timeout>>
+        ORB_STR_DOCKERFILE: <<parameters.dockerfile>>
+        ORB_STR_PROFILE_NAME: <<parameters.profile_name>>
+        ORB_ENV_REGISTRY_ID: <<parameters.registry_id>>
+        ORB_STR_REGION: <<parameters.region>>
+        ORB_STR_PLATFORM: <<parameters.platform>>
+        ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        ORB_BOOL_PUSH_IMAGE: <<parameters.push_image>>
+        ORB_STR_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle_policy_path>>
+        ORB_STR_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
+        ORB_EVAL_BUILD_PATH: <<parameters.build_path>>
+      command: <<include(scripts/docker_buildx.sh)>>
+      no_output_timeout: <<parameters.no_output_timeout>>

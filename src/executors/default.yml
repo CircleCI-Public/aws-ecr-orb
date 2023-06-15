@@ -5,15 +5,15 @@ parameters:
   image:
     type: string
     default: ubuntu-2004:2022.04.1
-  use-docker-layer-caching:
+  docker_layer_caching:
     type: boolean
     default: false
-  resource-class:
+  resource_class:
     type: string
     default: medium
 
 machine:
   image: <<parameters.image>>
-  docker_layer_caching: <<parameters.use-docker-layer-caching>>
+  docker_layer_caching: <<parameters.docker_layer_caching>>
 
-resource_class: <<parameters.resource-class>>
+resource_class: <<parameters.resource_class>>

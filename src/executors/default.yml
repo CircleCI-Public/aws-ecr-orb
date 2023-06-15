@@ -5,7 +5,7 @@ parameters:
   image:
     type: string
     default: ubuntu-2004:2022.04.1
-  use_docker_layer_caching:
+  docker_layer_caching:
     type: boolean
     default: false
   resource_class:

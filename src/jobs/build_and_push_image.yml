@@ -127,6 +127,12 @@ parameters:
     default: .
     description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
 
+  build_path:
+    default: .
+    description: >-
+      Path to the directory containing your build context. Defaults to . (working directory).
+    type: string
+
   extra_build_args:
     type: string
     default: ""
@@ -215,4 +221,5 @@ steps:
       public_registry_alias: <<parameters.public_registry_alias>>
       set_repo_policy: <<parameters.set_repo_policy>>
       repo_policy_path: <<parameters.repo_policy_path>>
+      build_path: <<parameters.build_path>>
       auth: <<parameters.auth>>

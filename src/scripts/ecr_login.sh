@@ -19,9 +19,9 @@ if [ -n "${ORB_STR_PROFILE_NAME}" ]; then
     set -- "$@" --profile "${ORB_STR_PROFILE_NAME}"
 fi
 
-# shellcheck disable=SC2002
-if [ -f "$HOME/.docker/config.json" ] && cat ~/.docker/config.json | grep "${ORB_VAL_ACCOUNT_URL}" > /dev/null 2>&1 ; then
+if [ -f "$HOME/.docker/config.json" ] && grep "${ORB_VAL_ACCOUNT_URL}" < ~/.docker/config.json > /dev/null 2>&1 ; then
     echo "Credential helper is already installed"
 else
+    docker logout "${ORB_VAL_ACCOUNT_URL}"    
     aws "${ECR_COMMAND}" get-login-password --region "${ORB_STR_REGION}" "$@" | docker login --username AWS --password-stdin "${ORB_VAL_ACCOUNT_URL}"
 fi

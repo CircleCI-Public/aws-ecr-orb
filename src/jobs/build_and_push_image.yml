@@ -1,9 +1,7 @@
 description: >
-  Install AWS CLI, if needed, and configure. Log into Amazon ECR
-  and push image to repository. Requires environment variables
-  for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. We recommend
-  these be saved in a Project (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
-  or in Contexts (https://circleci.com/docs/2.0/contexts).
+  Install AWS CLI Version 2, if needed, and configure credentials to log into Amazon ECR
+  and push image to repository. Authenticate with OIDC or static AWS keys using the aws-cli/setup command is required.
+  NOTE: Some commands may not work with AWS CLI Version 1.
 
 executor: << parameters.executor >>
 

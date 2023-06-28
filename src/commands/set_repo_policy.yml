@@ -1,4 +1,6 @@
-description: Sets a repository policy on a AWS ECR repository.
+description: >
+  Install AWS CLI Version 2 and configure credentials if needed to set a repository policy on an AWS ECR repository
+  NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:
   profile_name:

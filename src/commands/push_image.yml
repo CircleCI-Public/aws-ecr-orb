@@ -1,4 +1,6 @@
-description: Push a container image to the Amazon ECR registry
+description: >
+  Install AWS CLI Version 2 and configure credentials if needed to push a container image to the Amazon ECR registry
+  NOTE: Some commands may not work with AWS CLI Version 1.
 parameters:
   registry_id:
     type: env_var_name

@@ -1,4 +1,6 @@
-description: Create a new AWS ECR repository.
+description: >
+  Install AWS CLI Version 2 and configure credentials if needed to create a new AWS ECR repository.
+  NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:
   profile_name:

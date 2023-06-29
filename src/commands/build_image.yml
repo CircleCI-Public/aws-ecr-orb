@@ -1,4 +1,6 @@
-description: "Build a docker image with Docker Buildx"
+description: >
+  Install AWS CLI Version 2 and configure credentials if needed to Build a Docker image with docker buildx.
+  NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:
   registry_id:

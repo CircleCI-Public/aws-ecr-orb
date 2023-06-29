@@ -1,9 +1,7 @@
 description: >
-  Install AWS CLI, if needed, and configure. Log into Amazon ECR and push image
-  to repository. Requires environment variables for AWS_ACCESS_KEY_ID and
-  AWS_SECRET_ACCESS_KEY. We recommend these be saved in a Project
-  (https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project)
-  or in Contexts (https://circleci.com/docs/2.0/contexts).
+  Install AWS CLI Version 2 and configure credentials if needed.
+  Log into Amazon ECR, build and push a Docker image to the specified repository.
+  NOTE: Some commands may not work with AWS CLI Version 1.
 parameters:
   registry_id:
     type: env_var_name

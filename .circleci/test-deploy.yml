@@ -67,7 +67,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra_build_args: --compress
-          executor: amd64
+          executor: docker
           lifecycle_policy_path: ./sample/lifecycle-policy.json
           post-steps:
             - run:
@@ -218,6 +218,10 @@ executors:
   amd64:
     machine:
       image: ubuntu-2004:202010-01
+      docker_layer_caching: true
+  docker:
+    docker:
+      image: cimg/base:current
       docker_layer_caching: true
   arm64:
     machine:

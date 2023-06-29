@@ -58,8 +58,8 @@ workflows:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
-          setup_remote_docker: true
-          remote_docker_version: "20.10.11"
+          # setup_remote_docker: true
+          # remote_docker_version: "20.10.11"
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create_repo: true
@@ -68,9 +68,12 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra_build_args: --compress
-          executor: docker
+          executor: amd64
           lifecycle_policy_path: ./sample/lifecycle-policy.json
           post-steps:
+            - run:
+                name: "Check Docker Version"
+                command: docker version
             - run:
                 name: "Delete repository"
                 command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1}-default-profile --force
@@ -218,7 +221,7 @@ workflows:
 executors:
   amd64:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2204:2022.07.1
       docker_layer_caching: true
   docker:
     docker:

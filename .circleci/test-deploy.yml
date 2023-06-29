@@ -58,6 +58,7 @@ workflows:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
+          setup_remote_docker: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create_repo: true

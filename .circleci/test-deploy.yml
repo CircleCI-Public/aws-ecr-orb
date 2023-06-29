@@ -59,6 +59,7 @@ workflows:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
           setup_remote_docker: true
+          remote_docker_version: "20.10.11"
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create_repo: true
@@ -221,7 +222,7 @@ executors:
       docker_layer_caching: true
   docker:
     docker:
-      - image: cimg/base:current
+      - image: cimg/python:3.8
   arm64:
     machine:
       image: ubuntu-2204:2022.07.1

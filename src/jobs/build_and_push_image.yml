@@ -115,6 +115,36 @@ parameters:
       the environment variable you will set to hold this
       value, i.e. DOCKERHUB_PASSWORD.
 
+  third_party_login:
+    default: false
+    description: |
+      Enable github container registry authentication. Defaults to false.
+    type: boolean
+  
+  third_party_url:
+    default: third_party_url
+    description: >
+      Third party registry url to be configured. Set this to the URL of the
+      environment variable you will set to hold this value, i.e. 
+      ghcr.io for Github or registry.heroku.com for Heroku
+    type: env_var_name
+
+  third_party_username:
+    default: THIRD_PARTY_USERNAME
+    description: >
+      Github username to be configured. Set this to the name of the
+      environment variable you will set to hold this value, i.e.
+      THIRD_PARTY_USERNAME.
+    type: env_var_name
+
+  third_party_token:
+    default: THIRD_PARTY_TOKEN
+    description: >
+      Github password to be configured. Set this to the name of the
+      environment variable you will set to hold this value, i.e.
+      THIRD_PARTY_TOKEN.
+    type: env_var_name
+
   dockerfile:
     type: string
     default: Dockerfile
@@ -216,6 +246,10 @@ steps:
       docker_login: <<parameters.docker_login>>
       dockerhub_username: <<parameters.dockerhub_username>>
       dockerhub_password: <<parameters.dockerhub_password>>
+      third_party_login: <<parameters.third_party_login>>
+      third_party_url: <<parameters.third_party_url>>
+      third_party_username: <<parameters.third_party_username>>
+      third_party_token: <<parameters.third_party_token>>
       public_registry_alias: <<parameters.public_registry_alias>>
       set_repo_policy: <<parameters.set_repo_policy>>
       repo_policy_path: <<parameters.repo_policy_path>>

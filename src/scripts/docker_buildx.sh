@@ -23,14 +23,14 @@ if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
   exit 1
 fi
 
-if [ "${ORB_BOOL_PUBLIC_REGISTRY}" == "1" ]; then
+if [ "${ORB_BOOL_PUBLIC_REGISTRY}" -eq "1" ]; then
   ECR_COMMAND="ecr-public"
   ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_STR_PUBLIC_REGISTRY_ALIAS}"
 fi
 
 IFS="," read -ra DOCKER_TAGS <<<"${ORB_STR_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
-  if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "1" ] || [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
+  if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" ] || [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_STR_PROFILE_NAME}" --registry-id "${!ORB_ENV_REGISTRY_ID}" --region "${ORB_STR_REGION}" --repository-name "${ORB_STR_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       docker pull "${ORB_VAL_ACCOUNT_URL}/${ORB_STR_REPO}:${tag}"
@@ -40,8 +40,8 @@ for tag in "${DOCKER_TAGS[@]}"; do
   docker_tag_args="${docker_tag_args} -t ${ORB_VAL_ACCOUNT_URL}/${ORB_STR_REPO}:${tag}"
 done
 
-if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
-  if [ "${ORB_BOOL_PUSH_IMAGE}" == "1" ]; then
+if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
+  if [ "${ORB_BOOL_PUSH_IMAGE}" -eq "1" ]; then
     set -- "$@" --push
 
     if [ -n "${ORB_STR_LIFECYCLE_POLICY_PATH}" ]; then
@@ -50,7 +50,7 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TAGS
         --lifecycle-policy-text "file://${ORB_STR_LIFECYCLE_POLICY_PATH}"
     fi
 
-  else
+  elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -lt 1 ];then
     set -- "$@" --load
   fi
 

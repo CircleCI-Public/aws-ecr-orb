@@ -53,7 +53,29 @@ workflows:
           name: pre-integration
           filters: *filters
       - aws-ecr/build_and_push_image:
-          name: integration-tests-default-profile
+          name: integration-test-multi-platform-without-push
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          attach_workspace: true
+          workspace_root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
+          create_repo: true
+          context: [CPE_ORBS_AWS]
+          tag: integration,myECRRepoTag
+          dockerfile: sample/Dockerfile
+          path: workspace
+          executor: amd64
+          post-steps:
+            - run:
+                name: "Delete repository"
+                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1}-multi-platform-without-push --force
+          push_image: false
+          platform: linux/amd64,linux/arm64
+          filters: *filters
+          requires: [pre-integration]
+      - aws-ecr/build_and_push_image:
+          name: integration-test-default-profile
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -76,7 +98,7 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-tests-pubic-registry
+          name: integration-test-pubic-registry
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -106,7 +128,7 @@ workflows:
             - run:
                 name: "Export NPM_TOKEN"
                 command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"
-          name: integration-tests-named-profile
+          name: integration-test-named-profile
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -128,7 +150,7 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - tag-ecr-image:
-          name: integration-tests-tag-existing-image
+          name: integration-test-tag-existing-image
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -145,9 +167,9 @@ workflows:
                 command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-named-profile --force --profile OIDC-User
           filters: *filters
           requires:
-            - integration-tests-named-profile
+            - integration-test-named-profile
       - aws-ecr/build_and_push_image:
-          name: integration-tests-skip_when_tags_exist-populate-image-<<matrix.executor>>
+          name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -170,7 +192,7 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-tests-skip_when_tags_exist-<<matrix.executor>>
+          name: integration-test-skip_when_tags_exist-<<matrix.executor>>
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -196,8 +218,8 @@ workflows:
               executor: ["amd64", "arm64"]
           filters: *filters
           requires:
-            - integration-tests-skip_when_tags_exist-populate-image-amd64
-            - integration-tests-skip_when_tags_exist-populate-image-arm64
+            - integration-test-skip_when_tags_exist-populate-image-amd64
+            - integration-test-skip_when_tags_exist-populate-image-arm64
       - orb-tools/lint:
           filters: *filters
       - orb-tools/pack:
@@ -209,7 +231,7 @@ workflows:
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-tests-default-profile, integration-tests-pubic-registry, integration-tests-skip_when_tags_exist-amd64, integration-tests-skip_when_tags_exist-arm64, integration-tests-named-profile, integration-tests-tag-existing-image ]
+          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image ]
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters

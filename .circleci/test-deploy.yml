@@ -37,6 +37,9 @@ jobs:
         type: string
       auth:
         type: steps
+      skip_when_tags_exist:
+        type: boolean
+        default: false
     steps:
       - steps: <<parameters.auth>>
       - aws-ecr/ecr_login:
@@ -161,13 +164,28 @@ workflows:
           context: [CPE-OIDC]
           source_tag: integration
           target_tag: latest
+          requires:
+            - integration-test-named-profile
+      - tag-ecr-image:
+          name: integration-test-tag-image-with-existing-tag
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "OIDC-User"
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          region: "us-west-2"
+          profile_name: "OIDC-User"
+          context: [CPE-OIDC]
+          source_tag: integration
+          target_tag: alpha,latest
+          skip_when_tags_exist: true
           post-steps:
             - run:
                 name: "Delete repository"
                 command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-named-profile --force --profile OIDC-User
           filters: *filters
           requires:
-            - integration-test-named-profile
+            - integration-test-tag-existing-image
       - aws-ecr/build_and_push_image:
           name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
           auth:

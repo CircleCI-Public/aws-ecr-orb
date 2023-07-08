@@ -83,3 +83,9 @@ usage:
 
             # requires `set_repo_policy: true`, pass in a file with the repo permissions policy
             repo_policy_path: repo-policy.json
+
+            # Switches the default encryption AES256 to KMS
+            repo_encryption_type: KMS
+
+            # Specifies ARN of KMS key
+            repo_encryption_kms_key: arn:aws:kms::123456789012:key/UUID4_OF_KMS_KEY_ID

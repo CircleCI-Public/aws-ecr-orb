@@ -54,12 +54,13 @@ jobs:
     docker:
       - image: cimg/base:current
     parameters:
-      region:
-        type: string
       auth:
         type: steps
         default:
-           - jq/install
+           - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "OIDC-User"
+
     steps:
       - steps: <<parameters.auth>>
       # - aws-ecr/ecr_login:
@@ -73,7 +74,7 @@ workflows:
   test-deploy:
     jobs:
       - ecr-login:
-          region: us-west-2
+          context: [CPE-OIDC]
       # - pre-integration-checkout-workspace-job:
       #     name: pre-integration
       #     filters: *filters

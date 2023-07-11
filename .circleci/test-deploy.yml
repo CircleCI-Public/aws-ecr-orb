@@ -62,7 +62,8 @@ jobs:
         type: steps
         default:
            - aws-cli/setup:
-                role_arn: << parameters.role_arn >>
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                # role_arn: << parameters.role_arn >>
                 profile_name: << parameters.profile_name >>
 
     steps:

@@ -54,12 +54,16 @@ jobs:
     docker:
       - image: cimg/base:current
     parameters:
+      role_arn:
+        type: string
+      profile_name:
+        type: string
       auth:
         type: steps
         default:
            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                role_arn: << parameters.role_arn >>
+                profile_name: << parameters.profile_name >>
 
     steps:
       - steps: <<parameters.auth>>
@@ -75,6 +79,8 @@ workflows:
     jobs:
       - ecr-login:
           context: [CPE-OIDC]
+          role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          profile_name: "OIDC-User"
       # - pre-integration-checkout-workspace-job:
       #     name: pre-integration
       #     filters: *filters

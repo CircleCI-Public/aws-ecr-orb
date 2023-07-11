@@ -6,7 +6,7 @@ ORB_STR_TARGET_TAG="$(circleci env subst "${ORB_STR_TARGET_TAG}")"
 # pull the image manifest from ECR
 set -x
 MANIFEST="$(aws ecr batch-get-image --repository-name "${ORB_STR_REPO}" --image-ids imageTag="${ORB_STR_SOURCE_TAG}" --query 'images[].imageManifest' --output text)"
-EXISTING_TAGS="$(aws ecr list-images --repository-name aws-ecr-orb-816b53be3921413610f14619567bac79fd01cf9c-named-profile --filter "tagStatus=TAGGED")"
+EXISTING_TAGS="$(aws ecr list-images --repository-name "${ORB_STR_REPO}" --filter "tagStatus=TAGGED")"
 IFS="," read -ra ECR_TAGS <<<"${ORB_STR_TARGET_TAG}"
 
 for tag in "${ECR_TAGS[@]}"; do

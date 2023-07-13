@@ -45,25 +45,25 @@ jobs:
       - aws-ecr/ecr_login:
           profile_name: <<parameters.profile_name>>
           region: <<parameters.region>>
-ecr-login:
-  docker:
-    - image: cimg/base:current
-  parameters:
-    role_arn:
-      type: env_var_name
-      default: ECR_ROLE_ARN
-    profile_name:
-      type: env_var_name
-      default: ECR_PROFILE
-    auth:
-      type: steps
-      default:
-        - aws-cli/setup:
-            role_arn: << parameters.role_arn >>
-            profile_name: << parameters.profile_name >>
-        - run: cat ~/.aws/config
-  steps:
-    - steps: <<parameters.auth>>
+    ecr-login:
+      docker:
+        - image: cimg/base:current
+      parameters:
+        role_arn:
+          type: env_var_name
+          default: ECR_ROLE_ARN
+        profile_name:
+          type: env_var_name
+          default: ECR_PROFILE
+        auth:
+          type: steps
+          default:
+            - aws-cli/setup:
+                role_arn: << parameters.role_arn >>
+                profile_name: << parameters.profile_name >>
+            - run: cat ~/.aws/config
+      steps:
+        - steps: <<parameters.auth>>
 workflows:
   test-deploy:
     jobs:

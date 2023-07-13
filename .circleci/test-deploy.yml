@@ -55,7 +55,7 @@ jobs:
           - aws-cli/setup:
               role_arn: ${ECR_ROLE_ARN}
               profile_name: ${ECR_PROFILE}
-          - run: cat .aws/config
+          - run: cat ~/.aws/config
     steps:
       - steps: <<parameters.auth>>
 workflows:

@@ -59,8 +59,8 @@ ecr-login:
       type: steps
       default:
         - aws-cli/setup:
-            role_arn: ${ECR_ROLE_ARN}
-            profile_name: ${ECR_PROFILE}
+            role_arn: << parameters.role_arn >>
+            profile_name: << parameters.profile_name >>
         - run: cat ~/.aws/config
   steps:
     - steps: <<parameters.auth>>

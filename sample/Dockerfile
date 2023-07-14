@@ -1,7 +1,10 @@
-FROM cimg/node:current
+# FROM cimg/node:current
+FROM cimg/base:current
 
-WORKDIR /app
-ADD . /app
-EXPOSE 80
+RUN uname -a
 
-ENTRYPOINT ["npm", "start"]
+# WORKDIR /app
+# ADD . /app
+# EXPOSE 80
+
+# ENTRYPOINT ["npm", "start"]

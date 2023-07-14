@@ -129,7 +129,7 @@ workflows:
           create_repo: true
           context: [CPE-OIDC]
           tag: alpha
-          dockerfile: sample/Dockerfile-alpine
+          dockerfile: sample/Dockerfile
           path: workspace
           push_image: false
           platform: linux/amd64

@@ -93,10 +93,7 @@ jobs:
     steps:
       - steps: <<parameters.auth>>
       - aws-ecr/build_image:
-          attach_workspace: << parameters.attach_workspace >>
-          workspace_root: << parameters.workspace_root >>
           repo: << parameters.repo >>
-          create_repo: << parameters.create_repo >>
           tag: << parameters.tag >>
           dockerfile: << parameters.dockerfile >>
           path: << parameters.path >>

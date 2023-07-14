@@ -65,8 +65,8 @@ jobs:
     steps:
       - steps: <<parameters.auth>>
   build-image-test-then-push-with-buildx:
-    docker:
-      - image: cimg/base:current
+    machine:
+      image: ubuntu-2204:2022.07.1
     parameters:
       auth:
         type: steps

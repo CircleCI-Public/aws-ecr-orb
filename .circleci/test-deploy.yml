@@ -109,8 +109,8 @@ jobs:
             docker image ls
             docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> command -v curl
             status=$(echo "$?")
-            echo "status"
-            if [ status != "0" ]; then exit 1; else exit 0; fi
+            echo "$status"
+            if [ "${status}" != "0" ]; then exit 1; else exit 0; fi
             set +x
       - aws-ecr/push_image:
           repo: << parameters.repo >>

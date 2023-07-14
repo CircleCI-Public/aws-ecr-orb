@@ -1,7 +1,6 @@
-FROM cimg/node:current
+FROM alpine:latest
 
-WORKDIR /app
-ADD . /app
-EXPOSE 80
+RUN apk update
+RUN apk upgrade
+RUN apk add curl 
 
-ENTRYPOINT ["npm", "start"]

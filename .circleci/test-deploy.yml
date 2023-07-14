@@ -70,8 +70,14 @@ jobs:
     parameters:
       auth:
         type: steps
+      attach_workspace:
+        type: boolean
+      workspace_root:
+        type: string
       repo:
         type: string
+      create_repo:
+        type: boolean
       tag:
         type: string
       dockerfile:
@@ -86,12 +92,16 @@ jobs:
         type: string
     steps:
       - steps: <<parameters.auth>>
-      - aws-ecr/build_image:
+      - aws-ecr/build_and_push_image:
+          attach_workspace: << parameters.attach_workspace >>
+          workspace_root: << parameters.workspace_root >>
           repo: << parameters.repo >>
+          create_repo: << parameters.create_repo >>
           tag: << parameters.tag >>
           dockerfile: << parameters.dockerfile >>
           path: << parameters.path >>
           platform: << parameters.platform >>
+          push_image: << parameters.push_image >>
       - run: docker image ls
       - aws-ecr/push_image:
           repo: << parameters.repo >>
@@ -109,7 +119,10 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          attach_workspace: true
+          workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-image-test-then-push-with-buildx
+          create_repo: true
           context: [CPE-OIDC]
           tag: alpha
           dockerfile: sample/Dockerfile

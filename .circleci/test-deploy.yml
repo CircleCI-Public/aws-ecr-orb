@@ -76,8 +76,8 @@ jobs:
       #   type: string
       repo:
         type: string
-      # create_repo:
-      #   type: boolean
+      create_repo:
+        type: boolean
       tag:
         type: string
       dockerfile:
@@ -96,7 +96,7 @@ jobs:
           # attach_workspace: << parameters.attach_workspace >>
           # workspace_root: << parameters.workspace_root >>
           repo: << parameters.repo >>
-          # create_repo: << parameters.create_repo >>
+          create_repo: << parameters.create_repo >>
           tag: << parameters.tag >>
           dockerfile: << parameters.dockerfile >>
           path: << parameters.path >>
@@ -109,8 +109,7 @@ jobs:
             docker image ls
             # docker save 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> | docker load
             # docker run --rm 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> uname -a
-            # docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> curl --version
-            docker run << parameters.repo >>:<< parameters.tag >> curl --version
+            docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> curl --version
             status=$(echo "$?")
             if [ "${status}" != "0" ]; then exit 1; else exit 0; fi
             set +x

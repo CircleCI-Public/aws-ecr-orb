@@ -18,6 +18,9 @@ number_of_tags_in_ecr=0
 IFS=',' read -ra platform <<<"${ORB_STR_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
+echo "platforms ${number_of_platforms}"
+echo "push_image ${ORB_BOOL_PUSH_IMAGE}"
+
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
   echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
   exit 1
@@ -52,6 +55,7 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
 
   elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -lt 1 ];then
     set -- "$@" --load
+  
   fi
 
   if [ "${number_of_platforms}" -gt 1 ]; then

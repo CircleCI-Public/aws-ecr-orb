@@ -136,6 +136,7 @@ workflows:
           region: us-west-2
           filters: *filters
           requires: [pre-integration]
+          skip_when_tags_exist:
       # - aws-ecr/build_and_push_image:
       #     name: integration-test-multi-platform-without-push
       #     auth:

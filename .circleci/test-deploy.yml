@@ -45,65 +45,65 @@ jobs:
       - aws-ecr/ecr_login:
           profile_name: <<parameters.profile_name>>
           region: <<parameters.region>>
-ecr-login:
-  docker:
-    - image: cimg/base:current
-  parameters:
-    role_arn:
-      type: env_var_name
-      default: ECR_ROLE_ARN
-    profile_name:
-      type: env_var_name
-      default: ECR_PROFILE
-    auth:
-      type: steps
-      default:
-        - aws-cli/setup:
-            role_arn: << parameters.role_arn >>
-            profile_name: << parameters.profile_name >>
-        - run: cat ~/.aws/config
-  steps:
-    - steps: <<parameters.auth>>
-build-image-test-then-push-with-buildx:
-  docker:
-    - image: cimg/base:current
-  parameters:
-    auth:
-      type: steps
-    attach_workspace:
-      type: boolean
-    workspace_root:
-      type: string
-    repo:
-      type: string
-    create_repo:
-      type: boolean
-    tag:
-      type: string
-    dockerfile:
-      type: string
-    path:
-      type: string
-    platform:
-      type: string
-    region:
-      type: string
-  steps:
-    - steps: <<parameters.auth>>
-    - aws-ecr/build_image:
-        attach_workspace: << parameters.attach_workspace >>
-        workspace_root: << parameters.workspace_root >>
-        repo: << parameters.repo >>
-        create_repo: << parameters.create_repo >>
-        tag: << parameters.tag >>
-        dockerfile: << parameters.dockerfile >>
-        path: << parameters.path >>
-        platform: << parameters.platform >>
-    - run: docker image ls
-    - aws-ecr/push_image:
-        repo: << parameters.repo >>
-        region: << parameters.region >>
-        tag: << parameters.tag >>
+  ecr-login:
+    docker:
+      - image: cimg/base:current
+    parameters:
+      role_arn:
+        type: env_var_name
+        default: ECR_ROLE_ARN
+      profile_name:
+        type: env_var_name
+        default: ECR_PROFILE
+      auth:
+        type: steps
+        default:
+          - aws-cli/setup:
+              role_arn: << parameters.role_arn >>
+              profile_name: << parameters.profile_name >>
+          - run: cat ~/.aws/config
+    steps:
+      - steps: <<parameters.auth>>
+  build-image-test-then-push-with-buildx:
+    docker:
+      - image: cimg/base:current
+    parameters:
+      auth:
+        type: steps
+      attach_workspace:
+        type: boolean
+      workspace_root:
+        type: string
+      repo:
+        type: string
+      create_repo:
+        type: boolean
+      tag:
+        type: string
+      dockerfile:
+        type: string
+      path:
+        type: string
+      platform:
+        type: string
+      region:
+        type: string
+    steps:
+      - steps: <<parameters.auth>>
+      - aws-ecr/build_image:
+          attach_workspace: << parameters.attach_workspace >>
+          workspace_root: << parameters.workspace_root >>
+          repo: << parameters.repo >>
+          create_repo: << parameters.create_repo >>
+          tag: << parameters.tag >>
+          dockerfile: << parameters.dockerfile >>
+          path: << parameters.path >>
+          platform: << parameters.platform >>
+      - run: docker image ls
+      - aws-ecr/push_image:
+          repo: << parameters.repo >>
+          region: << parameters.region >>
+          tag: << parameters.tag >>
 workflows:
   test-deploy:
     jobs:

@@ -45,33 +45,89 @@ jobs:
       - aws-ecr/ecr_login:
           profile_name: <<parameters.profile_name>>
           region: <<parameters.region>>
-  ecr-login:
-    docker:
-      - image: cimg/base:current
-    parameters:
-      role_arn:
-        type: env_var_name
-        default: ECR_ROLE_ARN
-      profile_name:
-        type: env_var_name
-        default: ECR_PROFILE
-      auth:
-        type: steps
-        default:
-          - aws-cli/setup:
-              role_arn: << parameters.role_arn >>
-              profile_name: << parameters.profile_name >>
-          - run: cat ~/.aws/config
-    steps:
-      - steps: <<parameters.auth>>
+ecr-login:
+  docker:
+    - image: cimg/base:current
+  parameters:
+    role_arn:
+      type: env_var_name
+      default: ECR_ROLE_ARN
+    profile_name:
+      type: env_var_name
+      default: ECR_PROFILE
+    auth:
+      type: steps
+      default:
+        - aws-cli/setup:
+            role_arn: << parameters.role_arn >>
+            profile_name: << parameters.profile_name >>
+        - run: cat ~/.aws/config
+  steps:
+    - steps: <<parameters.auth>>
+build-image-test-then-push-with-buildx:
+  docker:
+    - image: cimg/base:current
+  parameters:
+    auth:
+      type: steps
+    attach_workspace:
+      type: boolean
+    workspace_root:
+      type: string
+    repo:
+      type: string
+    create_repo:
+      type: boolean
+    tag:
+      type: string
+    dockerfile:
+      type: string
+    path:
+      type: string
+    platform:
+      type: string
+    region:
+      type: string
+  steps:
+    - steps: <<parameters.auth>>
+    - aws-ecr/build_image:
+        attach_workspace: << parameters.attach_workspace >>
+        workspace_root: << parameters.workspace_root >>
+        repo: << parameters.repo >>
+        create_repo: << parameters.create_repo >>
+        tag: << parameters.tag >>
+        dockerfile: << parameters.dockerfile >>
+        path: << parameters.path >>
+        platform: << parameters.platform >>
+    - run: docker image ls
+    - aws-ecr/push_image:
+        repo: << parameters.repo >>
+        region: << parameters.region >>
+        tag: << parameters.tag >>
 workflows:
   test-deploy:
     jobs:
-      - ecr-login:
-          context: CPE-OIDC
-      # - pre-integration-checkout-workspace-job:
-      #     name: pre-integration
-      #     filters: *filters
+      - pre-integration-checkout-workspace-job:
+          name: pre-integration
+          filters: *filters
+      # - ecr-login:
+      #     context: CPE-OIDC
+      - build-image-test-then-push-with-buildx:
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          attach_workspace: true
+          workspace_root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-image-test-then-push-with-buildx
+          create_repo: true
+          context: [CPE-OIDC]
+          tag: alpha
+          dockerfile: sample/Dockerfile
+          path: workspace
+          push_image: false
+          platform: linux/amd64
+          filters: *filters
+          requires: [pre-integration]
       # - aws-ecr/build_and_push_image:
       #     name: integration-test-multi-platform-without-push
       #     auth:

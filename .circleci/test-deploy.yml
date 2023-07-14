@@ -107,6 +107,7 @@ build-image-test-then-push-with-buildx:
         command: |
           set -x
           docker image ls
+          docker save 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> | docker load
           docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >>
           set +x
     - aws-ecr/push_image:

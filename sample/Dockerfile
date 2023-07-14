@@ -1,6 +1,6 @@
-FROM alpine:latest
+FROM cimg/base:current
 
-RUN apk update
-RUN apk upgrade
-RUN apk add curl 
+CMD ["bin/bash"]
+RUN sudo apt-get update && sudo apt-get install -y iputils-ping
+
 

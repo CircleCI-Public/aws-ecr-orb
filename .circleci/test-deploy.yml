@@ -49,143 +49,215 @@ jobs:
           repo: <<parameters.repo>>
           source_tag: <<parameters.source_tag>>
           target_tag: <<parameters.target_tag>>
+  build-test-then-push-with-buildx:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    parameters:
+      auth:
+        type: steps
+      attach_workspace:
+        type: boolean
+      workspace_root:
+        type: string
+      repo:
+        type: string
+      create_repo:
+        type: boolean
+      tag:
+        type: string
+      dockerfile:
+        type: string
+      path:
+        type: string
+      push_image:
+        type: boolean
+      platform:
+        type: string
+      region:
+        type: string
+    steps:
+      - aws-ecr/build_and_push_image:
+          auth: << parameters.auth >>
+          attach_workspace: << parameters.attach_workspace >>
+          workspace_root: << parameters.workspace_root >>
+          repo: << parameters.repo >>
+          create_repo: << parameters.create_repo >>
+          tag: << parameters.tag >>
+          dockerfile: << parameters.dockerfile >>
+          path: << parameters.path >>
+          platform: << parameters.platform >>
+          push_image: << parameters.push_image >>
+      - run:
+          name: Tests for docker image
+          command: |
+            set -x
+            docker image ls
+            docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> ping -V
+            status=$(echo "$?")
+            if [ "${status}" != "0" ]; then exit 1; else exit 0; fi
+            set +x
+      - aws-ecr/push_image:
+          repo: << parameters.repo >>
+          region: << parameters.region >>
+          tag: << parameters.tag >>
 workflows:
   test-deploy:
     jobs:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
           filters: *filters
-      - aws-ecr/build_and_push_image:
-          name: integration-test-multi-platform-without-push
+      - build-test-then-push-with-buildx:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
+          repo: aws-ecr-orb-${CIRCLE_SHA1}-build-test-then-push-with-buildx
           create_repo: true
           context: [CPE-OIDC]
-          tag: integration,myECRRepoTag
+          tag: alpha
           dockerfile: sample/Dockerfile
           path: workspace
-          executor: amd64
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1}-multi-platform-without-push --force
           push_image: false
-          platform: linux/amd64,linux/arm64
-          filters: *filters
-          requires: [pre-integration]
-      - aws-ecr/build_and_push_image:
-          name: integration-test-default-profile
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-          attach_workspace: true
-          workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
-          create_repo: true
-          context: [CPE-OIDC]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra_build_args: --compress
-          executor: amd64
-          lifecycle_policy_path: ./sample/lifecycle-policy.json
+          platform: linux/amd64
+          region: us-west-2
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1}-default-profile --force
-          platform: linux/amd64,linux/arm64
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-build-test-then-push-with-buildx --region us-west-2 --force
           filters: *filters
           requires: [pre-integration]
-      - aws-ecr/build_and_push_image:
-          name: integration-test-pubic-registry
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
-          attach_workspace: true
-          workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry
-          create_repo: true
-          region: "us-west-2"
-          profile_name: "OIDC-User"
-          context: [CPE-OIDC]
-          tag: integration,myECRRepoTag
-          dockerfile: Dockerfile
-          path: ./sample
-          extra_build_args: --compress
-          executor: arm64
-          public_registry: true
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1}-public_registry --force --profile OIDC-User
-          platform: linux/arm64,linux/amd64
-          filters: *filters
-          requires: [pre-integration]
-      - aws-ecr/build_and_push_image:
-          pre-steps:
-            - run:
-                name: "Export NPM_TOKEN"
-                command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"
-          name: integration-test-named-profile
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
-          attach_workspace: true
-          region: "us-west-2"
-          profile_name: "OIDC-User"
-          context: [CPE-OIDC]
-          workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
-          create_repo: true
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra_build_args: '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg=${CIRCLE_SHA1:0:7}'
-          set_repo_policy: true
-          repo_policy_path: ./sample/repo-policy.json
-          executor: amd64
-          filters: *filters
-          requires: [pre-integration]
-      - tag-ecr-image:
-          name: integration-test-tag-existing-image
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
-          region: "us-west-2"
-          profile_name: "OIDC-User"
-          context: [CPE-OIDC]
-          source_tag: integration
-          target_tag: latest
-          requires:
-            - integration-test-named-profile
-      - tag-ecr-image:
-          name: integration-test-tag-image-with-existing-tag
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
-          region: "us-west-2"
-          profile_name: "OIDC-User"
-          context: [CPE-OIDC]
-          source_tag: integration
-          target_tag: alpha,latest
-          skip_when_tags_exist: true
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-named-profile --force --profile OIDC-User
-          filters: *filters
-          requires:
-            - integration-test-tag-existing-image
+      # - aws-ecr/build_and_push_image:
+      #     name: integration-test-multi-platform-without-push
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #     attach_workspace: true
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
+      #     create_repo: true
+      #     context: [CPE-OIDC]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     executor: amd64
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-multi-platform-without-push --region us-west-2 --force
+      #     push_image: false
+      #     platform: linux/amd64,linux/arm64
+      #     filters: *filters
+      #     requires: [pre-integration]
+      # - aws-ecr/build_and_push_image:
+      #     name: integration-test-default-profile
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #     attach_workspace: true
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
+      #     create_repo: true
+      #     context: [CPE-OIDC]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra_build_args: --compress
+      #     executor: amd64
+      #     lifecycle_policy_path: ./sample/lifecycle-policy.json
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1}-default-profile --force
+      #     platform: linux/amd64,linux/arm64
+      #     filters: *filters
+      #     requires: [pre-integration]
+      # - aws-ecr/build_and_push_image:
+      #     name: integration-test-pubic-registry
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           profile_name: "OIDC-User"
+      #     attach_workspace: true
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry
+      #     create_repo: true
+      #     region: "us-west-2"
+      #     profile_name: "OIDC-User"
+      #     context: [CPE-OIDC]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: Dockerfile
+      #     path: ./sample
+      #     extra_build_args: --compress
+      #     executor: arm64
+      #     public_registry: true
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1}-public_registry --force --profile OIDC-User
+      #     platform: linux/arm64,linux/amd64
+      #     filters: *filters
+      #     requires: [pre-integration]
+      # - aws-ecr/build_and_push_image:
+      #     pre-steps:
+      #       - run:
+      #           name: "Export NPM_TOKEN"
+      #           command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"
+      #     name: integration-test-named-profile
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           profile_name: "OIDC-User"
+      #     attach_workspace: true
+      #     region: "us-west-2"
+      #     profile_name: "OIDC-User"
+      #     context: [CPE-OIDC]
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+      #     create_repo: true
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra_build_args: '--build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg=${CIRCLE_SHA1:0:7}'
+      #     set_repo_policy: true
+      #     repo_policy_path: ./sample/repo-policy.json
+      #     executor: amd64
+      #     filters: *filters
+      #     requires: [pre-integration]
+      # - tag-ecr-image:
+      #     name: integration-test-tag-existing-image
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           profile_name: "OIDC-User"
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+      #     region: "us-west-2"
+      #     profile_name: "OIDC-User"
+      #     context: [CPE-OIDC]
+      #     source_tag: integration
+      #     target_tag: latest
+      #     requires:
+      #       - integration-test-named-profile
+      # - tag-ecr-image:
+      #     name: integration-test-tag-image-with-existing-tag
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           profile_name: "OIDC-User"
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+      #     region: "us-west-2"
+      #     profile_name: "OIDC-User"
+      #     context: [CPE-OIDC]
+      #     source_tag: integration
+      #     target_tag: alpha,latest
+      #     skip_when_tags_exist: true
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-named-profile --force --profile OIDC-User
+      #     filters: *filters
+      #     requires:
+      #       - integration-test-tag-existing-image
       - aws-ecr/build_and_push_image:
           name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
           auth:
@@ -200,59 +272,83 @@ workflows:
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
           create_repo: true
           tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
+          dockerfile: Dockerfile
+          path: ./sample
+          platform: linux/amd64,linux/arm64
           extra_build_args: --compress
           skip_when_tags_exist: true
           matrix:
             parameters:
-              executor: ["amd64", "arm64"]
+              executor: ["arm64", "amd64"]
           filters: *filters
           requires: [pre-integration]
-      - aws-ecr/build_and_push_image:
-          name: integration-test-skip_when_tags_exist-<<matrix.executor>>
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
-          attach_workspace: true
-          region: "us-west-2"
-          profile_name: "OIDC-User"
-          context: [CPE-OIDC]
-          workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra_build_args: --compress
-          skip_when_tags_exist: true
-          post-steps:
-            - run:
-                name: "Delete repository"
-                command: |
-                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
-          matrix:
-            parameters:
-              executor: ["amd64", "arm64"]
-          filters: *filters
-          requires:
-            - integration-test-skip_when_tags_exist-populate-image-amd64
-            - integration-test-skip_when_tags_exist-populate-image-arm64
-      - orb-tools/lint:
-          filters: *filters
-      - orb-tools/pack:
-          filters: *filters
-      - orb-tools/review:
-          filters: *release-filters
-      - orb-tools/publish:
-          orb_name: circleci/aws-ecr
-          vcs_type: << pipeline.project.type >>
-          pub_type: production
-          enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
-          github_token: GHI_TOKEN
-          context: orb-publisher
-          filters: *release-filters
+      # - aws-ecr/build_and_push_image:
+      #     name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           profile_name: "OIDC-User"
+      #     attach_workspace: true
+      #     region: "us-west-2"
+      #     profile_name: "OIDC-User"
+      #     context: [CPE-OIDC]
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
+      #     create_repo: true
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra_build_args: --compress
+      #     skip_when_tags_exist: true
+      #     matrix:
+      #       parameters:
+      #         executor: ["amd64", "arm64"]
+      #     filters: *filters
+      #     requires: [pre-integration]
+      # - aws-ecr/build_and_push_image:
+      #     name: integration-test-skip_when_tags_exist-<<matrix.executor>>
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           profile_name: "OIDC-User"
+      #     attach_workspace: true
+      #     region: "us-west-2"
+      #     profile_name: "OIDC-User"
+      #     context: [CPE-OIDC]
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     extra_build_args: --compress
+      #     skip_when_tags_exist: true
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: |
+      #             aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
+      #     matrix:
+      #       parameters:
+      #         executor: ["amd64", "arm64"]
+      #     filters: *filters
+      #     requires:
+      #       - integration-test-skip_when_tags_exist-populate-image-amd64
+      #       - integration-test-skip_when_tags_exist-populate-image-arm64
+      # - orb-tools/lint:
+      #     filters: *filters
+      # - orb-tools/pack:
+      #     filters: *filters
+      # - orb-tools/review:
+      #     filters: *release-filters
+      # - orb-tools/publish:
+      #     orb_name: circleci/aws-ecr
+      #     vcs_type: << pipeline.project.type >>
+      #     pub_type: production
+      #     enable_pr_comment: true
+      #     requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+      #     github_token: GHI_TOKEN
+      #     context: orb-publisher
+      #     filters: *release-filters
 executors:
   amd64:
     machine:

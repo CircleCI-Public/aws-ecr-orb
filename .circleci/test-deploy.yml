@@ -70,14 +70,8 @@ jobs:
     parameters:
       auth:
         type: steps
-      attach_workspace:
-        type: boolean
-      workspace_root:
-        type: string
       repo:
         type: string
-      create_repo:
-        type: boolean
       tag:
         type: string
       dockerfile:

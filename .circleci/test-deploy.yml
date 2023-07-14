@@ -92,7 +92,7 @@ jobs:
         type: string
     steps:
       - aws-ecr/build_and_push_image:
-          auth: << paramters.auth >>
+          auth: << parameters.auth >>
           attach_workspace: << parameters.attach_workspace >>
           workspace_root: << parameters.workspace_root >>
           repo: << parameters.repo >>

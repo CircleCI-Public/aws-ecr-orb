@@ -1,3 +1,0 @@
-FROM cimg/base:current
-
-RUN uname -a

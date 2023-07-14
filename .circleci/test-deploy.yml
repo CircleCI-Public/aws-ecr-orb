@@ -108,7 +108,7 @@ jobs:
             set -x
             docker image ls
             docker save 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> | docker load
-            docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >>
+            docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> uname -a
             set +x
       - aws-ecr/push_image:
           repo: << parameters.repo >>

@@ -127,7 +127,7 @@ workflows:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-image-test-then-push-with-buildx
+          repo: aws-ecr-orb-${CIRCLE_SHA1}-build-image-test-then-push-with-buildx
           create_repo: true
           context: [CPE-OIDC]
           tag: alpha

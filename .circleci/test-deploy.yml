@@ -64,55 +64,55 @@ jobs:
           - run: cat ~/.aws/config
     steps:
       - steps: <<parameters.auth>>
-  build-image-test-then-push-with-buildx:
-    machine:
-      image: ubuntu-2204:2022.07.1
-    parameters:
-      auth:
-        type: steps
-      attach_workspace:
-        type: boolean
-      workspace_root:
-        type: string
-      repo:
-        type: string
-      create_repo:
-        type: boolean
-      tag:
-        type: string
-      dockerfile:
-        type: string
-      path:
-        type: string
-      push_image:
-        type: boolean
-      platform:
-        type: string
-      region:
-        type: string
-    steps:
-      - aws-ecr/build_and_push_image:
-          auth: << parameters.auth >>
-          attach_workspace: << parameters.attach_workspace >>
-          workspace_root: << parameters.workspace_root >>
-          repo: << parameters.repo >>
-          create_repo: << parameters.create_repo >>
-          tag: << parameters.tag >>
-          dockerfile: << parameters.dockerfile >>
-          path: << parameters.path >>
-          platform: << parameters.platform >>
-          push_image: << parameters.push_image >>
-      - run:
-          name: Tests for docker image
-          command: |
-            set -x
-            docker image ls
-            docker exec 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> uname -a
-            set +x
-      - aws-ecr/push_image:
-          repo: << parameters.repo >>
-          region: << parameters.region >>
-          tag: << parameters.tag >>
+build-image-test-then-push-with-buildx:
+  machine:
+    image: ubuntu-2204:2022.07.1
+  parameters:
+    auth:
+      type: steps
+    attach_workspace:
+      type: boolean
+    workspace_root:
+      type: string
+    repo:
+      type: string
+    create_repo:
+      type: boolean
+    tag:
+      type: string
+    dockerfile:
+      type: string
+    path:
+      type: string
+    push_image:
+      type: boolean
+    platform:
+      type: string
+    region:
+      type: string
+  steps:
+    - aws-ecr/build_and_push_image:
+        auth: << parameters.auth >>
+        attach_workspace: << parameters.attach_workspace >>
+        workspace_root: << parameters.workspace_root >>
+        repo: << parameters.repo >>
+        create_repo: << parameters.create_repo >>
+        tag: << parameters.tag >>
+        dockerfile: << parameters.dockerfile >>
+        path: << parameters.path >>
+        platform: << parameters.platform >>
+        push_image: << parameters.push_image >>
+    - run:
+        name: Tests for docker image
+        command: |
+          set -x
+          docker image ls
+          docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >>
+          set +x
+    - aws-ecr/push_image:
+        repo: << parameters.repo >>
+        region: << parameters.region >>
+        tag: << parameters.tag >>
 workflows:
   test-deploy:
     jobs:

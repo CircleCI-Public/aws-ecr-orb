@@ -102,13 +102,20 @@ jobs:
           path: << parameters.path >>
           platform: << parameters.platform >>
           push_image: << parameters.push_image >>
-      - run:
-          name: Tests for docker image
-          command: |
-            set -x
-            docker image ls
-            docker run << parameters.repo >>:<< parameters.tag >>
-            set +x
+          post-steps:
+            - run:
+                name: Tests for docker image
+                command: |
+                  set -x
+                  docker run << parameters.repo >>:<< parameters.tag >>
+                  set +x
+      # - run:
+      #     name: Tests for docker image
+      #     command: |
+      #       set -x
+      #       docker image ls
+      #       docker run << parameters.repo >>:<< parameters.tag >>
+      #       set +x
       - aws-ecr/push_image:
           repo: << parameters.repo >>
           region: << parameters.region >>

@@ -15,7 +15,7 @@ ORB_STR_LIFECYCLE_POLICY_PATH="$(circleci env subst "${ORB_STR_LIFECYCLE_POLICY_
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 
-IFS=', ' read -ra platform <<<"${ORB_STR_PLATFORM}"
+IFS=',' read -ra platform <<<"${ORB_STR_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then

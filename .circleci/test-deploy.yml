@@ -85,7 +85,7 @@ jobs:
       path:
         type: string
       push_image:
-        tpye: boolean
+        type: boolean
       platform:
         type: string
       region:

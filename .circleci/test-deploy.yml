@@ -126,6 +126,7 @@ workflows:
           path: workspace
           push_image: false
           platform: linux/amd64
+          region: us-west-2
           filters: *filters
           requires: [pre-integration]
       # - aws-ecr/build_and_push_image:

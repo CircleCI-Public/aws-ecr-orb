@@ -143,7 +143,7 @@ workflows:
                 name: Tests for docker image
                 command: |
                   set -x
-                  docker run << parameters.repo >>:<< parameters.tag >>
+                  docker run aws-ecr-orb-${CIRCLE_SHA1}-build-image-test-then-push-with-buildx:alpha
                   set +x
       # - aws-ecr/build_and_push_image:
       #     name: integration-test-multi-platform-without-push

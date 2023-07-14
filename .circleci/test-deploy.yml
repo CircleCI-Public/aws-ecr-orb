@@ -102,7 +102,11 @@ jobs:
           path: << parameters.path >>
           platform: << parameters.platform >>
           push_image: << parameters.push_image >>
-      - run: docker image ls
+      - run:
+          name: Tests for docker image
+          command: |
+            docker image ls
+            docker run -it << parameters.repo >>:<< parameters.tag >>
       - aws-ecr/push_image:
           repo: << parameters.repo >>
           region: << parameters.region >>
@@ -125,7 +129,7 @@ workflows:
           create_repo: true
           context: [CPE-OIDC]
           tag: alpha
-          dockerfile: sample/Dockerfile
+          dockerfile: sample/Dockerfile-alpine
           path: workspace
           push_image: false
           platform: linux/amd64

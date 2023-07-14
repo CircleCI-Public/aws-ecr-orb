@@ -107,7 +107,7 @@ jobs:
           command: |
             set -x
             docker image ls
-            docker exec << parameters.repo >>:<< parameters.tag >> uname
+            docker exec 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> uname -a
             set +x
       - aws-ecr/push_image:
           repo: << parameters.repo >>

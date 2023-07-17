@@ -1,0 +1,85 @@
+description: >
+  This is an example of a job that builds a docker image with docker buildx, tests
+  the image and then pushes it to the specified ECR repository.
+
+usage:
+  version: 2.1
+
+  orbs:
+    aws-ecr: circleci/aws-ecr@9.0
+    # Importing aws-cli orb is required
+    aws-cli: circleci/aws-cli@4.0
+  jobs:
+    build-test-then-push-with-buildx:
+      machine:
+        image: ubuntu-2204:2022.07.1
+      parameters:
+        auth:
+          type: steps
+        attach_workspace:
+          type: boolean
+        workspace_root:
+          type: string
+        repo:
+          type: string
+        create_repo:
+          type: boolean
+        tag:
+          type: string
+        dockerfile:
+          type: string
+        path:
+          type: string
+        push_image:
+          type: boolean
+        platform:
+          type: string
+        region:
+          type: string
+      steps:
+        # build docker image
+        - aws-ecr/build_and_push_image:
+            auth: << parameters.auth >>
+            attach_workspace: << parameters.attach_workspace >>
+            workspace_root: << parameters.workspace_root >>
+            repo: << parameters.repo >>
+            create_repo: << parameters.create_repo >>
+            tag: << parameters.tag >>
+            dockerfile: << parameters.dockerfile >>
+            path: << parameters.path >>
+            platform: << parameters.platform >>
+            push_image: << parameters.push_image >>
+        - run:
+            name: Tests for docker image
+            # run a test command that's present in the docker image
+            command: |
+              set -x
+              docker run 123456789012.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> ping -V
+              status=$(echo "$?")
+              if [ "${status}" != "0" ]; then exit 1; else exit 0; fi
+              set +x
+        # push image to ecr
+        - aws-ecr/push_image:
+            repo: << parameters.repo >>
+            region: << parameters.region >>
+            tag: << parameters.tag >>
+workflows:
+  build-image-test-image-push-image-with-buildx:
+    jobs:
+      - build-test-then-push-with-buildx:
+          context: CircleCI_OIDC_Token
+          # authenticate job using aws-cli/setup command
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::123456789012
+          repo: my-sample-repo
+          attach_workspace: true
+          workspace_root: .
+          create_repo: true
+          tag: alpha
+          dockerfile: Dockerfile
+          path: workspace
+          push_image: false
+          platform: linux/amd64
+          region: us-west-2
+          requires: [pre-integration]

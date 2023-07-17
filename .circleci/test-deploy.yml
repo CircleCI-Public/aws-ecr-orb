@@ -283,29 +283,6 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
-          attach_workspace: true
-          region: "us-west-2"
-          profile_name: "OIDC-User"
-          context: [CPE-OIDC]
-          workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
-          create_repo: true
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          extra_build_args: --compress
-          skip_when_tags_exist: true
-          matrix:
-            parameters:
-              executor: ["amd64", "arm64"]
-          filters: *filters
-          requires: [pre-integration]
-      - aws-ecr/build_and_push_image:
           name: integration-test-skip_when_tags_exist-<<matrix.executor>>
           auth:
             - aws-cli/setup:

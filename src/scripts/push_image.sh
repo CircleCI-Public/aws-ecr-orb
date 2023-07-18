@@ -2,7 +2,7 @@
 ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
 ORB_STR_TAG="$(circleci env subst "${ORB_STR_TAG}")"
 ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
-ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.amazonaws.com"
+ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
 ORB_STR_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then

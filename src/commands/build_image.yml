@@ -98,6 +98,12 @@ parameters:
       buildx builders to be saved with Docker Layer Caching, the builder must explicitly be named.
       Specify the a builder name with this parameter. This parameter defaults to "default-builder" if none is provided.
 
+  aws_domain:
+    type: string
+    default: "amazonaws.com"
+    description: >
+      AWS domain, China regions will require override.
+
 steps:
   - run:
       name: Build Docker Image with buildx
@@ -117,5 +123,6 @@ steps:
         ORB_STR_LIFECYCLE_POLICY_PATH: <<parameters.lifecycle_policy_path>>
         ORB_STR_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
         ORB_EVAL_BUILD_PATH: <<parameters.build_path>>
+        ORB_STR_AWS_DOMAIN: <<parameters.aws_domain>>
       command: <<include(scripts/docker_buildx.sh)>>
       no_output_timeout: <<parameters.no_output_timeout>>

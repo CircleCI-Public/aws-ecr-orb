@@ -1,54 +1,39 @@
 description: >
-  This is an example of a job that builds a docker image with docker buildx, tests
-  the image and then pushes it to the specified ECR repository.
+  This is an example of a job that builds a docker image with docker buildx. It tests
+  the image and before pushing it to the specified ECR repository. 
+  NOTE: The push_image parameter must be set to false. Only one platform can be specified and
+  loaded into the local Docker Daemon. Loading multi-architecture images is not supported at this time. 
 
 usage:
   version: 2.1
 
   orbs:
     aws-ecr: circleci/aws-ecr@9.0
-    # Importing aws-cli orb is required
+    # importing aws-cli orb is required
     aws-cli: circleci/aws-cli@4.0
   jobs:
     build-test-then-push-with-buildx:
       machine:
         image: ubuntu-2204:2022.07.1
-      parameters:
-        auth:
-          type: steps
-        attach_workspace:
-          type: boolean
-        workspace_root:
-          type: string
-        repo:
-          type: string
-        create_repo:
-          type: boolean
-        tag:
-          type: string
-        dockerfile:
-          type: string
-        path:
-          type: string
-        push_image:
-          type: boolean
-        platform:
-          type: string
-        region:
-          type: string
       steps:
         # build docker image
         - aws-ecr/build_and_push_image:
-            auth: << parameters.auth >>
-            attach_workspace: << parameters.attach_workspace >>
-            workspace_root: << parameters.workspace_root >>
-            repo: << parameters.repo >>
-            create_repo: << parameters.create_repo >>
-            tag: << parameters.tag >>
-            dockerfile: << parameters.dockerfile >>
-            path: << parameters.path >>
-            platform: << parameters.platform >>
-            push_image: << parameters.push_image >>
+            # authenticate job using aws-cli/setup command
+            auth:
+              - aws-cli/setup:
+                  role_arn: arn:aws:iam::123456789012
+            repo: my-sample-repo
+            create_repo: true
+            attach_workspace: true
+            workspace_root: .
+            tag: sampleTag
+            dockerfile: Dockerfile
+            path: workspace
+            # set to false to test image before pushing
+            push_image: false
+            # only one platform can be specified. Multi-platform is not supported.
+            platform: linux/amd64
+            region: us-west-2
         - run:
             name: Tests for docker image
             # run a test command that's present in the docker image
@@ -68,18 +53,3 @@ workflows:
     jobs:
       - build-test-then-push-with-buildx:
           context: CircleCI_OIDC_Token
-          # authenticate job using aws-cli/setup command
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::123456789012
-          repo: my-sample-repo
-          attach_workspace: true
-          workspace_root: .
-          create_repo: true
-          tag: alpha
-          dockerfile: Dockerfile
-          path: workspace
-          push_image: false
-          platform: linux/amd64
-          region: us-west-2
-          requires: [pre-integration]

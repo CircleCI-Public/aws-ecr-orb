@@ -1,8 +1,8 @@
 description: >
   This is an example of a job that builds a docker image with docker buildx. It tests
-  the image and before pushing it to the specified ECR repository. 
+  the image and before pushing it to the specified ECR repository.
   NOTE: The push_image parameter must be set to false. Only one platform can be specified and
-  loaded into the local Docker Daemon. Loading multi-architecture images is not supported at this time. 
+  loaded into the local Docker Daemon. Loading multi-architecture images is not supported at this time.
 
 usage:
   version: 2.1

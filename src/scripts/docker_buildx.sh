@@ -50,7 +50,7 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
         --lifecycle-policy-text "file://${ORB_STR_LIFECYCLE_POLICY_PATH}"
     fi
 
-  elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -lt 1 ];then
+  elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -le 1 ];then
     set -- "$@" --load
   fi
 

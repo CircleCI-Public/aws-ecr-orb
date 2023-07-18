@@ -185,6 +185,19 @@ parameters:
       provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
     type: steps
 
+  repo_encryption_type:
+    type: enum
+    description: The encryption type to use.
+    default: "AES256"
+    enum: ["AES256", "KMS"]
+
+  repo_encryption_kms_key:
+    type: string
+    description: >
+      If you use the KMS encryption type, specify the KMS key to use for encryption.
+      The alias, key ID, or full ARN of the KMS key can be specified.
+    default: ""
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -223,6 +236,8 @@ steps:
             repo: <<parameters.repo>>
             repo_scan_on_push: <<parameters.repo_scan_on_push>>
             public_registry: <<parameters.public_registry>>
+            encryption_type: <<parameters.repo_encryption_type>>
+            encryption_kms_key: <<parameters.repo_encryption_kms_key>>
   - when:
       condition: <<parameters.set_repo_policy>>
       steps:

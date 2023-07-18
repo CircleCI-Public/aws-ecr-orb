@@ -27,6 +27,12 @@ parameters:
     description: Set to true if building and pushing an image to a Public Registry on ECR.
     default: false
 
+  aws_domain:
+    type: string
+    default: "amazonaws.com"
+    description: >
+      AWS domain, China regions will require override.
+
 steps:
   - run:
       name: Log into Amazon ECR with profile <<parameters.profile_name>>
@@ -35,4 +41,5 @@ steps:
         ORB_ENV_REGISTRY_ID: <<parameters.registry_id>>
         ORB_STR_REGION: <<parameters.region>>
         ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        ORB_STR_AWS_DOMAIN: <<parameters.aws_domain>>
       command: <<include(scripts/ecr_login.sh)>>

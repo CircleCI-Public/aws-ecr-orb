@@ -189,6 +189,12 @@ parameters:
       provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
     type: steps
 
+  aws_domain:
+    type: string
+    default: "amazonaws.com"
+    description: >
+      AWS domain, China regions will require override.
+
 steps:
   - build_and_push_image:
       registry_id: <<parameters.registry_id>>
@@ -221,3 +227,4 @@ steps:
       repo_policy_path: <<parameters.repo_policy_path>>
       build_path: <<parameters.build_path>>
       auth: <<parameters.auth>>
+      aws_domain: <<parameters.aws_domain>>

@@ -52,5 +52,4 @@ steps:
         ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         ORB_ENUM_ENCRYPTION_TYPE: <<<parameters.encryption_type>>
         ORB_STR_ENCRYPTION_KMS_KEY: <<<parameters.encryption_kms_key>>
-
       command: <<include(scripts/create_repo.sh)>>

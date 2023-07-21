@@ -206,7 +206,8 @@ parameters:
     type: string
     default: "amazonaws.com"
     description: >
-      AWS domain, China regions will require override.
+      The AWS domain for your region, e.g in China, the AWS domain is amazonaws.com.cn
+      The default value is amazonaws.com
 
 
 steps:

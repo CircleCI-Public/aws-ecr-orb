@@ -201,7 +201,7 @@ parameters:
       If you use the KMS encryption type, specify the KMS key to use for encryption.
       The alias, key ID, or full ARN of the KMS key can be specified.
     default: ""
-    
+
   aws_domain:
     type: string
     default: "amazonaws.com"

@@ -2,6 +2,8 @@
 ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
 ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
 ORB_STR_PROFILE_NAME="$(circleci env subst "${ORB_STR_PROFILE_NAME}")"
+ORB_ENUM_ENCRYPTION_TYPE="$(circleci env subst "${ORB_ENUM_ENCRYPTION_TYPE}")"
+ORB_STR_ENCRYPTION_KMS_KEY="$(circleci env subst "${ORB_STR_ENCRYPTION_KMS_KEY}")"
 
 if [ "$ORB_BOOL_PUBLIC_REGISTRY" == "1" ]; then
     aws ecr-public describe-repositories --profile "${ORB_STR_PROFILE_NAME}" --region us-east-1 --repository-names "${ORB_STR_REPO}" >/dev/null 2>&1 ||

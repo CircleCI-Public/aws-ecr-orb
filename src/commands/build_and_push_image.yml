@@ -179,6 +179,13 @@ parameters:
     default: ""
     description: |
       The path to the .json file containing the repository policy to be applied to a specified repository in AWS ECR.
+  aws_domain:
+    type: string
+    default: "amazonaws.com"
+    description: >
+      The AWS domain for your region, e.g in China, the AWS domain is amazonaws.com.cn
+      The default value is amazonaws.com
+
   auth:
     description: |
       The authentication method used to access your AWS account. Import the aws-cli orb in your config and
@@ -270,3 +277,4 @@ steps:
       lifecycle_policy_path: <<parameters.lifecycle_policy_path>>
       public_registry_alias: <<parameters.public_registry_alias>>
       build_path: <<parameters.build_path>>
+      aws_domain: <<parameters.aws_domain>>

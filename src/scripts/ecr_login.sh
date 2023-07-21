@@ -1,7 +1,7 @@
 #!/bin/bash
 ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
 ORB_STR_PROFILE_NAME="$(circleci env subst "${ORB_STR_PROFILE_NAME}")"
-ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.amazonaws.com"
+ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
 ECR_COMMAND="ecr"
 
 if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then

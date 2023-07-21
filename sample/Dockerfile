@@ -1,7 +1,6 @@
-FROM cimg/node:current
+FROM cimg/base:current
 
-WORKDIR /app
-ADD . /app
-EXPOSE 80
+CMD ["bin/bash"]
+RUN sudo apt-get update && sudo apt-get install -y iputils-ping
 
-ENTRYPOINT ["npm", "start"]
+

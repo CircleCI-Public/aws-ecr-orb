@@ -3,7 +3,8 @@ ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
 ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
 ORB_STR_TAG="$(circleci env subst "${ORB_STR_TAG}")"
 ORB_EVAL_PATH="$(eval echo "${ORB_EVAL_PATH}")"
-ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.amazonaws.com"
+ORB_STR_AWS_DOMAIN="$(echo "${ORB_STR_AWS_DOMAIN}" | circleci env subst)"
+ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
 ORB_STR_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
 ORB_STR_EXTRA_BUILD_ARGS="$(echo "${ORB_STR_EXTRA_BUILD_ARGS}" | circleci env subst)"
 ORB_EVAL_BUILD_PATH="$(eval echo "${ORB_EVAL_BUILD_PATH}")"
@@ -50,7 +51,7 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
         --lifecycle-policy-text "file://${ORB_STR_LIFECYCLE_POLICY_PATH}"
     fi
 
-  elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -lt 1 ];then
+  elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -le 1 ];then
     set -- "$@" --load
   fi
 

@@ -173,6 +173,21 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
+          name: integration-test-cache-to-flag
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          attach_workspace: true
+          workspace_root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-cache-to-flag
+          context: [CPE-OIDC]
+          dockerfile: sample/Dockerfile
+          path: workspace
+          extra_build_args: --cache-to type=local,dest=/tmp
+          executor: amd64
+          filters: *filters
+          requires: [pre-integration]
+      - aws-ecr/build_and_push_image:
           name: integration-test-pubic-registry
           auth:
             - aws-cli/setup:

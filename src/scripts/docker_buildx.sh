@@ -67,7 +67,7 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
     fi
     context_args="--context builder"
   # if no builder instance is currently used, create one
-  elif ! docker buildx inspect | grep "default * docker"; then 
+  elif ! docker buildx inspect | grep -q "default * docker"; then 
     docker buildx create --use 
   fi 
 

@@ -189,11 +189,26 @@ parameters:
       provide the aws-cli/setup command to authenticate with your preferred method. View examples for more information.
     type: steps
 
+  repo_encryption_type:
+    type: enum
+    description: The encryption type to use.
+    default: "AES256"
+    enum: ["AES256", "KMS"]
+
+  repo_encryption_kms_key:
+    type: string
+    description: >
+      If you use the KMS encryption type, specify the KMS key to use for encryption.
+      The alias, key ID, or full ARN of the KMS key can be specified.
+    default: ""
+
   aws_domain:
     type: string
     default: "amazonaws.com"
     description: >
-      AWS domain, China regions will require override.
+      The AWS domain for your region, e.g in China, the AWS domain is amazonaws.com.cn
+      The default value is amazonaws.com
+
 
 steps:
   - build_and_push_image:
@@ -227,4 +242,6 @@ steps:
       repo_policy_path: <<parameters.repo_policy_path>>
       build_path: <<parameters.build_path>>
       auth: <<parameters.auth>>
+      repo_encryption_type: <<parameters.repo_encryption_type>>
+      repo_encryption_kms_key: <<parameters.repo_encryption_kms_key>>
       aws_domain: <<parameters.aws_domain>>

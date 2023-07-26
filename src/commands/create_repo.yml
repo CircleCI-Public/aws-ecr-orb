@@ -28,6 +28,19 @@ parameters:
     description: Set to true if building and pushing an image to a Public Registry on ECR.
     default: false
 
+  repo_encryption_type:
+    type: enum
+    description: The encryption type to use.
+    default: "AES256"
+    enum: ["AES256", "KMS"]
+
+  encryption_kms_key:
+    type: string
+    description: >
+      If you use the KMS encryption type, specify the KMS key to use for encryption.
+      The alias, key ID, or full ARN of the KMS key can be specified.
+    default: ""
+
 steps:
   - run:
       name: Create Repository
@@ -37,4 +50,6 @@ steps:
         ORB_STR_REPO: <<parameters.repo>>
         ORB_BOOL_REPO_SCAN_ON_PUSH: <<parameters.repo_scan_on_push>>
         ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        ORB_ENUM_ENCRYPTION_TYPE: <<parameters.repo_encryption_type>>
+        ORB_STR_ENCRYPTION_KMS_KEY: <<parameters.encryption_kms_key>>
       command: <<include(scripts/create_repo.sh)>>

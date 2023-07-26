@@ -184,6 +184,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra_build_args: --cache-to type=local,dest=/tmp
+          push_image: false
           executor: amd64
           filters: *filters
           requires: [pre-integration]

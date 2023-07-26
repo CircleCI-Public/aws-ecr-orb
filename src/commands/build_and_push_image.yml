@@ -87,38 +87,18 @@ parameters:
     description: Name of dockerfile to use. Defaults to Dockerfile.
     type: string
 
-  image_registry_login:
+  container_registry_login:
     description:  >-
-      Enable login to different image repositories such as
+      Enable login to different image container registries such as
       DockerHub, Heroku or Github. Defaults to false.
-      NOTE: If no image_registry_url is provided, this command will
-      log into DockerHub by default
     type: boolean
     default: false
 
-  image_registry_username:
-    description: >-
-      Image registry username to be configured. Set this to the name of the
-      environment variable you will set to hold this value, i.e.
-      DOCKERHUB_USERNAME.
-    type: env_var_name
-    default: DOCKERHUB_USERNAME
-
-  image_registry_password:
-    description: >
-      Image registry password to be configured. Set this to the name of the
-      environment variable you will set to hold this value, i.e.
-      DOCKERHUB_PASSWORD.
-    type: env_var_name
-    default: DOCKERHUB_PASSWORD
-
-  image_registry_url:
-    description: >
-      Third party registry url to be configured. Set this to the URL of the
-      environment variable you will set to hold this value, i.e.
-      ghcr.io for Github or registry.heroku.com for Heroku
-    type: string
-    default: ${IMAGE_REGISTRY_URL}
+  registry_login:
+    description:  >-
+      Custom container registry login step
+      e.g docker -u $DOCKER_ID -p $DOCKER_PASSWORD
+    type: steps
 
   path:
     default: .
@@ -251,14 +231,9 @@ steps:
             public_registry: <<parameters.public_registry>>
             repo_policy_path: <<parameters.repo_policy_path>>
   - when:
-      condition: <<parameters.image_registry_login>>
-      steps:
-        - run:
-            environment:
-              ORB_ENV_IMAGE_REGISTRY_USERNAME: <<parameters.image_registry_username>>
-              ORB_ENV_IMAGE_REGISTRY_PASSWORD: <<parameters.image_registry_password>>
-              ORB_STR_IMAGE_REGISTRY_URL: <<parameters.image_registry_url>>
-            command: <<include(scripts/image_registry_login.sh)>>
+      condition: <<parameters.container_registry_login>>
+      steps: <<parameters.registry_login>>
+
   - build_image:
       registry_id: <<parameters.registry_id>>
       repo: <<parameters.repo>>

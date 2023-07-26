@@ -2,7 +2,6 @@
 ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
 ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
 ORB_STR_PROFILE_NAME="$(circleci env subst "${ORB_STR_PROFILE_NAME}")"
-ORB_ENUM_ENCRYPTION_TYPE="$(circleci env subst "${ORB_ENUM_ENCRYPTION_TYPE}")"
 ORB_STR_ENCRYPTION_KMS_KEY="$(circleci env subst "${ORB_STR_ENCRYPTION_KMS_KEY}")"
 
 if [ "$ORB_BOOL_PUBLIC_REGISTRY" == "1" ]; then
@@ -11,12 +10,12 @@ if [ "$ORB_BOOL_PUBLIC_REGISTRY" == "1" ]; then
 else
 
     IMAGE_SCANNING_CONFIGURATION="scanOnPush=true"
-    if [ "$ORB_BOOL_REPO_SCAN_ON_PUSH" != "1" ]; then
+    if [ "$ORB_BOOL_REPO_SCAN_ON_PUSH" -ne "1" ]; then
       IMAGE_SCANNING_CONFIGURATION="scanOnPush=false"
     fi
 
-    ENCRYPTION_CONFIGURATION="encryptionType=${ORB_ENUM_ENCRYPTION_TYPE}"
-    if [ "$ORB_ENUM_ENCRYPTION_TYPE" == "KMS"  ]; then
+    ENCRYPTION_CONFIGURATION="encryptionType=${ORB_STR_ENCRYPTION_TYPE}"
+    if [ "$ORB_STR_ENCRYPTION_TYPE" == "KMS"  ]; then
       ENCRYPTION_CONFIGURATION+=",kmsKey=${ORB_STR_ENCRYPTION_KMS_KEY}"
     fi
 

@@ -93,38 +93,18 @@ parameters:
       Enable Docker layer caching if using remote Docker engine.
       Requires setup_remote_docker to be set to true. Defaults to false.
 
-  image_registry_login:
+  container_registry_login:
     description:  >-
-      Enable login to different image repositories such as
+      Enable login to different image container registries such as
       DockerHub, Heroku or Github. Defaults to false.
-      NOTE: If no image_registry_url is provided, this command will
-      log into DockerHub by default
     type: boolean
     default: false
 
-  image_registry_username:
-    description: >-
-      Image registry username to be configured. Set this to the name of the
-      environment variable you will set to hold this value, i.e.
-      DOCKERHUB_USERNAME.
-    type: env_var_name
-    default: DOCKERHUB_USERNAME
-
-  image_registry_password:
-    description: >
-      Image registry password to be configured. Set this to the name of the
-      environment variable you will set to hold this value, i.e.
-      DOCKERHUB_PASSWORD.
-    type: env_var_name
-    default: DOCKERHUB_PASSWORD
-
-  image_registry_url:
-    description: >
-      Third party registry url to be configured. Set this to the URL of the
-      environment variable you will set to hold this value, i.e.
-      ghcr.io for Github or registry.heroku.com for Heroku
-    type: string
-    default: ${IMAGE_REGISTRY_URL}
+  registry_login:
+    description:  >-
+      Custom container registry login step
+      e.g docker -u $DOCKER_ID -p $DOCKER_PASSWORD
+    type: steps
 
   dockerfile:
     type: string
@@ -230,10 +210,8 @@ steps:
       remote_docker_version: <<parameters.remote_docker_version>>
       workspace_root: <<parameters.workspace_root>>
       create_repo: <<parameters.create_repo>>
-      image_registry_login: <<parameters.image_registry_login>>
-      image_registry_username: <<parameters.image_registry_username>>
-      image_registry_password: <<parameters.image_registry_password>>
-      image_registry_url: <<parameters.image_registry_url>>
+      container_registry_login: <<parameters.container_registry_login>>
+      registry_login: <<parameters.registry_login>>
       public_registry_alias: <<parameters.public_registry_alias>>
       set_repo_policy: <<parameters.set_repo_policy>>
       repo_policy_path: <<parameters.repo_policy_path>>

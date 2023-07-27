@@ -105,6 +105,11 @@ parameters:
       Custom container registry login step
       e.g docker -u $DOCKER_ID -p $DOCKER_PASSWORD
     type: steps
+    default:
+      - run: >-
+          echo "Error - container_registry_login parameter is set to true without
+           any registry_login steps."
+      - run: exit 1
 
   dockerfile:
     type: string

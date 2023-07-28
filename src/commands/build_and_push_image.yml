@@ -82,32 +82,28 @@ parameters:
       false.
     type: boolean
 
-  docker_login:
-    default: false
-    description: |
-      Enable dockerhub authentication. Defaults to false.
-    type: boolean
-
-  dockerhub_username:
-    default: DOCKERHUB_USERNAME
-    description: >
-      Dockerhub username to be configured. Set this to the name of the
-      environment variable you will set to hold this value, i.e.
-      DOCKERHUB_USERNAME.
-    type: env_var_name
-
-  dockerhub_password:
-    default: DOCKERHUB_PASSWORD
-    description: >
-      Dockerhub password to be configured. Set this to the name of the
-      environment variable you will set to hold this value, i.e.
-      DOCKERHUB_PASSWORD.
-    type: env_var_name
-
   dockerfile:
     default: Dockerfile
     description: Name of dockerfile to use. Defaults to Dockerfile.
     type: string
+
+  container_registry_login:
+    description:  >-
+      Enable login to different image container registries such as
+      DockerHub, Heroku or Github. Defaults to false.
+    type: boolean
+    default: false
+
+  registry_login:
+    description:  >-
+      Custom container registry login step
+      e.g docker -u $DOCKER_ID -p $DOCKER_PASSWORD
+    type: steps
+    default:
+      - run: >-
+          echo "Error - container_registry_login parameter is set to true without
+           any registry_login steps."
+      - run: exit 1
 
   path:
     default: .
@@ -255,11 +251,9 @@ steps:
             public_registry: <<parameters.public_registry>>
             repo_policy_path: <<parameters.repo_policy_path>>
   - when:
-      condition: <<parameters.docker_login>>
-      steps:
-        - run: >
-            docker login -u $<<parameters.dockerhub_username>> -p
-            $<<parameters.dockerhub_password>>
+      condition: <<parameters.container_registry_login>>
+      steps: <<parameters.registry_login>>
+
   - build_image:
       registry_id: <<parameters.registry_id>>
       repo: <<parameters.repo>>

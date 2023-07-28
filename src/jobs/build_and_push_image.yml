@@ -93,27 +93,23 @@ parameters:
       Enable Docker layer caching if using remote Docker engine.
       Requires setup_remote_docker to be set to true. Defaults to false.
 
-  docker_login:
+  container_registry_login:
+    description:  >-
+      Enable login to different image container registries such as
+      DockerHub, Heroku or Github. Defaults to false.
     type: boolean
     default: false
-    description: >
-      Enable dockerhub authentication. Defaults to false.
 
-  dockerhub_username:
-    type: env_var_name
-    default: DOCKERHUB_USERNAME
-    description: >
-      Dockerhub username to be configured. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. DOCKERHUB_USERNAME.
-
-  dockerhub_password:
-    type: env_var_name
-    default: DOCKERHUB_PASSWORD
-    description: >
-      Dockerhub password to be configured. Set this to the name of
-      the environment variable you will set to hold this
-      value, i.e. DOCKERHUB_PASSWORD.
+  registry_login:
+    description:  >-
+      Custom container registry login step
+      e.g docker -u $DOCKER_ID -p $DOCKER_PASSWORD
+    type: steps
+    default:
+      - run: >-
+          echo "Error - container_registry_login parameter is set to true without
+           any registry_login steps."
+      - run: exit 1
 
   dockerfile:
     type: string
@@ -234,9 +230,8 @@ steps:
       remote_docker_version: <<parameters.remote_docker_version>>
       workspace_root: <<parameters.workspace_root>>
       create_repo: <<parameters.create_repo>>
-      docker_login: <<parameters.docker_login>>
-      dockerhub_username: <<parameters.dockerhub_username>>
-      dockerhub_password: <<parameters.dockerhub_password>>
+      container_registry_login: <<parameters.container_registry_login>>
+      registry_login: <<parameters.registry_login>>
       public_registry_alias: <<parameters.public_registry_alias>>
       set_repo_policy: <<parameters.set_repo_policy>>
       repo_policy_path: <<parameters.repo_policy_path>>

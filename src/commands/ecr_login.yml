@@ -3,9 +3,9 @@ description: >
   NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:
-  registry_id:
-    type: env_var_name
-    default: AWS_ACCOUNT_ID
+  account_id:
+    type: string
+    default: ${AWS_ACCOUNT_ID}
     description: >
       The 12 digit AWS id associated with the ECR account.
       This field is required
@@ -38,7 +38,7 @@ steps:
       name: Log into Amazon ECR with profile <<parameters.profile_name>>
       environment:
         ORB_STR_PROFILE_NAME: <<parameters.profile_name>>
-        ORB_ENV_REGISTRY_ID: <<parameters.registry_id>>
+        ORB_STR_ACCOUNT_ID: <<parameters.account_id>>
         ORB_STR_REGION: <<parameters.region>>
         ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         ORB_STR_AWS_DOMAIN: <<parameters.aws_domain>>

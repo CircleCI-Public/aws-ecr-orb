@@ -4,7 +4,7 @@ ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
 ORB_STR_TAG="$(circleci env subst "${ORB_STR_TAG}")"
 ORB_EVAL_PATH="$(eval echo "${ORB_EVAL_PATH}")"
 ORB_STR_AWS_DOMAIN="$(echo "${ORB_STR_AWS_DOMAIN}" | circleci env subst)"
-ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
+ORB_VAL_ACCOUNT_URL="${!ORB_STR_ACCOUNT_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
 ORB_STR_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
 ORB_STR_EXTRA_BUILD_ARGS="$(echo "${ORB_STR_EXTRA_BUILD_ARGS}" | circleci env subst)"
 ORB_EVAL_BUILD_PATH="$(eval echo "${ORB_EVAL_BUILD_PATH}")"
@@ -19,7 +19,7 @@ number_of_tags_in_ecr=0
 IFS=', ' read -ra platform <<<"${ORB_STR_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
-if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
+if [ -z "${!ORB_STR_ACCOUNT_ID}" ]; then
   echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
   exit 1
 fi
@@ -32,7 +32,7 @@ fi
 IFS="," read -ra DOCKER_TAGS <<<"${ORB_STR_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" ] || [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
-    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_STR_PROFILE_NAME}" --registry-id "${!ORB_ENV_REGISTRY_ID}" --region "${ORB_STR_REGION}" --repository-name "${ORB_STR_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
+    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_STR_PROFILE_NAME}" --registry-id "${!ORB_STR_ACCOUNT_ID}" --region "${ORB_STR_REGION}" --repository-name "${ORB_STR_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       docker pull "${ORB_VAL_ACCOUNT_URL}/${ORB_STR_REPO}:${tag}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))

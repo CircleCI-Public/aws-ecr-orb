@@ -44,8 +44,8 @@ usage:
             #Your AWS region
             region: ${AWS_DEFAULT_REGION}
 
-            # name of env var storing your ECR Registry ID
-            account_id: AWS_ACCOUNT_ID
+            # Your AWS account ID. use ${variable_name} if stored as an environment variable \
+            account_id: ${AWS_ACCOUNT_ID}
 
             # ECR image tags (comma separated string), defaults to "latest"
             tag: latest,myECRRepoTag

@@ -6,7 +6,7 @@ parameters:
     type: string
     default: ${AWS_ACCOUNT_ID}
     description: >
-      The 12 digit AWS Registry ID associated with the ECR account.
+      The 12 digit AWS Account ID associated with the ECR account.
       This field is required
   region:
     type: string

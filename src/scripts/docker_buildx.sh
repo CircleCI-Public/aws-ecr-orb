@@ -21,7 +21,7 @@ IFS=', ' read -ra platform <<<"${ORB_STR_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
 if [ -z "${ORB_STR_ACCOUNT_ID}" ]; then
-  echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
+  echo "The account ID is not found. Please add the account ID before continuing."
   exit 1
 fi
 

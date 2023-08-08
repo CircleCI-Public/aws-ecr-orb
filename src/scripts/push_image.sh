@@ -7,7 +7,7 @@ ORB_VAL_ACCOUNT_URL="${ORB_STR_ACCOUNT_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_A
 ORB_STR_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
 
 if [ -z "${ORB_STR_ACCOUNT_ID}" ]; then
-  echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
+  echo "The account ID is not found. Please add the account ID before continuing."
   exit 1
 fi
 

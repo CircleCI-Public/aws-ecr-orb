@@ -2,11 +2,11 @@ description: >
   Install AWS CLI Version 2 and configure credentials if needed to push a container image to the Amazon ECR registry
   NOTE: Some commands may not work with AWS CLI Version 1.
 parameters:
-  registry_id:
-    type: env_var_name
-    default: AWS_ACCOUNT_ID
+  account_id:
+    type: string
+    default: ${AWS_ACCOUNT_ID}
     description: >
-      The 12 digit AWS Registry ID associated with the ECR account.
+      The 12 digit AWS Account ID associated with the ECR account.
       This field is required
   region:
     type: string
@@ -44,6 +44,6 @@ steps:
         ORB_STR_TAG: << parameters.tag >>
         ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         ORB_STR_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
-        ORB_ENV_REGISTRY_ID: << parameters.registry_id >>
+        ORB_STR_ACCOUNT_ID: << parameters.account_id >>
         ORB_STR_AWS_DOMAIN: <<parameters.aws_domain>>
       command: << include(scripts/push_image.sh) >>

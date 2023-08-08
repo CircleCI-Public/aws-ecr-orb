@@ -12,9 +12,9 @@ parameters:
     type: executor
     default: default
 
-  registry_id:
-    type: env_var_name
-    default: AWS_ACCOUNT_ID
+  account_id:
+    type: string
+    default: ${AWS_ACCOUNT_ID}
     description: >
       The 12 digit AWS id associated with the ECR account.
       This field is required
@@ -208,7 +208,7 @@ parameters:
 
 steps:
   - build_and_push_image:
-      registry_id: <<parameters.registry_id>>
+      account_id: <<parameters.account_id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
       dockerfile: <<parameters.dockerfile>>

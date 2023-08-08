@@ -3,9 +3,9 @@ description: >
   Log into Amazon ECR, build and push a Docker image to the specified repository.
   NOTE: Some commands may not work with AWS CLI Version 1.
 parameters:
-  registry_id:
-    type: env_var_name
-    default: AWS_ACCOUNT_ID
+  account_id:
+    type: string
+    default: ${AWS_ACCOUNT_ID}
     description: >
       The 12 digit AWS id associated with the ECR account.
       This field is required
@@ -228,7 +228,7 @@ steps:
   - ecr_login:
       profile_name: <<parameters.profile_name>>
       region: <<parameters.region>>
-      registry_id: <<parameters.registry_id>>
+      account_id: <<parameters.account_id>>
       public_registry: <<parameters.public_registry>>
   - when:
       condition: <<parameters.create_repo>>
@@ -255,7 +255,7 @@ steps:
       steps: <<parameters.registry_login>>
 
   - build_image:
-      registry_id: <<parameters.registry_id>>
+      account_id: <<parameters.account_id>>
       repo: <<parameters.repo>>
       tag: <<parameters.tag>>
       dockerfile: <<parameters.dockerfile>>

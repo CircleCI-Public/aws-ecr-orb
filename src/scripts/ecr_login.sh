@@ -1,11 +1,12 @@
 #!/bin/bash
 ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
 ORB_STR_PROFILE_NAME="$(circleci env subst "${ORB_STR_PROFILE_NAME}")"
-ORB_VAL_ACCOUNT_URL="${!ORB_ENV_REGISTRY_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
+ORB_STR_ACCOUNT_ID="$(circleci env subst "${ORB_STR_ACCOUNT_ID}")"
+ORB_VAL_ACCOUNT_URL="${ORB_STR_ACCOUNT_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
 ECR_COMMAND="ecr"
 
-if [ -z "${!ORB_ENV_REGISTRY_ID}" ]; then
-  echo "The registry ID is not found. Please add the registry ID as an environment variable in CicleCI before continuing."
+if [ -z "${ORB_STR_ACCOUNT_ID}" ]; then
+  echo "The account ID is not found. Please add the account ID before continuing."
   exit 1
 fi
 

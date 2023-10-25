@@ -343,7 +343,8 @@ workflows:
           #requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
           requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack ]
           github_token: GHI_TOKEN
-          context: orb-publisher
+          #context: orb-publisher
+          context: orb-publishing # Tibber's context name
           filters: *release-filters
 executors:
   amd64:

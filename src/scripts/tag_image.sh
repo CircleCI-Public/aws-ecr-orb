@@ -1,7 +1,7 @@
 #!/bin/bash
-ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
-ORB_STR_SOURCE_TAG="$(circleci env subst "${ORB_STR_SOURCE_TAG}")"
-ORB_STR_TARGET_TAG="$(circleci env subst "${ORB_STR_TARGET_TAG}")"
+ORB_STR_REPO="$(eval echo "${ORB_STR_REPO}")"
+ORB_STR_SOURCE_TAG="$(eval echo "${ORB_STR_SOURCE_TAG}")"
+ORB_STR_TARGET_TAG="$(eval echo "${ORB_STR_TARGET_TAG}")"
 
 # pull the image manifest from ECR
 set -x

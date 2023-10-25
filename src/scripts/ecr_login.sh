@@ -1,7 +1,7 @@
 #!/bin/bash
-ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
-ORB_STR_PROFILE_NAME="$(circleci env subst "${ORB_STR_PROFILE_NAME}")"
-ORB_STR_ACCOUNT_ID="$(circleci env subst "${ORB_STR_ACCOUNT_ID}")"
+ORB_STR_REGION="$(eval echo "${ORB_STR_REGION}")"
+ORB_STR_PROFILE_NAME="$(eval echo "${ORB_STR_PROFILE_NAME}")"
+ORB_STR_ACCOUNT_ID="$(eval echo "${ORB_STR_ACCOUNT_ID}")"
 ORB_VAL_ACCOUNT_URL="${ORB_STR_ACCOUNT_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
 ECR_COMMAND="ecr"
 
@@ -23,6 +23,6 @@ fi
 if [ -f "$HOME/.docker/config.json" ] && grep "${ORB_VAL_ACCOUNT_URL}" < ~/.docker/config.json > /dev/null 2>&1 ; then
     echo "Credential helper is already installed"
 else
-    docker logout "${ORB_VAL_ACCOUNT_URL}"    
+    docker logout "${ORB_VAL_ACCOUNT_URL}"
     aws "${ECR_COMMAND}" get-login-password --region "${ORB_STR_REGION}" "$@" | docker login --username AWS --password-stdin "${ORB_VAL_ACCOUNT_URL}"
 fi

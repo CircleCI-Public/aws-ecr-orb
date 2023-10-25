@@ -1,18 +1,18 @@
 #!/bin/bash
-ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
-ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
-ORB_STR_TAG="$(circleci env subst "${ORB_STR_TAG}")"
+ORB_STR_REGION="$(eval echo "${ORB_STR_REGION}")"
+ORB_STR_REPO="$(eval echo "${ORB_STR_REPO}")"
+ORB_STR_TAG="$(eval echo "${ORB_STR_TAG}")"
 ORB_EVAL_PATH="$(eval echo "${ORB_EVAL_PATH}")"
-ORB_STR_AWS_DOMAIN="$(echo "${ORB_STR_AWS_DOMAIN}" | circleci env subst)"
-ORB_STR_ACCOUNT_ID="$(circleci env subst "${ORB_STR_ACCOUNT_ID}")"
+ORB_STR_AWS_DOMAIN="$(echo "${ORB_STR_AWS_DOMAIN}" | eval echo)"
+ORB_STR_ACCOUNT_ID="$(eval echo "${ORB_STR_ACCOUNT_ID}")"
 ORB_VAL_ACCOUNT_URL="${ORB_STR_ACCOUNT_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
-ORB_STR_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
-ORB_STR_EXTRA_BUILD_ARGS="$(echo "${ORB_STR_EXTRA_BUILD_ARGS}" | circleci env subst)"
+ORB_STR_PUBLIC_REGISTRY_ALIAS="$(eval echo "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
+ORB_STR_EXTRA_BUILD_ARGS="$(echo "${ORB_STR_EXTRA_BUILD_ARGS}" | eval echo)"
 ORB_EVAL_BUILD_PATH="$(eval echo "${ORB_EVAL_BUILD_PATH}")"
-ORB_STR_DOCKERFILE="$(circleci env subst "${ORB_STR_DOCKERFILE}")"
-ORB_STR_PROFILE_NAME="$(circleci env subst "${ORB_STR_PROFILE_NAME}")"
-ORB_STR_PLATFORM="$(circleci env subst "${ORB_STR_PLATFORM}")"
-ORB_STR_LIFECYCLE_POLICY_PATH="$(circleci env subst "${ORB_STR_LIFECYCLE_POLICY_PATH}")"
+ORB_STR_DOCKERFILE="$(eval echo "${ORB_STR_DOCKERFILE}")"
+ORB_STR_PROFILE_NAME="$(eval echo "${ORB_STR_PROFILE_NAME}")"
+ORB_STR_PLATFORM="$(eval echo "${ORB_STR_PLATFORM}")"
+ORB_STR_LIFECYCLE_POLICY_PATH="$(eval echo "${ORB_STR_LIFECYCLE_POLICY_PATH}")"
 
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
@@ -68,9 +68,9 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
     fi
     context_args="--context builder"
   # if no builder instance is currently used, create one
-  elif ! docker buildx inspect | grep -q "default * docker"; then 
-    docker buildx create --use 
-  fi 
+  elif ! docker buildx inspect | grep -q "default * docker"; then
+    docker buildx create --use
+  fi
 
 set -x
   docker \
@@ -84,5 +84,5 @@ set -x
     "$@" \
     "${ORB_EVAL_BUILD_PATH}"
 set +x
-  
+
 fi

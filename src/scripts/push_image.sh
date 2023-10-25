@@ -1,10 +1,10 @@
 #!/bin/bash
-ORB_STR_REPO="$(circleci env subst "${ORB_STR_REPO}")"
-ORB_STR_TAG="$(circleci env subst "${ORB_STR_TAG}")"
-ORB_STR_REGION="$(circleci env subst "${ORB_STR_REGION}")"
-ORB_STR_ACCOUNT_ID="$(circleci env subst "${ORB_STR_ACCOUNT_ID}")"
+ORB_STR_REPO="$(eval echo "${ORB_STR_REPO}")"
+ORB_STR_TAG="$(eval echo "${ORB_STR_TAG}")"
+ORB_STR_REGION="$(eval echo "${ORB_STR_REGION}")"
+ORB_STR_ACCOUNT_ID="$(eval echo "${ORB_STR_ACCOUNT_ID}")"
 ORB_VAL_ACCOUNT_URL="${ORB_STR_ACCOUNT_ID}.dkr.ecr.${ORB_STR_REGION}.${ORB_STR_AWS_DOMAIN}"
-ORB_STR_PUBLIC_REGISTRY_ALIAS="$(circleci env subst "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
+ORB_STR_PUBLIC_REGISTRY_ALIAS="$(eval echo "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
 
 if [ -z "${ORB_STR_ACCOUNT_ID}" ]; then
   echo "The account ID is not found. Please add the account ID before continuing."

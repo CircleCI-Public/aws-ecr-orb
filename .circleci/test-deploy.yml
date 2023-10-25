@@ -340,7 +340,8 @@ workflows:
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          #requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack ]
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters

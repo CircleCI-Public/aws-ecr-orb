@@ -47,6 +47,7 @@ jobs:
           region: <<parameters.region>>
       - aws-ecr/tag_image:
           repo: <<parameters.repo>>
+          skip_when_tags_exist: <<parameters.skip_when_tags_exist>>
           source_tag: <<parameters.source_tag>>
           target_tag: <<parameters.target_tag>>
   build-test-then-push-with-buildx:

@@ -336,7 +336,7 @@ workflows:
       - orb-tools/review:
           filters: *release-filters
       - orb-tools/publish:
-          orb_name: tibber/aws-ecr
+          orb_name: circleci/aws-ecr
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true

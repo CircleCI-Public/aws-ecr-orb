@@ -11,7 +11,7 @@ IFS="," read -ra ECR_TAGS <<<"${ORB_STR_TARGET_TAG}"
 
 for tag in "${ECR_TAGS[@]}"; do
     # if skip_when_tags_exist is true
-    if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ]; then
+    if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq 1 ]; then
         # tag image if tag does not exist
         if ! echo "${EXISTING_TAGS}" | grep "${tag}"; then
             aws ecr put-image --repository-name "${ORB_STR_REPO}" --image-tag "${tag}" --image-manifest "${MANIFEST}"

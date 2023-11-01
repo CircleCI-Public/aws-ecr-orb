@@ -67,8 +67,10 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
       docker --context builder buildx create --name DLC_builder --use
     fi
     context_args="--context builder"
-  # if no builder instance is currently used, create one
-  elif ! docker buildx inspect | grep -q "default * docker"; then 
+  # the command ! docker buildx inspect --builder DLC_builder &> /dev/null will
+  # attempt to inspect the builder named DLC_builder - this returns either true (inspect succeeds) or false (inspect fails)
+  # if docker buildx inspect --builder DLC_builder is not true, then perform a docker buildx create
+  elif ! docker buildx inspect --builder DLC_builder &> /dev/null; then
     docker buildx create --name DLC_builder --use 
   fi 
 

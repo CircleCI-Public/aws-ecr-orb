@@ -1,5 +1,5 @@
 description: >
-  Install AWS CLI Version 2 and configure credentials if needed to authenticate into the Amazon ECR service.
+  Authenticate into the Amazon ECR service.
   NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:

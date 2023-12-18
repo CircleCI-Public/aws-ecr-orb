@@ -1,5 +1,5 @@
 description: >
-  Install AWS CLI Version 2 and configure credentials if needed to push a container image to the Amazon ECR registry
+  Push a container image to the Amazon ECR registry
   NOTE: Some commands may not work with AWS CLI Version 1.
 parameters:
   account_id:

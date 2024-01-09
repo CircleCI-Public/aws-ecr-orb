@@ -48,6 +48,7 @@ if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TA
 
     if [ -n "${ORB_EVAL_LIFECYCLE_POLICY_PATH}" ]; then
       aws ecr put-lifecycle-policy \
+        --profile "${ORB_EVAL_PROFILE_NAME}" \
         --repository-name "${ORB_EVAL_REPO}" \
         --lifecycle-policy-text "file://${ORB_EVAL_LIFECYCLE_POLICY_PATH}"
     fi

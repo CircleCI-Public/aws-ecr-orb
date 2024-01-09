@@ -14,6 +14,13 @@ ORB_EVAL_PROFILE_NAME="$(eval echo "${ORB_STR_PROFILE_NAME}")"
 ORB_EVAL_PLATFORM="$(eval echo "${ORB_STR_PLATFORM}")"
 ORB_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${ORB_STR_LIFECYCLE_POLICY_PATH}")"
 
+
+if [ -n "${ORB_STR_EXTRA_BUILD_ARGS}" ]; then
+  IFS=" " read -a args -r <<< "${ORB_STR_EXTRA_BUILD_ARGS[@]}"
+  for arg in "${args[@]}"; do
+    set -- "$@" "$arg"
+  done
+fi
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 
@@ -81,7 +88,6 @@ set -x
     ${docker_tag_args:+$docker_tag_args} \
     --platform "${ORB_EVAL_PLATFORM}" \
     --progress plain \
-    ${ORB_STR_EXTRA_BUILD_ARGS:+$ORB_STR_EXTRA_BUILD_ARGS} \
     "$@" \
     "${ORB_EVAL_BUILD_PATH}"
 set +x

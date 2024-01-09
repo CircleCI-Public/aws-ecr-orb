@@ -184,7 +184,7 @@ workflows:
           context: [CPE-OIDC]
           dockerfile: sample/Dockerfile
           path: workspace
-          extra_build_args: --cache-to type=local,dest=/tmp
+          extra_build_args: --cache-to type=local,dest=/tmp --compress
           push_image: false
           executor: amd64
           filters: *filters
@@ -312,7 +312,7 @@ workflows:
           profile_name: "OIDC-User"
           context: [CPE-OIDC]
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
+          repo: aws-ecr-orb-${CIRCLE_SHA1}-skip_when_tags_exist-<<matrix.executor>>
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace

@@ -1,22 +1,22 @@
 #!/bin/bash
-ORB_EVAL_REGION="$(eval echo "${ORB_STR_REGION}")"
-ORB_EVAL_REPO="$(eval echo "${ORB_STR_REPO}")"
-ORB_EVAL_TAG="$(eval echo "${ORB_STR_TAG}")"
-ORB_EVAL_PATH="$(eval echo "${ORB_EVAL_PATH}")"
-ORB_STR_AWS_DOMAIN="$(echo "${ORB_STR_AWS_DOMAIN}" | circleci env subst)"
-ORB_EVAL_ACCOUNT_ID="$(eval echo "${ORB_STR_ACCOUNT_ID}")"
-ORB_VAL_ACCOUNT_URL="${ORB_EVAL_ACCOUNT_ID}.dkr.ecr.${ORB_EVAL_REGION}.${ORB_STR_AWS_DOMAIN}"
-ORB_EVAL_PUBLIC_REGISTRY_ALIAS="$(eval echo "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
-ORB_STR_EXTRA_BUILD_ARGS="$(echo "${ORB_STR_EXTRA_BUILD_ARGS}" | circleci env subst)"
-ORB_EVAL_BUILD_PATH="$(eval echo "${ORB_EVAL_BUILD_PATH}")"
-ORB_EVAL_DOCKERFILE="$(eval echo "${ORB_STR_DOCKERFILE}")"
-ORB_EVAL_PROFILE_NAME="$(eval echo "${ORB_STR_PROFILE_NAME}")"
-ORB_EVAL_PLATFORM="$(eval echo "${ORB_STR_PLATFORM}")"
-ORB_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${ORB_STR_LIFECYCLE_POLICY_PATH}")"
+AWS_ECR_EVAL_REGION="$(eval echo "${AWS_ECR_STR_REGION}")"
+AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
+AWS_ECR_EVAL_TAG="$(eval echo "${AWS_ECR_STR_TAG}")"
+AWS_ECR_EVAL_PATH="$(eval echo "${AWS_ECR_EVAL_PATH}")"
+AWS_ECR_STR_AWS_DOMAIN="$(echo "${AWS_ECR_STR_AWS_DOMAIN}" | circleci env subst)"
+AWS_ECR_EVAL_ACCOUNT_ID="$(eval echo "${AWS_ECR_STR_ACCOUNT_ID}")"
+AWS_ECR_VAL_ACCOUNT_URL="${AWS_ECR_EVAL_ACCOUNT_ID}.dkr.ecr.${AWS_ECR_EVAL_REGION}.${AWS_ECR_STR_AWS_DOMAIN}"
+AWS_ECR_EVAL_PUBLIC_REGISTRY_ALIAS="$(eval echo "${AWS_ECR_STR_PUBLIC_REGISTRY_ALIAS}")"
+AWS_ECR_STR_EXTRA_BUILD_ARGS="$(echo "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" | circleci env subst)"
+AWS_ECR_EVAL_BUILD_PATH="$(eval echo "${AWS_ECR_EVAL_BUILD_PATH}")"
+AWS_ECR_EVAL_DOCKERFILE="$(eval echo "${AWS_ECR_STR_DOCKERFILE}")"
+AWS_ECR_EVAL_PROFILE_NAME="$(eval echo "${AWS_ECR_STR_PROFILE_NAME}")"
+AWS_ECR_EVAL_PLATFORM="$(eval echo "${AWS_ECR_STR_PLATFORM}")"
+AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_PATH}")"
 
 
-if [ -n "${ORB_STR_EXTRA_BUILD_ARGS}" ]; then
-  IFS=" " read -a args -r <<< "${ORB_STR_EXTRA_BUILD_ARGS[@]}"
+if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
+  IFS=" " read -a args -r <<< "${AWS_ECR_STR_EXTRA_BUILD_ARGS[@]}"
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"
   done
@@ -24,43 +24,43 @@ fi
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 
-IFS=', ' read -ra platform <<<"${ORB_EVAL_PLATFORM}"
+IFS=', ' read -ra platform <<<"${AWS_ECR_EVAL_PLATFORM}"
 number_of_platforms="${#platform[@]}"
 
-if [ -z "${ORB_EVAL_ACCOUNT_ID}" ]; then
+if [ -z "${AWS_ECR_EVAL_ACCOUNT_ID}" ]; then
   echo "The account ID is not found. Please add the account ID before continuing."
   exit 1
 fi
 
-if [ "${ORB_BOOL_PUBLIC_REGISTRY}" -eq "1" ]; then
+if [ "${AWS_ECR_BOOL_PUBLIC_REGISTRY}" -eq "1" ]; then
   ECR_COMMAND="ecr-public"
-  ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}"
+  AWS_ECR_VAL_ACCOUNT_URL="public.ecr.aws/${AWS_ECR_EVAL_PUBLIC_REGISTRY_ALIAS}"
 fi
 
-IFS="," read -ra DOCKER_TAGS <<<"${ORB_EVAL_TAG}"
+IFS="," read -ra DOCKER_TAGS <<<"${AWS_ECR_EVAL_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
-  if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" ] || [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
-    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${ORB_EVAL_PROFILE_NAME}" --registry-id "${ORB_EVAL_ACCOUNT_ID}" --region "${ORB_EVAL_REGION}" --repository-name "${ORB_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
+  if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" ] || [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
+    docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${AWS_ECR_EVAL_PROFILE_NAME}" --registry-id "${AWS_ECR_EVAL_ACCOUNT_ID}" --region "${AWS_ECR_EVAL_REGION}" --repository-name "${AWS_ECR_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
-      docker pull "${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
+      docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi
   fi
-  docker_tag_args="${docker_tag_args} -t ${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
+  docker_tag_args="${docker_tag_args} -t ${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}"
 done
 
-if [ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${ORB_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
-  if [ "${ORB_BOOL_PUSH_IMAGE}" -eq "1" ]; then
+if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" && ${number_of_tags_in_ecr} -lt ${#DOCKER_TAGS[@]} ]]; then
+  if [ "${AWS_ECR_BOOL_PUSH_IMAGE}" -eq "1" ]; then
     set -- "$@" --push
 
-    if [ -n "${ORB_EVAL_LIFECYCLE_POLICY_PATH}" ]; then
+    if [ -n "${AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH}" ]; then
       aws ecr put-lifecycle-policy \
-        --profile "${ORB_EVAL_PROFILE_NAME}" \
-        --repository-name "${ORB_EVAL_REPO}" \
-        --lifecycle-policy-text "file://${ORB_EVAL_LIFECYCLE_POLICY_PATH}"
+        --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
+        --repository-name "${AWS_ECR_EVAL_REPO}" \
+        --lifecycle-policy-text "file://${AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH}"
     fi
 
-  elif [ "${ORB_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -le 1 ];then
+  elif [ "${AWS_ECR_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -le 1 ];then
     set -- "$@" --load
   fi
 
@@ -84,12 +84,12 @@ set -x
   docker \
     ${context_args:+$context_args} \
     buildx build \
-    -f "${ORB_EVAL_PATH}"/"${ORB_EVAL_DOCKERFILE}" \
+    -f "${AWS_ECR_EVAL_PATH}"/"${AWS_ECR_EVAL_DOCKERFILE}" \
     ${docker_tag_args:+$docker_tag_args} \
-    --platform "${ORB_EVAL_PLATFORM}" \
+    --platform "${AWS_ECR_EVAL_PLATFORM}" \
     --progress plain \
     "$@" \
-    "${ORB_EVAL_BUILD_PATH}"
+    "${AWS_ECR_EVAL_BUILD_PATH}"
 set +x
 
 fi

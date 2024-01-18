@@ -1,25 +1,25 @@
 #!/bin/bash
-ORB_EVAL_REPO="$(eval echo "${ORB_STR_REPO}")"
-ORB_EVAL_TAG="$(eval echo "${ORB_STR_TAG}")"
-ORB_EVAL_REGION="$(eval echo "${ORB_STR_REGION}")"
-ORB_EVAL_ACCOUNT_ID="$(eval echo "${ORB_STR_ACCOUNT_ID}")"
-ORB_VAL_ACCOUNT_URL="${ORB_EVAL_ACCOUNT_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
-ORB_EVAL_PUBLIC_REGISTRY_ALIAS="$(eval echo "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
+AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
+AWS_ECR_EVAL_TAG="$(eval echo "${AWS_ECR_STR_TAG}")"
+AWS_ECR_EVAL_REGION="$(eval echo "${AWS_ECR_STR_REGION}")"
+AWS_ECR_EVAL_ACCOUNT_ID="$(eval echo "${AWS_ECR_STR_ACCOUNT_ID}")"
+AWS_ECR_VAL_ACCOUNT_URL="${AWS_ECR_EVAL_ACCOUNT_ID}.dkr.ecr.${AWS_ECR_EVAL_REGION}.amazonaws.com"
+AWS_ECR_EVAL_PUBLIC_REGISTRY_ALIAS="$(eval echo "${AWS_ECR_STR_PUBLIC_REGISTRY_ALIAS}")"
 
-echo "$ORB_VAL_ACCOUNT_URL" >> test.txt
+echo "$AWS_ECR_VAL_ACCOUNT_URL" >> test.txt
 
-if [ -z "${ORB_EVAL_ACCOUNT_ID}" ]; then
+if [ -z "${AWS_ECR_EVAL_ACCOUNT_ID}" ]; then
   echo "The account ID is not found. Please add the account ID before continuing."
   exit 1
 fi
 
-if [ "${ORB_BOOL_PUBLIC_REGISTRY}" == "1" ]; then
-  ORB_VAL_ACCOUNT_URL="public.ecr.aws/${ORB_EVAL_PUBLIC_REGISTRY_ALIAS}"
+if [ "${AWS_ECR_BOOL_PUBLIC_REGISTRY}" == "1" ]; then
+  AWS_ECR_VAL_ACCOUNT_URL="public.ecr.aws/${AWS_ECR_EVAL_PUBLIC_REGISTRY_ALIAS}"
 fi
 
-IFS="," read -ra DOCKER_TAGS <<< "${ORB_EVAL_TAG}"
+IFS="," read -ra DOCKER_TAGS <<< "${AWS_ECR_EVAL_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
 set -x
-    docker push "${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
+    docker push "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}"
 set +x
 done

@@ -21,8 +21,8 @@ parameters:
     description: Whether to skip tagging an image if any specified tags already exist
     type: boolean
 
-  aws_profile:
-    default: default
+  profile_name:
+    default: "default"
     description: AWS profile to use
     type: string
 
@@ -34,5 +34,5 @@ steps:
         AWS_ECR_STR_SOURCE_TAG: <<parameters.source_tag>>
         AWS_ECR_STR_TARGET_TAG: <<parameters.target_tag>>
         AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
-        AWS_ECR_STR_AWS_PROFILE: <<parameters.aws_profile>>
+        AWS_ECR_STR_AWS_PROFILE: <<parameters.profile_name>>
       command: <<include(scripts/tag_image.sh)>>

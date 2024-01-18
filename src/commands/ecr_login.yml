@@ -37,9 +37,9 @@ steps:
   - run:
       name: Log into Amazon ECR with profile <<parameters.profile_name>>
       environment:
-        ORB_STR_PROFILE_NAME: <<parameters.profile_name>>
-        ORB_STR_ACCOUNT_ID: <<parameters.account_id>>
-        ORB_STR_REGION: <<parameters.region>>
-        ORB_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
-        ORB_STR_AWS_DOMAIN: <<parameters.aws_domain>>
+        AWS_ECR_STR_PROFILE_NAME: <<parameters.profile_name>>
+        AWS_ECR_STR_ACCOUNT_ID: <<parameters.account_id>>
+        AWS_ECR_STR_REGION: <<parameters.region>>
+        AWS_ECR_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
+        AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
       command: <<include(scripts/ecr_login.sh)>>

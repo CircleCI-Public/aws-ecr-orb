@@ -25,8 +25,8 @@ steps:
   - run:
       name: <<parameters.target_tag>> tag to <<parameters.repo>>:<<parameters.source_tag>>
       environment:
-        ORB_STR_REPO: <<parameters.repo>>
-        ORB_STR_SOURCE_TAG: <<parameters.source_tag>>
-        ORB_STR_TARGET_TAG: <<parameters.target_tag>>
-        ORB_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
+        AWS_ECR_STR_REPO: <<parameters.repo>>
+        AWS_ECR_STR_SOURCE_TAG: <<parameters.source_tag>>
+        AWS_ECR_STR_TARGET_TAG: <<parameters.target_tag>>
+        AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
       command: <<include(scripts/tag_image.sh)>>

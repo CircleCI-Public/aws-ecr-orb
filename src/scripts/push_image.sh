@@ -1,10 +1,9 @@
 #!/bin/bash
-set -x
 ORB_EVAL_REPO="$(eval echo "${ORB_STR_REPO}")"
 ORB_EVAL_TAG="$(eval echo "${ORB_STR_TAG}")"
 ORB_EVAL_REGION="$(eval echo "${ORB_STR_REGION}")"
 ORB_EVAL_ACCOUNT_ID="$(eval echo "${ORB_STR_ACCOUNT_ID}")"
-ORB_VAL_ACCOUNT_URL="${ORB_EVAL_ACCOUNT_ID}.dkr.ecr.${ORB_EVAL_REGION}"
+ORB_VAL_ACCOUNT_URL="${ORB_EVAL_ACCOUNT_ID}.dkr.ecr.${ORB_EVAL_REGION}.amazonaws.com"
 ORB_EVAL_PUBLIC_REGISTRY_ALIAS="$(eval echo "${ORB_STR_PUBLIC_REGISTRY_ALIAS}")"
 
 echo "$ORB_VAL_ACCOUNT_URL" >> test.txt
@@ -20,8 +19,7 @@ fi
 
 IFS="," read -ra DOCKER_TAGS <<< "${ORB_EVAL_TAG}"
 for tag in "${DOCKER_TAGS[@]}"; do
+set -x
     docker push "${ORB_VAL_ACCOUNT_URL}/${ORB_EVAL_REPO}:${tag}"
-done
-
-docker image ls >> test.txt
 set +x
+done

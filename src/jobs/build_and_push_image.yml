@@ -1,6 +1,6 @@
 description: >
-  Install AWS CLI Version 2, if needed, and configure credentials to log into Amazon ECR
-  and push image to repository. Authenticate with OIDC or static AWS keys using the aws-cli/setup command is required.
+  Log into Amazon ECR and push image to repository.
+  Authentication with OIDC or static AWS keys using the aws-cli/setup command is required.
   NOTE: Some commands may not work with AWS CLI Version 1.
 
 executor: << parameters.executor >>

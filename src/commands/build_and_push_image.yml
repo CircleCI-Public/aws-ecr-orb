@@ -1,5 +1,4 @@
 description: >
-  Install AWS CLI Version 2 and configure credentials if needed.
   Log into Amazon ECR, build and push a Docker image to the specified repository.
   NOTE: Some commands may not work with AWS CLI Version 1.
 parameters:

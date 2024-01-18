@@ -113,7 +113,7 @@ workflows:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
           attach_workspace: true
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1}-build-test-then-push-with-buildx
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx
           create_repo: true
           context: [CPE-OIDC]
           tag: alpha
@@ -125,7 +125,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-build-test-then-push-with-buildx --region us-west-2 --force
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx --region us-west-2 --force
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
@@ -145,7 +145,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-multi-platform-without-push --region us-west-2 --force
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push --region us-west-2 --force
           push_image: false
           platform: linux/amd64,linux/arm64
           filters: *filters
@@ -169,7 +169,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1}-default-profile --force
+                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           platform: linux/amd64,linux/arm64
           filters: *filters
           requires: [pre-integration]
@@ -211,7 +211,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1}-public_registry --force --profile OIDC-User
+                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry --force --profile OIDC-User
           platform: linux/arm64,linux/amd64
           filters: *filters
           requires: [pre-integration]
@@ -273,7 +273,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-named-profile --force --profile OIDC-User
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force --profile OIDC-User
           filters: *filters
           requires:
             - integration-test-tag-existing-image
@@ -312,7 +312,7 @@ workflows:
           profile_name: "OIDC-User"
           context: [CPE-OIDC]
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1}-skip_when_tags_exist-<<matrix.executor>>
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
@@ -322,7 +322,7 @@ workflows:
             - run:
                 name: "Delete repository"
                 command: |
-                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
+                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
           matrix:
             parameters:
               executor: ["amd64", "arm64"]

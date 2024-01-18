@@ -1,5 +1,5 @@
 description: >
-  Install AWS CLI Version 2 and configure credentials if needed to add a tag to an existing published image
+  Add a tag to an existing published image
   NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:

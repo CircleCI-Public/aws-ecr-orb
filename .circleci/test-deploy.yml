@@ -173,9 +173,9 @@ workflows:
                   set -x
                   docker images
                   set +x
-            - run:
-                name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push --region us-west-2 --force
+            # - run:
+            #     name: "Delete repository"
+            #     command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push --region us-west-2 --force
           push_image: false
           platform: linux/arm64
           filters: *filters

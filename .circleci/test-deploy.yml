@@ -165,7 +165,7 @@ workflows:
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
-          executor: arm64-current
+          executor: arm64
           post-steps:
             - run:
                 name: "List docker images"

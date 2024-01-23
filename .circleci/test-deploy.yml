@@ -171,7 +171,7 @@ workflows:
                 name: "List docker images"
                 command: |
                   set -x
-                  docker images
+                  docker inspect 122211685980.dkr.ecr.us-west-2.amazonaws.com/aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
                   set +x
             # - run:
             #     name: "Delete repository"

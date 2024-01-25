@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   orb-tools: circleci/orb-tools@12.0
-  aws-cli: circleci/aws-cli@4.0
+  aws-cli: circleci/aws-cli@4.1.1
   aws-ecr: {}
 filters: &filters
   tags:

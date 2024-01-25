@@ -42,11 +42,12 @@ parameters:
     description: The amount of time to allow the docker command to run before timing out.
 
   extra_build_args:
-    type: string
     default: ""
     description: >
-      Extra flags to pass to docker build. For examples, see
-      https://docs.docker.com/engine/reference/commandline/buildx
+      Extra flags to pass to docker build. This parameter accepts multi-line arguments. 
+      If your argument spans multiple lines, please use the Folded Block Style denoted by `>-` (e.g. extra_build_args: >-).
+      For examples of available flags, see https://docs.docker.com/engine/reference/commandline/buildx_build
+    type: string
 
   skip_when_tags_exist:
     type: boolean

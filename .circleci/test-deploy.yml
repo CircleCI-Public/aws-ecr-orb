@@ -149,7 +149,7 @@ jobs:
           path: << parameters.path >>
           platform: << parameters.platform >>
           push_image: << parameters.push_image >>
-          extra_build_args: |
+          extra_build_args: >-
             --build-arg ARG1=<< parameters.param_1 >>
             --build-arg ARG2=<< parameters.param_2 >>
             --build-arg ARG3=<< parameters.param_3 >>

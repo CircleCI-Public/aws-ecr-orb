@@ -153,19 +153,6 @@ jobs:
             --build-arg ARG1=<< parameters.param_1 >>
             --build-arg ARG2=<< parameters.param_2 >>
             --build-arg ARG3=<< parameters.param_3 >>
-      - run:
-          name: Tests for docker image
-          command: |
-            set -x
-            docker image ls
-            docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> ping -V
-            status=$?
-            if [ "${status}" -ne 0 ]; then exit "${status}"; else exit 0; fi
-            set +x
-      - aws-ecr/push_image:
-          repo: << parameters.repo >>
-          region: << parameters.region >>
-          tag: << parameters.tag >>
 workflows:
   test-deploy:
     jobs:

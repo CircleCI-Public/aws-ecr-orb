@@ -173,7 +173,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           push_image: false
-          platform: linux/amd64
+          platform: linux/arm64
           region: us-west-2
           param_1: "test_1"
           param_2: "test_2"

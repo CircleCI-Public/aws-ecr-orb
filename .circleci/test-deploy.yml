@@ -149,10 +149,13 @@ jobs:
           path: << parameters.path >>
           platform: << parameters.platform >>
           push_image: << parameters.push_image >>
-          param_1: << parameters.param_1 >>
-          param_2: << parameters.param_2 >>
-          param_3: << parameters.param_3 >>
-          extra_build_args: << parameters.extra_build_args >>
+          param_1: "test_1"
+          param_2: "test_2"
+          param_3: "test_3"
+          extra_build_args: |
+            --build-arg ARG1=<< parameters.arg1 >>
+            --build-arg ARG2=<< parameters.arg2 >>
+            --build-arg ARG3=<< parameters.arg3 >>
       - run:
           name: Tests for docker image
           command: |

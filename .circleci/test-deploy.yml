@@ -153,9 +153,9 @@ jobs:
           param_2: "test_2"
           param_3: "test_3"
           extra_build_args: |
-            --build-arg ARG1=<< parameters.arg1 >>
-            --build-arg ARG2=<< parameters.arg2 >>
-            --build-arg ARG3=<< parameters.arg3 >>
+            --build-arg ARG1=<< parameters.param_1 >>
+            --build-arg ARG2=<< parameters.param_2 >>
+            --build-arg ARG3=<< parameters.param_3 >>
       - run:
           name: Tests for docker image
           command: |

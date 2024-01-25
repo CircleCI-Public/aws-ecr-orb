@@ -102,12 +102,103 @@ jobs:
           repo: << parameters.repo >>
           region: << parameters.region >>
           tag: << parameters.tag >>
+  build-with-multi-line-args:
+    machine:
+      image: ubuntu-2204:current
+    parameters:
+      auth:
+        type: steps
+      attach_workspace:
+        type: boolean
+      workspace_root:
+        type: string
+      repo:
+        type: string
+      create_repo:
+        type: boolean
+      tag:
+        type: string
+      dockerfile:
+        type: string
+      path:
+        type: string
+      push_image:
+        type: boolean
+      platform:
+        type: string
+      region:
+        type: string
+      param_1:
+        type: string
+      param_2:
+        type: string
+      param_3:
+        type: string
+      extra_build_args:
+        default: ""
+        type: string
+    steps:
+      - aws-ecr/build_and_push_image:
+          auth: << parameters.auth >>
+          attach_workspace: << parameters.attach_workspace >>
+          workspace_root: << parameters.workspace_root >>
+          repo: << parameters.repo >>
+          create_repo: << parameters.create_repo >>
+          tag: << parameters.tag >>
+          dockerfile: << parameters.dockerfile >>
+          path: << parameters.path >>
+          platform: << parameters.platform >>
+          push_image: << parameters.push_image >>
+          param_1: << parameters.param_1 >>
+          param_2: << parameters.param_2 >>
+          param_3: << parameters.param_3 >>
+          extra_build_args: << parameters.extra_build_args >>
+      - run:
+          name: Tests for docker image
+          command: |
+            set -x
+            docker image ls
+            docker run 122211685980.dkr.ecr.us-west-2.amazonaws.com/<< parameters.repo >>:<< parameters.tag >> ping -V
+            status=$?
+            if [ "${status}" -ne 0 ]; then exit "${status}"; else exit 0; fi
+            set +x
+      - aws-ecr/push_image:
+          repo: << parameters.repo >>
+          region: << parameters.region >>
+          tag: << parameters.tag >>
 workflows:
   test-deploy:
     jobs:
       - pre-integration-checkout-workspace-job:
           name: pre-integration
           filters: *filters
+      - build-with-multi-line-args:
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          attach_workspace: true
+          workspace_root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx
+          create_repo: true
+          context: [CPE-OIDC]
+          tag: alpha
+          dockerfile: sample/Dockerfile
+          path: workspace
+          push_image: false
+          platform: linux/amd64
+          region: us-west-2
+          post-steps:
+            - run:
+                name: Test Multi-line Args
+                command: |
+                  set -x
+                  echo "${AWS_ECR_STR_EXTRA_BUILD_ARGS}"
+                  set +x
+            - run:
+                name: "Delete repository"
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx --region us-west-2 --force
+          filters: *filters
+          requires: [pre-integration]
       # - build-test-then-push-with-buildx:
       #     auth:
       #       - aws-cli/setup:
@@ -151,35 +242,29 @@ workflows:
       #     platform: linux/amd64,linux/arm64
       #     filters: *filters
       #     requires: [pre-integration]
-      - aws-ecr/build_and_push_image:
-          name: integration-test-build-arm64-ubuntu2204:current
-          auth:
-            - aws-cli/setup:
-                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                role_session_name: "Testing-Ubuntu2204"
-          attach_workspace: true
-          workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
-          create_repo: true
-          context: [CPE-OIDC]
-          tag: integration,myECRRepoTag
-          dockerfile: sample/Dockerfile
-          path: workspace
-          executor: arm64
-          post-steps:
-            - run:
-                name: "List docker images"
-                command: |
-                  set -x
-                  docker inspect 122211685980.dkr.ecr.us-west-2.amazonaws.com/aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
-                  set +x
-            # - run:
-            #     name: "Delete repository"
-            #     command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push --region us-west-2 --force
-          push_image: false
-          platform: linux/arm64
-          filters: *filters
-          requires: [pre-integration]
+      # - aws-ecr/build_and_push_image:
+      #     name: integration-test-build-arm64-ubuntu2204:current
+      #     auth:
+      #       - aws-cli/setup:
+      #           role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+      #           role_session_name: "Testing-Ubuntu2204"
+      #     attach_workspace: true
+      #     workspace_root: workspace
+      #     repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
+      #     create_repo: true
+      #     context: [CPE-OIDC]
+      #     tag: integration,myECRRepoTag
+      #     dockerfile: sample/Dockerfile
+      #     path: workspace
+      #     executor: arm64
+      #     post-steps:
+      #       - run:
+      #           name: "Delete repository"
+      #           command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push --region us-west-2 --force
+      #     push_image: false
+      #     platform: linux/arm64
+      #     filters: *filters
+      #     requires: [pre-integration]
       # - aws-ecr/build_and_push_image:
       #     name: integration-test-default-profile
       #     auth:

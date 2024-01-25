@@ -163,6 +163,7 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                role_session_name: Test-aws-cli-4.1.2
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx

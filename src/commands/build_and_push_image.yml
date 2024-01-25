@@ -119,8 +119,9 @@ parameters:
   extra_build_args:
     default: ""
     description: >
-      Extra flags to pass to docker build. For examples, see
-      https://docs.docker.com/engine/reference/commandline/build
+      Extra flags to pass to docker build. This parameter accepts multi-line arguments.
+      If your argument spans multiple lines, please use the Folded Block Style denoted by `>-` (e.g. extra_build_args: >-).
+      For examples of available flags, see https://docs.docker.com/engine/reference/commandline/buildx_build
     type: string
 
   no_output_timeout:

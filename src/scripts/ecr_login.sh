@@ -25,8 +25,8 @@ if [ -f "$HOME/.docker/config.json" ] && grep "${AWS_ECR_VAL_ACCOUNT_URL}" < ~/.
     echo "Credential helper is already installed"
 fi
 
-set -x
 Configure_config.json(){
+    echo "Configuring config.json..."
     CONFIG_FILE="$HOME/.docker/config.json"
     mkdir -p "$(dirname "${CONFIG_FILE}")"
     cat > "${CONFIG_FILE}" << EOF
@@ -36,10 +36,10 @@ Configure_config.json(){
         }
     }
 EOF
-
 }
 
 Install_AWS_ECR_Credential_Helper(){
+    echo "Installing AWS ECR Credential Helper..."
     if [[ "$SYS_ENV_PLATFORM" = "linux" ]]; then
         $SUDO apt update
         $SUDO apt install amazon-ecr-credential-helper
@@ -54,4 +54,3 @@ Install_AWS_ECR_Credential_Helper(){
 }
 
 Install_AWS_ECR_Credential_Helper
-set +x

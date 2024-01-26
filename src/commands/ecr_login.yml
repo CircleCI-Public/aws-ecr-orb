@@ -42,4 +42,5 @@ steps:
         AWS_ECR_STR_REGION: <<parameters.region>>
         AWS_ECR_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
+        SCRIPT_UTILS: << include(scripts/utils.sh) >>
       command: <<include(scripts/ecr_login.sh)>>

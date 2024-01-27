@@ -19,6 +19,9 @@ if [ "$AWS_ECR_BOOL_PUBLIC_REGISTRY" == "1" ]; then
     AWS_ECR_EVAL_REGION="us-east-1"
     AWS_ECR_VAL_ACCOUNT_URL="public.ecr.aws/${AWS_ECR_EVAL_PUBLIC_REGISTRY_ALIAS}"
     ECR_COMMAND="ecr-public"
+    aws "${ECR_COMMAND}" get-login-password --region "${AWS_ECR_EVAL_REGION}" --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
+     | docker login --username AWS --password-stdin "${AWS_ECR_VAL_ACCOUNT_URL}"
+    exit 0
 fi
 
 if [ -f "$HOME/.docker/config.json" ] && grep "${AWS_ECR_VAL_ACCOUNT_URL}" < ~/.docker/config.json > /dev/null 2>&1 ; then

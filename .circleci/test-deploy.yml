@@ -21,6 +21,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: [sample/Dockerfile]
+
   tag-ecr-image:
     docker:
       - image: cimg/base:current
@@ -172,6 +173,36 @@ workflows:
                 name: "Delete repository"
                 command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile --force
           platform: linux/amd64,linux/arm64
+          filters: *filters
+          requires: [pre-integration]
+      - aws-ecr/build_and_push_image:
+          name: integration-test-aws-ecr-credential-helper
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+          attach_workspace: true
+          workspace_root: workspace
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-credential-helper
+          create_repo: true
+          context: [CPE-OIDC]
+          tag: credential-helper
+          dockerfile: sample/Dockerfile
+          path: workspace
+          executor: amd64
+          post-steps:
+            - run:
+                name: Verify ~/.docker/config.json
+                command: |
+                  if [ -f "$HOME/.docker/config.json" ] && grep 122211685980.dkr.ecr.us-west-2.amazonaws.com < ~/.docker/config.json; then
+                    echo "AWS ECR Credential Helper correctly configured."
+                    exit 0
+                  else
+                    echo "AWS ECR Credential Helper not configured."
+                    exit 1
+                  fi
+            - run:
+                name: "Delete repository"
+                command: aws ecr delete-repository --repository-name --region us-west-2 aws-ecr-orb-${CIRCLE_SHA1:0:7}-credential-helper --force
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:

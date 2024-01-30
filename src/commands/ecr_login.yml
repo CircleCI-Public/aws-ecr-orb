@@ -1,5 +1,5 @@
 description: >
-  Authenticate into the Amazon ECR service.
+  Authenticate into the Amazon ECR service. This command requires jq.
   NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:

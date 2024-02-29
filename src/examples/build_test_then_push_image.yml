@@ -14,7 +14,7 @@ usage:
   jobs:
     build-test-then-push-with-buildx:
       machine:
-        image: ubuntu-2204:2022.07.1
+        image: ubuntu-2204:current
       steps:
         # build docker image
         - aws-ecr/build_and_push_image:

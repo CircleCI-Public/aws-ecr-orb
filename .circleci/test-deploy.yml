@@ -54,7 +54,7 @@ jobs:
           profile_name: <<parameters.profile_name>>
   build-test-then-push-with-buildx:
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2204:current
     parameters:
       auth:
         type: steps
@@ -380,10 +380,10 @@ workflows:
 executors:
   amd64:
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2204:current
       docker_layer_caching: true
   arm64:
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2204:current
       docker_layer_caching: true
     resource_class: arm.medium

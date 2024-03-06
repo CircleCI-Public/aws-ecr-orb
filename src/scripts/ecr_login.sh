@@ -38,9 +38,10 @@ configure_config_json(){
     if [ ! -s "${CONFIG_FILE}" ]; then
         jq_flag="-n"
     fi
-        jq "${jq_flag}" --arg url "${AWS_ECR_VAL_ACCOUNT_URL}" \
-        --arg helper "ecr-login" '.credHelpers[$url] = $helper' \
-        "${CONFIG_FILE}" > temp.json && mv temp.json "${CONFIG_FILE}"
+
+    jq ${jq_flag} --arg url "${AWS_ECR_VAL_ACCOUNT_URL}" \
+      --arg helper "ecr-login" '.credHelpers[$url] = $helper' \
+      "${CONFIG_FILE}" > temp.json && mv temp.json "${CONFIG_FILE}"
 }
 
 install_aws_ecr_credential_helper(){

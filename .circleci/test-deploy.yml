@@ -357,7 +357,7 @@ workflows:
                   aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
           matrix:
             parameters:
-              executor: ["amd64", "arm64"]
+              executor: ["amd64", "arm64", "macintosh"]
           filters: *filters
           requires:
             - integration-test-skip_when_tags_exist-populate-image-amd64
@@ -387,3 +387,6 @@ executors:
       image: ubuntu-2204:current
       docker_layer_caching: true
     resource_class: arm.medium
+  macintosh:
+     macos:
+      xcode: "15.4.0"

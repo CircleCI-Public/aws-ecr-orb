@@ -47,14 +47,14 @@ configure_config_json(){
 install_aws_ecr_credential_helper(){
     echo "Installing AWS ECR Credential Helper..."
     if [[ "$SYS_ENV_PLATFORM" = "linux" ]]; then
-        HELPER_INSTALLED=$(dpkg --get-selections | (grep unzip || test $?) | awk '{print $2}')
+        HELPER_INSTALLED=$(dpkg --get-selections | (grep amazon-ecr-credential-helper || test $?) | awk '{print $2}')
         if [[ "$HELPER_INSTALLED" != "install" ]]; then
             $SUDO apt update
             $SUDO apt install amazon-ecr-credential-helper
         fi
         configure_config_json
     elif [[ "$SYS_ENV_PLATFORM" = "macos" ]]; then
-        HELPER_INSTALLED=$(brew list -q | grep -q docker-credential-helper-ecr)
+        HELPER_INSTALLED=$(brew list -q | grep -q docker-credential-helper-ecr || test $?)
         if [[ "$HELPER_INSTALLED" -ne 0 ]]; then
             brew install docker-credential-helper-ecr
         fi

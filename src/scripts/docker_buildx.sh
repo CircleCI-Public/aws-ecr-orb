@@ -44,7 +44,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" ] || [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${AWS_ECR_EVAL_PROFILE_NAME}" --registry-id "${AWS_ECR_EVAL_ACCOUNT_ID}" --region "${AWS_ECR_EVAL_REGION}" --repository-name "${AWS_ECR_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
-      docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}"
+      docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}" --platform "${AWS_ECR_EVAL_PLATFORM}"
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi
   fi

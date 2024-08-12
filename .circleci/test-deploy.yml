@@ -117,7 +117,7 @@ workflows:
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx
           create_repo: true
-          context: [CPE-OIDC]
+          # context: [CPE-OIDC]
           tag: alpha
           dockerfile: sample/Dockerfile
           path: workspace

@@ -229,7 +229,7 @@ workflows:
                 profile_name: "OIDC-User"
           attach_workspace: true
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry-<<matrix.use_credentials_helper>>
           create_repo: true
           region: "us-west-2"
           profile_name: "OIDC-User"
@@ -268,7 +268,7 @@ workflows:
               use_credentials_helper: [true, false]
           context: [CPE-OIDC]
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.use_credentials_helper>>
           create_repo: true
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile

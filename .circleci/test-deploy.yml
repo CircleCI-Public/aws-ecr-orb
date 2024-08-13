@@ -222,14 +222,14 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-test-pubic-registry-<<matrix.use_credentials_helper>>
+          name: integration-test-pubic-registry
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
           attach_workspace: true
           workspace_root: workspace
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry-<<matrix.use_credentials_helper>>
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry
           create_repo: true
           region: "us-west-2"
           profile_name: "OIDC-User"
@@ -240,9 +240,6 @@ workflows:
           extra_build_args: --compress
           executor: arm64
           public_registry: true
-          matrix:
-            parameters:
-              use_credentials_helper: [true, false]
           post-steps:
             - run:
                 name: "Delete repository"
@@ -255,7 +252,7 @@ workflows:
             - run:
                 name: "Export NPM_TOKEN"
                 command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"
-          name: integration-test-named-profile-<<matrix.use_credentials_helper>>
+          name: integration-test-named-profile-<<matrix.use_credentials_helper>>-helper
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -380,7 +377,7 @@ workflows:
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry-true, integration-test-pubic-registry-false, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-true, integration-test-named-profile-false, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-true, integration-test-named-profile-false, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters

@@ -312,8 +312,7 @@ workflows:
                 command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force --profile OIDC-User
           filters: *filters
           requires:
-            - integration-test-tag-existing-image-true
-            - integration-test-tag-existing-image-false
+            - integration-test-tag-existing-image
       - aws-ecr/build_and_push_image:
           name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
           auth:

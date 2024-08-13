@@ -279,31 +279,37 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - tag-ecr-image:
-          name: integration-test-tag-existing-image
+          name: integration-test-tag-existing-image-<<matrix.use_credentials_helper>>
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.use_credentials_helper>>
           region: "us-west-2"
           profile_name: "OIDC-User"
           context: [CPE-OIDC]
+          matrix:
+            parameters:
+              use_credentials_helper: [true, false]
           source_tag: integration
           target_tag: latest
           requires:
             - integration-test-named-profile-true-helper
             - integration-test-named-profile-false-helper
       - tag-ecr-image:
-          name: integration-test-tag-image-with-existing-tag
+          name: integration-test-tag-image-with-existing-tag-<<matrix.use_credentials_helper>>
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.use_credentials_helper>>
           region: "us-west-2"
           profile_name: "OIDC-User"
           context: [CPE-OIDC]
           source_tag: integration
+          matrix:
+            parameters:
+              use_credentials_helper: [true, false]
           target_tag: alpha,latest
           skip_when_tags_exist: true
           post-steps:
@@ -312,7 +318,8 @@ workflows:
                 command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force --profile OIDC-User
           filters: *filters
           requires:
-            - integration-test-tag-existing-image
+            - integration-test-tag-existing-image-true
+            - integration-test-tag-existing-image-false
       - aws-ecr/build_and_push_image:
           name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
           auth:
@@ -377,7 +384,7 @@ workflows:
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-true-helper, integration-test-named-profile-false-helper, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-true-helper, integration-test-named-profile-false-helper, integration-test-tag-existing-image-true, integration-test-tag-existing-image-false, integration-test-tag-image-with-existing-tag-true, integration-test-tag-image-with-existing-tag-false ]
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters

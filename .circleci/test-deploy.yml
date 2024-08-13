@@ -222,7 +222,7 @@ workflows:
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-test-pubic-registry
+          name: integration-test-pubic-registry-<<matrix.use_credentials_helper>>
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -240,6 +240,9 @@ workflows:
           extra_build_args: --compress
           executor: arm64
           public_registry: true
+          matrix:
+            parameters:
+              use_credentials_helper: [true, false]
           post-steps:
             - run:
                 name: "Delete repository"
@@ -252,7 +255,7 @@ workflows:
             - run:
                 name: "Export NPM_TOKEN"
                 command: echo 'export NPM_TOKEN="00000000-0000-0000-0000-000000000000"' >> "$BASH_ENV"
-          name: integration-test-named-profile
+          name: integration-test-named-profile-<<matrix.use_credentials_helper>>
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -260,6 +263,9 @@ workflows:
           attach_workspace: true
           region: "us-west-2"
           profile_name: "OIDC-User"
+          matrix:
+            parameters:
+              use_credentials_helper: [true, false]
           context: [CPE-OIDC]
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile

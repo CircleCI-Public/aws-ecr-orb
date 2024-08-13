@@ -4,6 +4,7 @@ AWS_ECR_EVAL_PROFILE_NAME="$(eval echo "${AWS_ECR_STR_PROFILE_NAME}")"
 AWS_ECR_EVAL_ACCOUNT_ID="$(eval echo "${AWS_ECR_STR_ACCOUNT_ID}")"
 AWS_ECR_VAL_ACCOUNT_URL="${AWS_ECR_EVAL_ACCOUNT_ID}.dkr.ecr.${AWS_ECR_EVAL_REGION}.${AWS_ECR_STR_AWS_DOMAIN}"
 AWS_ECR_EVAL_PUBLIC_REGISTRY_ALIAS="$(eval echo "${AWS_ECR_STR_PUBLIC_REGISTRY_ALIAS}")"
+AWS_ECR_BOOL_HELPER="$(eval echo "${AWS_ECR_BOOL_HELPER}")"
 ECR_COMMAND="ecr"
 
 eval "$SCRIPT_UTILS"
@@ -46,14 +47,14 @@ configure_config_json(){
 
 install_aws_ecr_credential_helper(){
     echo "Installing AWS ECR Credential Helper..."
-    if [[ "$SYS_ENV_PLATFORM" = "linux" ]]; then
+    if [[ "$SYS_ENV_PLATFORM" = "linux" && "$AWS_ECR_BOOL_HELPER" = "1"]]; then
         HELPER_INSTALLED=$(dpkg --get-selections | (grep amazon-ecr-credential-helper || test $?) | awk '{print $2}')
         if [[ "$HELPER_INSTALLED" != "install" ]]; then
             $SUDO apt update
             $SUDO apt install amazon-ecr-credential-helper
         fi
         configure_config_json
-    elif [[ "$SYS_ENV_PLATFORM" = "macos" ]]; then
+    elif [[ "$SYS_ENV_PLATFORM" = "macos" && "$AWS_ECR_BOOL_HELPER" = "1"]]; then
         HELPER_INSTALLED=$(brew list -q | grep -q docker-credential-helper-ecr || test $?)
         if [[ "$HELPER_INSTALLED" -ne 0 ]]; then
             brew install docker-credential-helper-ecr

@@ -211,7 +211,7 @@ parameters:
     default: true
     description: >
       When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
-      the password saved in text plain. Otherwise it will use the classic docker login command which is more compatible.
+      the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 
 steps:
   - build_and_push_image:

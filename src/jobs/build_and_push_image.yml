@@ -206,6 +206,12 @@ parameters:
       The AWS domain for your region, e.g in China, the AWS domain is amazonaws.com.cn
       The default value is amazonaws.com
 
+  use_credentials_helper:
+    type: boolean
+    default: true
+    description: >
+      When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
+      the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 
 steps:
   - build_and_push_image:
@@ -240,4 +246,5 @@ steps:
       auth: <<parameters.auth>>
       repo_encryption_type: <<parameters.repo_encryption_type>>
       repo_encryption_kms_key: <<parameters.repo_encryption_kms_key>>
+      use_credentials_helper: <<parameters.use_credentials_helper>>
       aws_domain: <<parameters.aws_domain>>

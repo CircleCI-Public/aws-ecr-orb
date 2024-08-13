@@ -201,6 +201,12 @@ parameters:
       The alias, key ID, or full ARN of the KMS key can be specified.
     default: ""
 
+  use_credentials_helper:
+    type: boolean
+    default: true
+    description: >
+      When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
+      the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -230,6 +236,7 @@ steps:
       region: <<parameters.region>>
       account_id: <<parameters.account_id>>
       public_registry: <<parameters.public_registry>>
+      use_credentials_helper: <<parameters.use_credentials_helper>>
   - when:
       condition: <<parameters.create_repo>>
       steps:

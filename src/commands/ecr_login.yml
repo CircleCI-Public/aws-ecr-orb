@@ -33,6 +33,14 @@ parameters:
     description: >
       AWS domain, China regions will require override.
 
+  use_credentials_helper:
+    type: boolean
+    default: true
+    description: >
+      When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
+      the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
+      If you are having issues with credentials helper login, set this to false.
+
 steps:
   - run:
       name: Log into Amazon ECR with profile <<parameters.profile_name>>
@@ -42,5 +50,6 @@ steps:
         AWS_ECR_STR_REGION: <<parameters.region>>
         AWS_ECR_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
+        AWS_ECR_BOOL_HELPER: <<parameters.use_credentials_helper>>
         SCRIPT_UTILS: << include(scripts/utils.sh) >>
       command: <<include(scripts/ecr_login.sh)>>

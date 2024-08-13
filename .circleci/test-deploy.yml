@@ -291,8 +291,8 @@ workflows:
           source_tag: integration
           target_tag: latest
           requires:
-            - integration-test-named-profile-true
-            - integration-test-named-profile-false
+            - integration-test-named-profile-true-helper
+            - integration-test-named-profile-false-helper
       - tag-ecr-image:
           name: integration-test-tag-image-with-existing-tag
           auth:

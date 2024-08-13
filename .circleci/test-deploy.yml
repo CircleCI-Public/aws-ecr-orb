@@ -284,7 +284,7 @@ workflows:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true-helper
           region: "us-west-2"
           profile_name: "OIDC-User"
           context: [CPE-OIDC]
@@ -292,14 +292,13 @@ workflows:
           target_tag: latest
           requires:
             - integration-test-named-profile-true-helper
-            - integration-test-named-profile-false-helper
       - tag-ecr-image:
           name: integration-test-tag-image-with-existing-tag
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
                 profile_name: "OIDC-User"
-          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile
+          repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true-helper
           region: "us-west-2"
           profile_name: "OIDC-User"
           context: [CPE-OIDC]

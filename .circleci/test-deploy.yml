@@ -294,7 +294,8 @@ workflows:
           source_tag: integration
           target_tag: latest
           requires:
-            - integration-test-named-profile
+            - integration-test-named-profile-1
+            - integration-test-named-profile-0
       - tag-ecr-image:
           name: integration-test-tag-image-with-existing-tag
           auth:
@@ -379,7 +380,7 @@ workflows:
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry-1, integration-test-pubic-registry-0, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-1, integration-test-named-profile-0 integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters

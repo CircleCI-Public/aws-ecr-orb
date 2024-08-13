@@ -308,7 +308,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile --force --profile OIDC-User
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true --force --profile OIDC-User
           filters: *filters
           requires:
             - integration-test-tag-existing-image

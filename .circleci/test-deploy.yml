@@ -278,6 +278,7 @@ workflows:
           region: "us-west-2"
           profile_name: "OIDC-User"
           matrix:
+            alias: integration-test-named-profile
             parameters:
               use_credentials_helper: [true, false]
           context: [CPE-OIDC]
@@ -330,7 +331,7 @@ workflows:
           requires:
             - integration-test-tag-existing-image
       - aws-ecr/build_and_push_image:
-          name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
+          name: integration-test-skip_when_tags_exist-populate-image
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -349,12 +350,13 @@ workflows:
           extra_build_args: --compress
           skip_when_tags_exist: true
           matrix:
+            alias: integration-test-skip_when_tags_exist-populate-image
             parameters:
               executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-test-skip_when_tags_exist-<<matrix.executor>>
+          name: integration-test-skip_when_tags_exist
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -376,13 +378,14 @@ workflows:
                 command: |
                   aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
           matrix:
+            alias: integration-test-skip_when_tags_exist
             parameters:
               executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
           filters: *filters
           requires:
             - integration-test-skip_when_tags_exist-populate-image
       - login:
-          name: login-<<matrix.executor>>
+          name: login
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -390,6 +393,7 @@ workflows:
           profile_name: "OIDC-User"
           region: "us-west-2"
           matrix:
+            alias: login
             parameters:
               executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
       - orb-tools/publish:

@@ -63,6 +63,8 @@ jobs:
         type: executor
       auth:
         type: steps
+      account_id:
+        type: string
     steps:
       - steps: <<parameters.auth>>
       - aws-ecr/ecr_login:
@@ -392,6 +394,8 @@ workflows:
                 profile_name: "OIDC-User"
           profile_name: "OIDC-User"
           region: "us-west-2"
+          context: [CPE-OIDC]
+          requires: [pre-integration]
           matrix:
             alias: login
             parameters:

@@ -51,7 +51,7 @@ install_aws_ecr_credential_helper(){
         HELPER_INSTALLED=$(dpkg --get-selections | (grep amazon-ecr-credential-helper || test $?) | awk '{print $2}')
         if [[ "$HELPER_INSTALLED" != "install" ]]; then
             $SUDO apt update
-            $SUDO apt install amazon-ecr-credential-helper
+            $SUDO apt -y install amazon-ecr-credential-helper
         fi
         configure_config_json
     elif [[ "$SYS_ENV_PLATFORM" = "macos" && "$AWS_ECR_BOOL_HELPER" = "1" ]]; then

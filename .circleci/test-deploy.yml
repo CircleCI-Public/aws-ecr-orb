@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   orb-tools: circleci/orb-tools@12.0
-  aws-cli: circleci/aws-cli@4.0
+  aws-cli: circleci/aws-cli@5.1.0
   aws-ecr: {}
 filters: &filters
   tags:
@@ -52,6 +52,23 @@ jobs:
           source_tag: <<parameters.source_tag>>
           target_tag: <<parameters.target_tag>>
           profile_name: <<parameters.profile_name>>
+  login:
+    executor: <<parameters.executor>>
+    parameters:
+      region:
+        type: string
+      profile_name:
+        type: string
+      executor:
+        type: executor
+      auth:
+        type: steps
+    steps:
+      - steps: <<parameters.auth>>
+      - aws-ecr/ecr_login:
+          profile_name: <<parameters.profile_name>>
+          region: <<parameters.region>>
+      
   build-test-then-push-with-buildx:
     machine:
       image: ubuntu-2204:current
@@ -313,7 +330,7 @@ workflows:
           requires:
             - integration-test-tag-existing-image
       - aws-ecr/build_and_push_image:
-          name: integration-test-skip_when_tags_exist-populate-image-<<matrix.executor>>
+          name: integration-test-skip_when_tags_exist-populate-image
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -333,11 +350,11 @@ workflows:
           skip_when_tags_exist: true
           matrix:
             parameters:
-              executor: ["arm64", "amd64"]
+              executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
-          name: integration-test-skip_when_tags_exist-<<matrix.executor>>
+          name: integration-test-skip_when_tags_exist
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -360,23 +377,36 @@ workflows:
                   aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
           matrix:
             parameters:
-              executor: ["amd64", "arm64"]
+              executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
           filters: *filters
           requires:
-            - integration-test-skip_when_tags_exist-populate-image-amd64
-            - integration-test-skip_when_tags_exist-populate-image-arm64
-      - orb-tools/lint:
-          filters: *filters
-      - orb-tools/pack:
-          filters: *filters
-      - orb-tools/review:
-          filters: *release-filters
+            - integration-test-skip_when_tags_exist-populate-image
+      - login:
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "OIDC-User"
+          profile_name: "OIDC-User"
+          region: "us-west-2"
+          matrix:
+            parameters:
+              executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
       - orb-tools/publish:
           orb_name: circleci/aws-ecr
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-true-helper, integration-test-named-profile-false-helper, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          requires:
+          - build-test-then-push-with-buildx
+          - integration-test-multi-platform-without-push
+          - integration-test-default-profile
+          - integration-test-aws-ecr-credential-helper
+          - integration-test-cache-to-flag
+          - integration-test-pubic-registry
+          - integration-test-skip_when_tags_exist
+          - integration-test-named-profile-false-helper
+          - login
+          - integration-test-tag-image-with-existing-tag
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters
@@ -390,3 +420,12 @@ executors:
       image: ubuntu-2204:current
       docker_layer_caching: true
     resource_class: arm.medium
+  macos:
+    macos:
+      xcode: 15.1.0
+  alpine:
+    docker:
+      - image: alpine:latest
+  docker-base:
+    docker:
+      - image: cimg/base:stable      

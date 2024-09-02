@@ -16,9 +16,8 @@ AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_
 # shellcheck disable=SC2034 # used indirectly via environment in `docker buildx` builds
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
 
-
 if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
-  IFS=" " read -a args -r <<< "${AWS_ECR_STR_EXTRA_BUILD_ARGS[@]}"
+  IFS=" " read -a args -r <<<"${AWS_ECR_STR_EXTRA_BUILD_ARGS[@]}"
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"
   done
@@ -44,7 +43,10 @@ for tag in "${DOCKER_TAGS[@]}"; do
   if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "1" ] || [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" = "true" ]; then
     docker_tag_exists_in_ecr=$(aws "${ECR_COMMAND}" describe-images --profile "${AWS_ECR_EVAL_PROFILE_NAME}" --registry-id "${AWS_ECR_EVAL_ACCOUNT_ID}" --region "${AWS_ECR_EVAL_REGION}" --repository-name "${AWS_ECR_EVAL_REPO}" --query "contains(imageDetails[].imageTags[], '${tag}')")
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
-      docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}" --platform "${AWS_ECR_EVAL_PLATFORM}"
+      IFS="," read -ra PLATFORMS <<<"${AWS_ECR_EVAL_PLATFORM}"
+      for p in "${PLATFORMS[@]}"; do
+        docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}" --platform "${p}"
+      done
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi
   fi
@@ -62,7 +64,7 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
         --lifecycle-policy-text "file://${AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH}"
     fi
 
-  elif [ "${AWS_ECR_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -le 1 ];then
+  elif [ "${AWS_ECR_BOOL_PUSH_IMAGE}" -eq "0" ] && [ "${number_of_platforms}" -le 1 ]; then
     set -- "$@" --load
   fi
 
@@ -85,7 +87,7 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
     set +x
   fi
 
-set -x
+  set -x
   docker \
     ${context_args:+$context_args} \
     buildx build \
@@ -95,6 +97,6 @@ set -x
     --progress plain \
     "$@" \
     "${AWS_ECR_EVAL_BUILD_PATH}"
-set +x
+  set +x
 
 fi

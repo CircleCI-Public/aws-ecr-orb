@@ -354,7 +354,7 @@ workflows:
           matrix:
             alias: integration-test-skip_when_tags_exist-populate-image
             parameters:
-              executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
+              executor: ["arm64", "amd64"]
           filters: *filters
           requires: [pre-integration]
       - aws-ecr/build_and_push_image:
@@ -382,7 +382,7 @@ workflows:
           matrix:
             alias: integration-test-skip_when_tags_exist
             parameters:
-              executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
+              executor: ["arm64", "amd64"]
           filters: *filters
           requires:
             - integration-test-skip_when_tags_exist-populate-image
@@ -399,7 +399,7 @@ workflows:
           matrix:
             alias: login
             parameters:
-              executor: ["arm64", "amd64", "macos", "alpine", "docker-base"]
+              executor: ["arm64", "amd64"]
       - orb-tools/publish:
           orb_name: circleci/aws-ecr
           vcs_type: << pipeline.project.type >>
@@ -429,12 +429,3 @@ executors:
       image: ubuntu-2204:current
       docker_layer_caching: true
     resource_class: arm.medium
-  macos:
-    macos:
-      xcode: 15.1.0
-  alpine:
-    docker:
-      - image: alpine:latest
-  docker-base:
-    docker:
-      - image: cimg/base:stable      

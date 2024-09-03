@@ -119,7 +119,7 @@ parameters:
   path:
     type: string
     default: .
-    description: Path to the directory containing your Dockerfile and build context. Defaults to . (working directory).
+    description: Path to the directory containing your Dockerfile. Defaults to . (working directory).
 
   build_path:
     default: .

@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   orb-tools: circleci/orb-tools@12.0
-  aws-cli: circleci/aws-cli@4.0
+  aws-cli: circleci/aws-cli@5.1.0
   aws-ecr: {}
 filters: &filters
   tags:
@@ -52,6 +52,23 @@ jobs:
           source_tag: <<parameters.source_tag>>
           target_tag: <<parameters.target_tag>>
           profile_name: <<parameters.profile_name>>
+  login:
+    executor: <<parameters.executor>>
+    parameters:
+      region:
+        type: string
+      profile_name:
+        type: string
+      executor:
+        type: executor
+      auth:
+        type: steps
+    steps:
+      - steps: <<parameters.auth>>
+      - aws-ecr/ecr_login:
+          profile_name: <<parameters.profile_name>>
+          region: <<parameters.region>>
+      
   build-test-then-push-with-buildx:
     machine:
       image: ubuntu-2204:current
@@ -113,6 +130,9 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "default" 
+                role_session_name: ecr-orb-test-session-buildx
+                region: "us-west-2"
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-build-test-then-push-with-buildx
@@ -135,6 +155,9 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "default" 
+                role_session_name: ecr-orb-test-session-nopush
+                region: "us-west-2"
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
@@ -157,6 +180,9 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "default" 
+                role_session_name: ecr-orb-test-session-default
+                region: "us-west-2"
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
@@ -180,6 +206,9 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "default" 
+                role_session_name: ecr-orb-test-session-cred-helper
+                region: "us-west-2"
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-credential-helper
@@ -210,6 +239,9 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "default" 
+                role_session_name: ecr-orb-test-session-cache
+                region: "us-west-2"
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-cache-to-flag
@@ -226,13 +258,15 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                profile_name: "default"
+                role_session_name: ecr-orb-test-session-public-registry
+                region: "us-west-2"
           attach_workspace: true
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry
           create_repo: true
           region: "us-west-2"
-          profile_name: "OIDC-User"
+          profile_name: "default"
           context: [CPE-OIDC]
           tag: integration,myECRRepoTag
           dockerfile: Dockerfile
@@ -243,7 +277,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry --force --profile OIDC-User
+                command: aws ecr-public delete-repository --region us-east-1 --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-public_registry --force --profile default
           platform: linux/arm64,linux/amd64
           filters: *filters
           requires: [pre-integration]
@@ -256,11 +290,14 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                profile_name: "default"
+                role_session_name: ecr-orb-test-session-cred-helper-<<matrix.use_credentials_helper>>
+                region: "us-west-2"
           attach_workspace: true
           region: "us-west-2"
-          profile_name: "OIDC-User"
+          profile_name: "default"
           matrix:
+            alias: integration-test-named-profile
             parameters:
               use_credentials_helper: [true, false]
           context: [CPE-OIDC]
@@ -283,10 +320,12 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                profile_name: "default"
+                role_session_name: ecr-orb-test-session-tag-existing
+                region: "us-west-2"
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true
           region: "us-west-2"
-          profile_name: "OIDC-User"
+          profile_name: "default"
           context: [CPE-OIDC]
           source_tag: integration
           target_tag: latest
@@ -297,10 +336,12 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                profile_name: "default" 
+                role_session_name: ecr-orb-test-session-existing
+                region: "us-west-2"
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true
           region: "us-west-2"
-          profile_name: "OIDC-User"
+          profile_name: "default"
           context: [CPE-OIDC]
           source_tag: integration
           target_tag: alpha,latest
@@ -308,7 +349,7 @@ workflows:
           post-steps:
             - run:
                 name: "Delete repository"
-                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true --force --profile OIDC-User
+                command: aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-true --force --profile default
           filters: *filters
           requires:
             - integration-test-tag-existing-image
@@ -317,10 +358,12 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                profile_name: "default"
+                role_session_name: ecr-orb-test-session-populate-<<matrix.executor>>
+                region: "us-west-2"
           attach_workspace: true
           region: "us-west-2"
-          profile_name: "OIDC-User"
+          profile_name: "default"
           context: [CPE-OIDC]
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
@@ -332,6 +375,7 @@ workflows:
           extra_build_args: --compress
           skip_when_tags_exist: true
           matrix:
+            alias: integration-test-skip_when_tags_exist-populate-image
             parameters:
               executor: ["arm64", "amd64"]
           filters: *filters
@@ -341,10 +385,12 @@ workflows:
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
-                profile_name: "OIDC-User"
+                profile_name: "default"
+                role_session_name: ecr-orb-test-session-<<matrix.executor>>
+                region: "us-west-2"
           attach_workspace: true
           region: "us-west-2"
-          profile_name: "OIDC-User"
+          profile_name: "default"
           context: [CPE-OIDC]
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
@@ -358,26 +404,51 @@ workflows:
             - run:
                 name: "Delete repository"
                 command: |
-                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>> --force --profile OIDC-User
+                  aws ecr delete-repository --repository-name aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>> --force --profile default
           matrix:
+            alias: integration-test-skip_when_tags_exist
             parameters:
-              executor: ["amd64", "arm64"]
+              executor: ["arm64", "amd64"]
           filters: *filters
           requires:
-            - integration-test-skip_when_tags_exist-populate-image-amd64
-            - integration-test-skip_when_tags_exist-populate-image-arm64
-      - orb-tools/lint:
-          filters: *filters
-      - orb-tools/pack:
-          filters: *filters
-      - orb-tools/review:
-          filters: *release-filters
+            - integration-test-skip_when_tags_exist-populate-image
+      - login:
+          name: login-<<matrix.executor>>
+          auth:
+            - aws-cli/setup:
+                role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
+                profile_name: "default"
+                role_session_name: ecr-orb-test-session-login-<<matrix.executor>>
+                region: "us-west-2"
+          profile_name: "default"
+          region: "us-west-2"
+          context: [CPE-OIDC]
+          requires: [pre-integration]
+          matrix:
+            alias: login
+            parameters:
+              executor: ["arm64", "amd64"]
+          post-steps:
+            - run:
+                name: "Validation"
+                command: |
+                  aws sts get-caller-identity --profile default
       - orb-tools/publish:
           orb_name: circleci/aws-ecr
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
-          requires: [ orb-tools/lint, orb-tools/review, orb-tools/pack, integration-test-default-profile, integration-test-pubic-registry, integration-test-skip_when_tags_exist-amd64, integration-test-skip_when_tags_exist-arm64, integration-test-named-profile-true-helper, integration-test-named-profile-false-helper, integration-test-tag-existing-image, integration-test-tag-image-with-existing-tag ]
+          requires:
+          - build-test-then-push-with-buildx
+          - integration-test-multi-platform-without-push
+          - integration-test-default-profile
+          - integration-test-aws-ecr-credential-helper
+          - integration-test-cache-to-flag
+          - integration-test-pubic-registry
+          - integration-test-skip_when_tags_exist
+          - integration-test-named-profile-false-helper
+          - login
+          - integration-test-tag-image-with-existing-tag
           github_token: GHI_TOKEN
           context: orb-publisher
           filters: *release-filters

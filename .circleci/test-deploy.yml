@@ -352,6 +352,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           extra_build_args: --compress
+          platform: linux/amd64,linux/arm64
           skip_when_tags_exist: true
           post-steps:
             - run:

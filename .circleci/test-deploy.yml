@@ -433,12 +433,21 @@ workflows:
                 name: "Validation"
                 command: |
                   aws sts get-caller-identity --profile default
+      - orb-tools/lint:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/review:
+          filters: *release-filters                  
       - orb-tools/publish:
           orb_name: circleci/aws-ecr
           vcs_type: << pipeline.project.type >>
           pub_type: production
           enable_pr_comment: true
           requires:
+          - orb-tools/lint
+          - orb-tools/review
+          - orb-tools/pack
           - build-test-then-push-with-buildx
           - integration-test-multi-platform-without-push
           - integration-test-default-profile

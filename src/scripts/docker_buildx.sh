@@ -82,7 +82,11 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
   # if no builder instance is currently used, create one
   elif ! docker buildx ls | grep -q "default * docker"; then
     set -x
-    docker buildx create --name DLC_builder --use
+    if ! docker buildx ls | grep -q DLC_builder; then
+      docker buildx create --name DLC_builder --use
+    else
+      docker buildx use DLC_builder
+    fi
     echo "Context is set to DLC_builder"
     set +x
   fi

@@ -107,6 +107,17 @@ jobs:
           path: << parameters.path >>
           platform: << parameters.platform >>
           push_image: << parameters.push_image >>
+      - aws-ecr/build_and_push_image:
+          auth: << parameters.auth >>
+          attach_workspace: << parameters.attach_workspace >>
+          workspace_root: << parameters.workspace_root >>
+          repo: << parameters.repo >>
+          create_repo: false
+          tag: dummy
+          dockerfile: << parameters.dockerfile >>
+          path: << parameters.path >>
+          platform: << parameters.platform >>
+          push_image: false
       - run:
           name: Tests for docker image
           command: |

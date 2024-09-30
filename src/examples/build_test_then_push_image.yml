@@ -48,8 +48,8 @@ usage:
             repo: << parameters.repo >>
             region: << parameters.region >>
             tag: << parameters.tag >>
-workflows:
-  build-image-test-image-push-image-with-buildx:
-    jobs:
-      - build-test-then-push-with-buildx:
-          context: CircleCI_OIDC_Token
+  workflows:
+    build-image-test-image-push-image-with-buildx:
+      jobs:
+        - build-test-then-push-with-buildx:
+            context: CircleCI_OIDC_Token

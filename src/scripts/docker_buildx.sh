@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 AWS_ECR_EVAL_REGION="$(eval echo "${AWS_ECR_STR_REGION}")"
 AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
 AWS_ECR_EVAL_TAG="$(eval echo "${AWS_ECR_STR_TAG}")"
@@ -16,15 +16,18 @@ AWS_ECR_EVAL_PLATFORM="$(eval echo "${AWS_ECR_STR_PLATFORM}")"
 AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_PATH}")"
 # shellcheck disable=SC2034 # used indirectly via environment in `docker buildx` builds
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
-
+set -x
 if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
   args=()
   # shellcheck disable=SC2086
-  eval 'for p in '$EXTRA_BUILD_ARGS'; do args+=("$p"); done'
+  eval 'for p in '$AWS_ECR_STR_EXTRA_BUILD_ARGS'; do args+=("$p"); done'
+  echo "$args"
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"
   done
+  echo "$@"
 fi
+set +x
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 

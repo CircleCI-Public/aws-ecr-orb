@@ -17,7 +17,7 @@ AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
 
 if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
-  IFS=" " read -a args -r <<<"${AWS_ECR_STR_EXTRA_BUILD_ARGS[@]}"
+  eval 'for p in '$EXTRA_BUILD_ARGS'; do args+=("$p"); done'
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"
   done

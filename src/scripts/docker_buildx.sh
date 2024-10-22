@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 AWS_ECR_EVAL_REGION="$(eval echo "${AWS_ECR_STR_REGION}")"
 AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
 AWS_ECR_EVAL_TAG="$(eval echo "${AWS_ECR_STR_TAG}")"

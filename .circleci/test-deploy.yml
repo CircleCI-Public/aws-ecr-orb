@@ -321,6 +321,7 @@ workflows:
           extra_build_args: >-
             --build-arg NPM_TOKEN=${NPM_TOKEN}
             --build-arg=${CIRCLE_SHA1:0:7}
+            --build-arg=TEST='This is a test'
           set_repo_policy: true
           repo_policy_path: ./sample/repo-policy.json
           executor: amd64

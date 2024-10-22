@@ -16,7 +16,7 @@ AWS_ECR_EVAL_PLATFORM="$(eval echo "${AWS_ECR_STR_PLATFORM}")"
 AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_PATH}")"
 # shellcheck disable=SC2034 # used indirectly via environment in `docker buildx` builds
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
-set -x
+
 if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
   args=()
   # shellcheck disable=SC2086
@@ -25,7 +25,7 @@ if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
     set -- "$@" "$arg"
   done
 fi
-set +x
+
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 

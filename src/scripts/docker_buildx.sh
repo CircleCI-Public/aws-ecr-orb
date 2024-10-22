@@ -13,11 +13,12 @@ AWS_ECR_EVAL_DOCKERFILE="$(eval echo "${AWS_ECR_STR_DOCKERFILE}")"
 AWS_ECR_EVAL_PROFILE_NAME="$(eval echo "${AWS_ECR_STR_PROFILE_NAME}")"
 AWS_ECR_EVAL_PLATFORM="$(eval echo "${AWS_ECR_STR_PLATFORM}")"
 AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_PATH}")"
-# shellcheck disable=SC2034,SC2086 # used indirectly via environment in `docker buildx` builds
+# shellcheck disable=SC2034 # used indirectly via environment in `docker buildx` builds
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
 
 if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
   args=()
+  # shellcheck disable=SC2086
   eval 'for p in '$EXTRA_BUILD_ARGS'; do args+=("$p"); done'
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"

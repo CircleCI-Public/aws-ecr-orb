@@ -21,11 +21,9 @@ if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
   args=()
   # shellcheck disable=SC2086
   eval 'for p in '$AWS_ECR_STR_EXTRA_BUILD_ARGS'; do args+=("$p"); done'
-  echo "$args"
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"
   done
-  echo "$@"
 fi
 set +x
 ECR_COMMAND="ecr"

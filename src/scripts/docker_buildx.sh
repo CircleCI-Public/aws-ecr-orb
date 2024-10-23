@@ -1,4 +1,5 @@
 #!/bin/bash
+
 AWS_ECR_EVAL_REGION="$(eval echo "${AWS_ECR_STR_REGION}")"
 AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
 AWS_ECR_EVAL_TAG="$(eval echo "${AWS_ECR_STR_TAG}")"
@@ -17,11 +18,14 @@ AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
 
 if [ -n "${AWS_ECR_STR_EXTRA_BUILD_ARGS}" ]; then
-  IFS=" " read -a args -r <<<"${AWS_ECR_STR_EXTRA_BUILD_ARGS[@]}"
+  args=()
+  # shellcheck disable=SC2086
+  eval 'for p in '$AWS_ECR_STR_EXTRA_BUILD_ARGS'; do args+=("$p"); done'
   for arg in "${args[@]}"; do
     set -- "$@" "$arg"
   done
 fi
+
 ECR_COMMAND="ecr"
 number_of_tags_in_ecr=0
 

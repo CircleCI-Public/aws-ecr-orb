@@ -7,7 +7,10 @@ AWS_ECR_EVAL_AWS_PROFILE="$(eval echo "${AWS_ECR_STR_AWS_PROFILE}")"
 # pull the image manifest from ECR
 set -x
 MANIFEST="$(aws ecr batch-get-image --repository-name "${AWS_ECR_EVAL_REPO}" --image-ids imageTag="${AWS_ECR_EVAL_SOURCE_TAG}" --query 'images[].imageManifest' --output text --profile "${AWS_ECR_EVAL_AWS_PROFILE}")"
-EXISTING_TAGS="$(aws ecr list-images --repository-name "${AWS_ECR_EVAL_REPO}" --filter "tagStatus=TAGGED" --profile "${AWS_ECR_EVAL_AWS_PROFILE}")"
+# only list images when needed
+if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq 1 ]; then
+    EXISTING_TAGS="$(aws ecr list-images --repository-name "${AWS_ECR_EVAL_REPO}" --filter "tagStatus=TAGGED" --profile "${AWS_ECR_EVAL_AWS_PROFILE}")"
+fi
 IFS="," read -ra ECR_TAGS <<<"${AWS_ECR_EVAL_TARGET_TAG}"
 
 for tag in "${ECR_TAGS[@]}"; do

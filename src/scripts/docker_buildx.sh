@@ -14,6 +14,7 @@ AWS_ECR_EVAL_DOCKERFILE="$(eval echo "${AWS_ECR_STR_DOCKERFILE}")"
 AWS_ECR_EVAL_PROFILE_NAME="$(eval echo "${AWS_ECR_STR_PROFILE_NAME}")"
 AWS_ECR_EVAL_PLATFORM="$(eval echo "${AWS_ECR_STR_PLATFORM}")"
 AWS_ECR_EVAL_LIFECYCLE_POLICY_PATH="$(eval echo "${AWS_ECR_STR_LIFECYCLE_POLICY_PATH}")"
+AWS_ECR_EVAL_DOCKER_BUILDX_NAME="$(eval echo "${AWS_ECR_STR_DOCKER_BUILDX_NAME}")"
 # shellcheck disable=SC2034 # used indirectly via environment in `docker buildx` builds
 BUILDX_NO_DEFAULT_ATTESTATIONS=1
 
@@ -80,18 +81,18 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
       # otherwise the command will fail when called more than once in the same job.
       docker context create builder
       docker run --privileged --rm tonistiigi/binfmt --install all
-      docker --context builder buildx create --name DLC_builder --use
+      docker --context builder buildx create --name "$AWS_ECR_EVAL_DOCKER_BUILDX_NAME" --use
     fi
     context_args="--context builder"
   # if no builder instance is currently used, create one
   elif ! docker buildx ls | grep -q "default * docker"; then
     set -x
-    if ! docker buildx ls | grep -q DLC_builder; then
-      docker buildx create --name DLC_builder --use
+    if ! docker buildx ls | grep -q "$AWS_ECR_EVAL_DOCKER_BUILDX_NAME"; then
+      docker buildx create --name "$AWS_ECR_EVAL_DOCKER_BUILDX_NAME" --use
     else
-      docker buildx use DLC_builder
+      docker buildx use "$AWS_ECR_EVAL_DOCKER_BUILDX_NAME"
     fi
-    echo "Context is set to DLC_builder"
+    echo "Context is set to $AWS_ECR_EVAL_DOCKER_BUILDX_NAME"
     set +x
   fi
 

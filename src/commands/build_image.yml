@@ -106,6 +106,13 @@ parameters:
       The AWS domain for your region, e.g in China, the AWS domain is amazonaws.com.cn
       The default value is amazonaws.com
 
+  docker_buildx_name:
+    type: string
+    default: DLC_builder
+    description: >
+      A name for the docker buildx instance. Defaults to DLC_builder.
+      Note: DLC Cache will be generated from this name so it should be unique for each build job in the workflow.
+
 steps:
   - run:
       name: Build Docker Image with buildx
@@ -126,5 +133,6 @@ steps:
         AWS_ECR_STR_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
         AWS_ECR_EVAL_BUILD_PATH: <<parameters.build_path>>
         AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
+        AWS_ECR_STR_DOCKER_BUILDX_NAME: <<parameters.docker_buildx_name>>
       command: <<include(scripts/docker_buildx.sh)>>
       no_output_timeout: <<parameters.no_output_timeout>>

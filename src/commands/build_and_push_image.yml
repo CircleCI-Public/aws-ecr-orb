@@ -207,6 +207,14 @@ parameters:
     description: >
       When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
       the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
+
+  docker_buildx_name:
+    type: string
+    default: DLC_builder
+    description: >
+      A name for the docker buildx instance. Defaults to DLC_builder.
+      Note: DLC Cache will be generated from this name so it should be unique for each build job in the workflow.
+
 steps:
   - when:
       condition: <<parameters.checkout>>
@@ -279,3 +287,4 @@ steps:
       public_registry_alias: <<parameters.public_registry_alias>>
       build_path: <<parameters.build_path>>
       aws_domain: <<parameters.aws_domain>>
+      docker_buildx_name: <<parameters.docker_buildx_name>>

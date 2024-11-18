@@ -475,8 +475,10 @@ workflows:
       #     filters: *release-filters
       - aws-ecr/build_and_push_image:
           checkout: true
+          setup_remote_docker: true
+          remote_docker_layer_caching: true
           context: [CPE-OIDC]
-          executor: amd64
+          executor: docker
           auth:
             - aws-cli/setup:
                 role_arn: arn:aws:iam::122211685980:role/CPE_ECR_OIDC_TEST
@@ -503,3 +505,6 @@ executors:
       image: ubuntu-2204:current
       docker_layer_caching: true
     resource_class: arm.medium
+  docker:
+    docker:
+    - image: ubuntu

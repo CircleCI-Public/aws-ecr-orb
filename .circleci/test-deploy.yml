@@ -507,4 +507,4 @@ executors:
     resource_class: arm.medium
   docker:
     docker:
-    - image: ubuntu
+    - image: cimg/base

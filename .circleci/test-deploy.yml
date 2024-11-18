@@ -475,7 +475,6 @@ workflows:
       #     filters: *release-filters
       - aws-ecr/build_and_push_image:
           checkout: true
-          setup_remote_docker: true
           remote_docker_layer_caching: true
           context: [CPE-OIDC]
           executor: amd64

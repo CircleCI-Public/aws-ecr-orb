@@ -507,4 +507,4 @@ executors:
     resource_class: arm.medium
   docker:
     docker:
-    - image: cimg/base
+    - image: cimg/base:current

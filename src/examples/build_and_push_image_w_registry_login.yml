@@ -12,7 +12,7 @@ usage:
   orbs:
     aws-ecr: circleci/aws-ecr@9.0
     # importing aws-cli orb is required for authentication
-    aws-cli: circleci/aws-cli@4.0
+    aws-cli: circleci/aws-cli@5.1
   workflows:
     build-and-push-image-with-container-registry-login:
       jobs:

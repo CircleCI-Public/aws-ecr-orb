@@ -19,7 +19,7 @@ usage:
         - aws-ecr/build_and_push_image:
             # must set container registry login to true
             container_registry_login: true
-            container_registry_login_step:
+            registry_login:
               # custom login step for heroku.
               - run: docker login -u ${HEROKU_USERNAME} -p ${HEROKU_API_KEY}
               # custom login step for GitHub Container Registry.

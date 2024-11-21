@@ -8,7 +8,7 @@ usage:
   orbs:
     aws-ecr: circleci/aws-ecr@9.0
     # Importing aws-cli orb is required
-    aws-cli: circleci/aws-cli@4.0
+    aws-cli: circleci/aws-cli@5.1
 
   executors:
     base:
@@ -23,7 +23,7 @@ usage:
             auth:
                # Add authentication step with OIDC using aws-cli/setup command
               - aws-cli/setup:
-                  profile: "OIDC-USER"
+                  profile_name: "OIDC-USER"
                   role_arn: "arn:aws:iam::123456789012:role/VALID_OIDC_ECR_ROLE"
 
             # Must use same profile configured in aws-cli/setup command

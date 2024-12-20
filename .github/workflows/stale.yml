@@ -28,4 +28,4 @@ jobs:
         stale-pr-label: stale
         exempt-issue-labels: 'pinned,security,confirmed,bug,enhancement'
         exempt-pr-labels: 'pinned,security,confirmed,bug,enhancement'
-        limit-per-run: 30
+        operations-per-run: 30

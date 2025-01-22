@@ -178,6 +178,7 @@ workflows:
           dockerfile: sample/Dockerfile
           path: workspace
           executor: amd64
+          extra_build_args: --compress --attest type=provenance,mode=min --sbom=true
           post-steps:
             - run:
                 name: "Delete repository"

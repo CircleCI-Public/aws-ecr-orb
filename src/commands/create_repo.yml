@@ -41,6 +41,16 @@ parameters:
       The alias, key ID, or full ARN of the KMS key can be specified.
     default: ""
 
+  image_tag_mutability:
+    type: enum
+    enum: ["MUTABLE", "IMMUTABLE"]
+    description: >
+      The tag mutability setting for the repository. If this parameter is omitted,
+      the default setting of MUTABLE will be used which will allow image tags to be
+      overwritten. If IMMUTABLE is specified, all image tags within the repository will
+      be immutable which will prevent them from being overwritten.
+    default: "MUTABLE"
+
 steps:
   - run:
       name: Create Repository
@@ -52,4 +62,5 @@ steps:
         AWS_ECR_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         AWS_ECR_ENUM_ENCRYPTION_TYPE: <<parameters.repo_encryption_type>>
         AWS_ECR_STR_ENCRYPTION_KMS_KEY: <<parameters.encryption_kms_key>>
+        AWS_ECR_STR_IMAGE_TAG_MUTABILITY: <<parameters.image_tag_mutability>>
       command: <<include(scripts/create_repo.sh)>>

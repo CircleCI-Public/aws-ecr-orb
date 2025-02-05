@@ -141,7 +141,7 @@ workflows:
           path: .
           create_repo: true
           repo: test-credentials-aws-ecr-orb
-          context: [CPE-OIDC]
+          context: [CPE-OIDC, CPE_ORBS_AWS]
           tag: test-credentials
           platform: linux/arm64
       # - pre-integration-checkout-workspace-job:

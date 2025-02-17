@@ -106,6 +106,14 @@ parameters:
       The AWS domain for your region, e.g in China, the AWS domain is amazonaws.com.cn
       The default value is amazonaws.com
 
+  binfmt_version:
+    type: string
+    default: qemu-v7.0.0-28
+    description: |
+      The version to use for binfmt image.
+      The binfmt image is used to emulate multiple arquitectures when building multiplatform images.
+      Defaults to qemu-v7.0.0-28, change only if you know what you are doing.
+      See https://hub.docker.com/r/tonistiigi/binfmt for details.
 steps:
   - run:
       name: Build Docker Image with buildx
@@ -126,5 +134,6 @@ steps:
         AWS_ECR_STR_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
         AWS_ECR_EVAL_BUILD_PATH: <<parameters.build_path>>
         AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
+        PARAM_BINFMT_VERSION: <<parameters.qemu_version>>
       command: <<include(scripts/docker_buildx.sh)>>
       no_output_timeout: <<parameters.no_output_timeout>>

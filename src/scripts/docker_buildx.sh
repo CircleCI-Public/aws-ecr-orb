@@ -79,7 +79,7 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
       # We need to skip the creation of the builder context if it's already present
       # otherwise the command will fail when called more than once in the same job.
       docker context create builder
-      docker run --privileged --rm tonistiigi/binfmt --install all
+      docker run --privileged --rm "tonistiigi/binfmt:$PARAM_BINFMT_VERSION" --install all
       docker --context builder buildx create --name DLC_builder --use
     fi
     context_args="--context builder"

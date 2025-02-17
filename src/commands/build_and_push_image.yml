@@ -201,6 +201,16 @@ parameters:
       The alias, key ID, or full ARN of the KMS key can be specified.
     default: ""
 
+  repo_image_tag_mutability:
+    type: enum
+    enum: ["MUTABLE", "IMMUTABLE"]
+    description: >
+      The tag mutability setting for the repository. If this parameter is omitted,
+      the default setting of MUTABLE will be used which will allow image tags to be
+      overwritten. If IMMUTABLE is specified, all image tags within the repository will
+      be immutable which will prevent them from being overwritten.
+    default: "MUTABLE"
+
   use_credentials_helper:
     type: boolean
     default: true
@@ -248,6 +258,7 @@ steps:
             public_registry: <<parameters.public_registry>>
             repo_encryption_type: <<parameters.repo_encryption_type>>
             encryption_kms_key: <<parameters.repo_encryption_kms_key>>
+            image_tag_mutability: <<parameters.repo_image_tag_mutability>>
   - when:
       condition: <<parameters.set_repo_policy>>
       steps:

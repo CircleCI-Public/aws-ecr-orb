@@ -209,13 +209,13 @@ parameters:
       the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 
   binfmt_version:
-  type: string
-  default: qemu-v7.0.0-28
-  description: |
-    The version to use for binfmt image.
-    The binfmt image is used to emulate multiple arquitectures when building multiplatform images.
-    Defaults to qemu-v7.0.0-28, change only if you know what you are doing.
-    See https://hub.docker.com/r/tonistiigi/binfmt for details.
+    type: string
+    default: qemu-v7.0.0-28
+    description: |
+      The version to use for binfmt image.
+      The binfmt image is used to emulate multiple arquitectures when building multiplatform images.
+      Defaults to qemu-v7.0.0-28, change only if you know what you are doing.
+      See https://hub.docker.com/r/tonistiigi/binfmt for details.
 
 steps:
   - when:

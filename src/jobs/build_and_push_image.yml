@@ -213,6 +213,15 @@ parameters:
       When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
       the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 
+  binfmt_version:
+    type: string
+    default: qemu-v7.0.0-28
+    description: |
+      The version to use for binfmt image.
+      The binfmt image is used to emulate multiple arquitectures when building multiplatform images.
+      Defaults to qemu-v7.0.0-28, change only if you know what you are doing.
+      See https://hub.docker.com/r/tonistiigi/binfmt for details.
+
 steps:
   - build_and_push_image:
       account_id: <<parameters.account_id>>
@@ -248,3 +257,4 @@ steps:
       repo_encryption_kms_key: <<parameters.repo_encryption_kms_key>>
       use_credentials_helper: <<parameters.use_credentials_helper>>
       aws_domain: <<parameters.aws_domain>>
+      binfmt_version: <<parameters.binfmt_version>>

@@ -134,6 +134,6 @@ steps:
         AWS_ECR_STR_PUBLIC_REGISTRY_ALIAS: <<parameters.public_registry_alias>>
         AWS_ECR_EVAL_BUILD_PATH: <<parameters.build_path>>
         AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
-        PARAM_BINFMT_VERSION: <<parameters.qemu_version>>
+        PARAM_BINFMT_VERSION: <<parameters.binfmt_version>>
       command: <<include(scripts/docker_buildx.sh)>>
       no_output_timeout: <<parameters.no_output_timeout>>

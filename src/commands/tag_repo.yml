@@ -8,7 +8,7 @@ parameters:
 
   tag:
     type: string
-    description: A comma-separated string containing tags for repository.
+    description: A comma-separated string containing tags for repository
 
   profile_name:
     default: "default"

@@ -231,7 +231,6 @@ workflows:
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-credential-helper
           create_repo: true
-          repo_tag: Key=Env,Value=CITesting
           context: [CPE-OIDC]
           tag: credential-helper
           dockerfile: sample/Dockerfile
@@ -287,7 +286,6 @@ workflows:
           region: "us-west-2"
           profile_name: "default"
           context: [CPE-OIDC]
-          repo_tag: Key=Env,Value=CITesting
           tag: integration,myECRRepoTag
           dockerfile: Dockerfile
           path: ./sample

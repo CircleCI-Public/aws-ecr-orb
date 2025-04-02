@@ -235,9 +235,9 @@ parameters:
   repo_tag:
     type: string
     default: ""
-    description: | 
+    description: |
       A comma-separated string containing tags for repository.
-      Shorthand Syntax: Key=Env,Value=Prod Key=Team,Value=ProdTeam 
+      Shorthand Syntax: Key=Env,Value=Prod Key=Team,Value=ProdTeam
 
 steps:
   - build_and_push_image:

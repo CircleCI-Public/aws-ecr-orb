@@ -1,6 +1,6 @@
 description: >
   Add tag to an existing ECR repository
-  
+
 parameters:
   repo:
     type: string
@@ -8,7 +8,7 @@ parameters:
 
   tag:
     type: string
-    description: > 
+    description: >
       A comma-separated string containing tags for repository
       Shorthand Syntax: Key=Env,Value=Prod Key=Team,Value=ProdTeam
 

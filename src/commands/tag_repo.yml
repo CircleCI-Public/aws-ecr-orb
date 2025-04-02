@@ -25,7 +25,7 @@ parameters:
 
 steps:
   - run:
-      name: Add tag <<parameters.tag>> tag to <<parameters.repo>>
+      name: Add tag <<parameters.tag>> to <<parameters.repo>>
       environment:
         AWS_ECR_STR_REPO: <<parameters.repo>>
         AWS_ECR_STR_REPO_TAG: <<parameters.tag>>

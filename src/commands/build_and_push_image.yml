@@ -231,8 +231,8 @@ parameters:
     type: string
     default: ""
     description: |
-      A comma-separated string containing tags for repository.
-      Shorthand Syntax: Key=Env,Value=Prod Key=Team,Value=ProdTeam
+      A list of strings in json format, containing tags for repository.
+      Shorthand Syntax: [{"Key": "FirstTag", "Value": "FirstValue"}]
 
 steps:
   - when:

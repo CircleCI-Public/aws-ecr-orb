@@ -8,6 +8,10 @@ AWS_ECR_EVAL_REPO_TAG="$(eval echo "${AWS_ECR_STR_REPO_TAG}")"
 if [ "$AWS_ECR_BOOL_PUBLIC_REGISTRY" == "1" ]; then
     echo "repo_tag is not supported on public repos"
     exit 1
+fi
+
+if [ -z "${AWS_ECR_EVAL_REPO_TAG}" ]; then
+    AWS_ECR_EVAL_REPO_TAG="{\"Key\": \"Name\", \"Value\": \""${AWS_ECR_EVAL_REPO}\""}"
 else
     aws ecr tag-resource \
         --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \

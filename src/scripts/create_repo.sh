@@ -21,6 +21,10 @@ else
       ENCRYPTION_CONFIGURATION+=",kmsKey=${AWS_ECR_EVAL_ENCRYPTION_KMS_KEY}"
     fi
 
+    if [ -z "${AWS_ECR_EVAL_REPO_TAG}" ]; then
+        AWS_ECR_EVAL_REPO_TAG="{\"Key\": \"Name\", \"Value\": \""${AWS_ECR_EVAL_REPO}\""}"
+    fi
+    
     aws ecr describe-repositories \
       --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
       --region "${AWS_ECR_EVAL_REGION}" \

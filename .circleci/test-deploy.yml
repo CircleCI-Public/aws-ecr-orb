@@ -121,7 +121,7 @@ jobs:
           push_image: false
       - aws-ecr/tag_repo:
           repo: << parameters.repo >>
-          tag: Key=Validation,Value=CITesting Key=Validation2,Value=CITesting
+          tag: '[{"Key":"Validation","Value":"CITesting"}, {"Key":"Validation2","Value":"CITesting"}]'
           region: << parameters.region >>
       - run:
           name: Tests for docker image

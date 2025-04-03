@@ -10,12 +10,12 @@ if [ "$AWS_ECR_BOOL_PUBLIC_REGISTRY" == "1" ]; then
     exit 1
 fi
 
-if [ -z "${AWS_ECR_EVAL_REPO_TAG}" ]; then
+if [ -z "${AWS_ECR_STR_REPO_TAG}" ]; then
     AWS_ECR_EVAL_REPO_TAG="{\"Key\": \"Name\", \"Value\": \""${AWS_ECR_EVAL_REPO}\""}"
-else
-    aws ecr tag-resource \
-        --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
-        --region "${AWS_ECR_EVAL_REGION}" \
-        --resource-arn "arn:aws:ecr:${AWS_ECR_EVAL_REGION}:${AWS_ECR_EVAL_ACCOUNT_ID}:repository/${AWS_ECR_EVAL_REPO}" \
-        --tags "${AWS_ECR_EVAL_REPO_TAG}"
 fi
+aws ecr tag-resource \
+    --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
+    --region "${AWS_ECR_EVAL_REGION}" \
+    --resource-arn "arn:aws:ecr:${AWS_ECR_EVAL_REGION}:${AWS_ECR_EVAL_ACCOUNT_ID}:repository/${AWS_ECR_EVAL_REPO}" \
+    --tags "${AWS_ECR_EVAL_REPO_TAG}"
+

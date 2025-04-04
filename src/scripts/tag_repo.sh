@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 AWS_ECR_EVAL_ACCOUNT_ID="$(eval echo "${AWS_ECR_STR_ACCOUNT_ID}")"
 AWS_ECR_EVAL_REGION="$(eval echo "${AWS_ECR_STR_REGION}")"
 AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
@@ -19,4 +18,3 @@ aws ecr tag-resource \
     --region "${AWS_ECR_EVAL_REGION}" \
     --resource-arn "arn:aws:ecr:${AWS_ECR_EVAL_REGION}:${AWS_ECR_EVAL_ACCOUNT_ID}:repository/${AWS_ECR_EVAL_REPO}" \
     --tags "${AWS_ECR_EVAL_REPO_TAG}"
-set +x

@@ -102,6 +102,7 @@ jobs:
           workspace_root: << parameters.workspace_root >>
           repo: << parameters.repo >>
           create_repo: << parameters.create_repo >>
+          repo_tag: Key=Env,Value=CITesting
           tag: << parameters.tag >>
           dockerfile: << parameters.dockerfile >>
           path: << parameters.path >>
@@ -118,6 +119,10 @@ jobs:
           path: << parameters.path >>
           platform: << parameters.platform >>
           push_image: false
+      - aws-ecr/tag_repo:
+          repo: << parameters.repo >>
+          tag: '[{\"Key\": \"Validation\", \"Value\": \"CITesting\"}, {\"Key\": \"Validation2\", \"Value\": \"CITesting\"}]'
+          region: << parameters.region >>
       - run:
           name: Tests for docker image
           command: |
@@ -173,6 +178,7 @@ workflows:
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-multi-platform-without-push
           create_repo: true
+          repo_tag: Key=Env,Value=CITesting
           context: [CPE-OIDC]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
@@ -198,6 +204,7 @@ workflows:
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-default-profile
           create_repo: true
+          repo_tag: Key=Env,Value=CITesting
           context: [CPE-OIDC]
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
@@ -315,6 +322,7 @@ workflows:
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-named-profile-<<matrix.use_credentials_helper>>
           create_repo: true
+          repo_tag: Key=Env,Value=CITesting
           tag: integration,myECRRepoTag
           dockerfile: sample/Dockerfile
           path: workspace
@@ -380,6 +388,7 @@ workflows:
           workspace_root: workspace
           repo: aws-ecr-orb-${CIRCLE_SHA1:0:7}-skip_when_tags_exist-<<matrix.executor>>
           create_repo: true
+          repo_tag: Key=Env,Value=CITesting
           tag: integration,myECRRepoTag
           dockerfile: Dockerfile
           path: ./sample

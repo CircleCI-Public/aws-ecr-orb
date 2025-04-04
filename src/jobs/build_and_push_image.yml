@@ -232,6 +232,13 @@ parameters:
       Defaults to qemu-v7.0.0-28, change only if you know what you are doing.
       See https://hub.docker.com/r/tonistiigi/binfmt for details.
 
+  repo_tag:
+    type: string
+    default: ""
+    description: |
+      A list of strings in json format, containing tags for repository.
+      Shorthand Syntax: [{"Key": "FirstTag", "Value": "FirstValue"}]
+
 steps:
   - build_and_push_image:
       account_id: <<parameters.account_id>>
@@ -269,3 +276,4 @@ steps:
       use_credentials_helper: <<parameters.use_credentials_helper>>
       aws_domain: <<parameters.aws_domain>>
       binfmt_version: <<parameters.binfmt_version>>
+      repo_tag: <<parameters.repo_tag>>

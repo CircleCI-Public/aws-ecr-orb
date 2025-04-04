@@ -1,0 +1,42 @@
+description: >
+  Add tag to an existing ECR repository
+
+parameters:
+  account_id:
+    type: string
+    default: ${AWS_ACCOUNT_ID}
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      This field is required
+
+  repo:
+    type: string
+    description: Name of an Amazon ECR repository
+
+  tag:
+    type: string
+    description: >
+      A list of strings in json format, containing tags for repository
+      Shorthand Syntax: [{"Key": "FirstTag", "Value": "FirstValue"}]
+
+  profile_name:
+    default: "default"
+    description: AWS profile to use
+    type: string
+
+  region:
+    type: string
+    default: ${AWS_DEFAULT_REGION}
+    description: >
+      AWS region of ECR repository. Defaults to environment variable ${AWS_DEFAULT_REGION}
+
+steps:
+  - run:
+      name: Add tag <<parameters.tag>> to <<parameters.repo>>
+      environment:
+        AWS_ECR_STR_REPO: <<parameters.repo>>
+        AWS_ECR_STR_REPO_TAG: <<parameters.tag>>
+        AWS_ECR_STR_REGION: <<parameters.region>>
+        AWS_ECR_STR_AWS_PROFILE: <<parameters.profile_name>>
+        AWS_ECR_STR_ACCOUNT_ID: <<parameters.account_id>>
+      command: <<include(scripts/tag_repo.sh)>>

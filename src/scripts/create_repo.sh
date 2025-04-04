@@ -4,6 +4,7 @@ AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
 AWS_ECR_EVAL_PROFILE_NAME="$(eval echo "${AWS_ECR_STR_PROFILE_NAME}")"
 AWS_ECR_EVAL_ENCRYPTION_KMS_KEY="$(eval echo "${AWS_ECR_STR_ENCRYPTION_KMS_KEY}")"
 AWS_ECR_EVAL_IMAGE_TAG_MUTABILITY="$(eval echo "${AWS_ECR_STR_IMAGE_TAG_MUTABILITY}")"
+AWS_ECR_EVAL_REPO_TAG="$(eval echo "${AWS_ECR_STR_REPO_TAG}")"
 
 if [ "$AWS_ECR_BOOL_PUBLIC_REGISTRY" == "1" ]; then
     aws ecr-public describe-repositories --profile "${AWS_ECR_EVAL_PROFILE_NAME}" --region us-east-1 --repository-names "${AWS_ECR_EVAL_REPO}" >/dev/null 2>&1 ||
@@ -20,6 +21,10 @@ else
       ENCRYPTION_CONFIGURATION+=",kmsKey=${AWS_ECR_EVAL_ENCRYPTION_KMS_KEY}"
     fi
 
+    if [ -z "${AWS_ECR_EVAL_REPO_TAG}" ]; then
+        AWS_ECR_EVAL_REPO_TAG="{\"Key\": \"Name\", \"Value\": \""${AWS_ECR_EVAL_REPO}\""}"
+    fi
+    
     aws ecr describe-repositories \
       --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
       --region "${AWS_ECR_EVAL_REGION}" \
@@ -30,5 +35,6 @@ else
           --repository-name "${AWS_ECR_EVAL_REPO}" \
           --image-tag-mutability "${AWS_ECR_EVAL_IMAGE_TAG_MUTABILITY}" \
           --image-scanning-configuration "${IMAGE_SCANNING_CONFIGURATION}" \
-          --encryption-configuration "${ENCRYPTION_CONFIGURATION}"
+          --encryption-configuration "${ENCRYPTION_CONFIGURATION}" \
+          --tags "${AWS_ECR_EVAL_REPO_TAG}"
 fi

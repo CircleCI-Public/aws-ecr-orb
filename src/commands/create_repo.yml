@@ -51,6 +51,13 @@ parameters:
       be immutable which will prevent them from being overwritten.
     default: "MUTABLE"
 
+  repo_tag:
+    type: string
+    description: >
+      A list of strings in json format, containing tags for repository.
+      Shorthand Syntax: [{"Key": "FirstTag", "Value": "FirstValue"}]
+    default: ""
+
 steps:
   - run:
       name: Create Repository
@@ -63,4 +70,5 @@ steps:
         AWS_ECR_ENUM_ENCRYPTION_TYPE: <<parameters.repo_encryption_type>>
         AWS_ECR_STR_ENCRYPTION_KMS_KEY: <<parameters.encryption_kms_key>>
         AWS_ECR_STR_IMAGE_TAG_MUTABILITY: <<parameters.image_tag_mutability>>
+        AWS_ECR_STR_REPO_TAG: <<parameters.repo_tag>>
       command: <<include(scripts/create_repo.sh)>>

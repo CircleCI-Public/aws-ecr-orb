@@ -2,6 +2,13 @@ description: >
   Add tag to an existing ECR repository
 
 parameters:
+  account_id:
+    type: string
+    default: ${AWS_ACCOUNT_ID}
+    description: >
+      The 12 digit AWS id associated with the ECR account.
+      This field is required
+
   repo:
     type: string
     description: Name of an Amazon ECR repository
@@ -31,4 +38,5 @@ steps:
         AWS_ECR_STR_REPO_TAG: <<parameters.tag>>
         AWS_ECR_STR_REGION: <<parameters.region>>
         AWS_ECR_STR_AWS_PROFILE: <<parameters.profile_name>>
+        AWS_ECR_EVAL_ACCOUNT_ID: <<parameters.account_id>>
       command: <<include(scripts/tag_repo.sh)>>

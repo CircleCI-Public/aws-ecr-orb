@@ -21,8 +21,8 @@ else
       ENCRYPTION_CONFIGURATION+=",kmsKey=${AWS_ECR_EVAL_ENCRYPTION_KMS_KEY}"
     fi
 
-    if [ -z "${AWS_ECR_EVAL_REPO_TAG}" ]; then
-        AWS_ECR_EVAL_REPO_TAG="{\"Key\": \"Name\", \"Value\": \""${AWS_ECR_EVAL_REPO}\""}"
+    if [ -n "${AWS_ECR_EVAL_REPO_TAG}" ]; then
+        set -- "$@" "--tags ${AWS_ECR_EVAL_REPO_TAG}"
     fi
     
     aws ecr describe-repositories \
@@ -36,5 +36,5 @@ else
           --image-tag-mutability "${AWS_ECR_EVAL_IMAGE_TAG_MUTABILITY}" \
           --image-scanning-configuration "${IMAGE_SCANNING_CONFIGURATION}" \
           --encryption-configuration "${ENCRYPTION_CONFIGURATION}" \
-          --tags "${AWS_ECR_EVAL_REPO_TAG}"
+          "$@"
 fi

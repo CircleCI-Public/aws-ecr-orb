@@ -22,9 +22,10 @@ else
     fi
 
     if [ -n "${AWS_ECR_EVAL_REPO_TAG}" ]; then
-        set -- "$@" "--tags ${AWS_ECR_EVAL_REPO_TAG}"
+        set -- "$@" --tags
+        set -- "$@" "${AWS_ECR_EVAL_REPO_TAG}"
     fi
-    
+    set -x
     aws ecr describe-repositories \
       --profile "${AWS_ECR_EVAL_PROFILE_NAME}" \
       --region "${AWS_ECR_EVAL_REGION}" \
@@ -37,4 +38,5 @@ else
           --image-scanning-configuration "${IMAGE_SCANNING_CONFIGURATION}" \
           --encryption-configuration "${ENCRYPTION_CONFIGURATION}" \
           "$@"
+    set +x
 fi

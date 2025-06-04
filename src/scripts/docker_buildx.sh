@@ -49,7 +49,7 @@ for tag in "${DOCKER_TAGS[@]}"; do
     if [ "${docker_tag_exists_in_ecr}" = "true" ]; then
       IFS="," read -ra PLATFORMS <<<"${AWS_ECR_EVAL_PLATFORM}"
       for p in "${PLATFORMS[@]}"; do
-        docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}" --platform "${p}"
+        docker pull "${AWS_ECR_VAL_ACCOUNT_URL}/${AWS_ECR_EVAL_REPO}:${tag}" --platform "${p}" || true
       done
       number_of_tags_in_ecr=$((number_of_tags_in_ecr += 1))
     fi

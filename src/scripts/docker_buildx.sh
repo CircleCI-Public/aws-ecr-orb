@@ -80,7 +80,10 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
       # otherwise the command will fail when called more than once in the same job.
       docker context create builder
       docker run --privileged --rm "tonistiigi/binfmt:$PARAM_BINFMT_VERSION" --install all
-      docker --context builder buildx create --name DLC_builder --use
+      builder_exists="$(docker --context builder buildx ls --format json | jq -s 'any(.[]; .Name == "DLC_builder")')"
+      if [ "${builder_exists}" != "true" ]; then
+        docker --context builder buildx create --name DLC_builder --use
+      fi
     fi
     context_args="--context builder"
   # if no builder instance is currently used, create one

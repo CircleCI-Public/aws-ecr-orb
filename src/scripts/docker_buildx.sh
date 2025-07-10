@@ -83,6 +83,8 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq "0" ] || [[ "${AWS_ECR_BOOL_SKIP
       builder_exists="$(docker --context builder buildx ls --format json | jq -s 'any(.[]; .Name == "DLC_builder")')"
       if [ "${builder_exists}" != "true" ]; then
         docker --context builder buildx create --name DLC_builder --use
+      else
+        docker --context builder buildx use DLC_builder
       fi
     fi
     context_args="--context builder"

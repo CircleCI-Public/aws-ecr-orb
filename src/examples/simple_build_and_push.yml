@@ -30,7 +30,7 @@ usage:
             profile_name: "OIDC-User"
 
             # Select executor defined above
-            executors: base
+            executor: base
 
             # name of your ECR repository
             repo: myECRRepository

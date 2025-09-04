@@ -14,7 +14,7 @@ fi
 IFS="," read -ra ECR_TAGS <<<"${AWS_ECR_EVAL_TARGET_TAG}"
 
 if [ -n "$AWS_ECR_STR_MEDIA_TYPE" ]; then
-    MEDIA_TYPE="--image-manifest-media-type $AWS_ECR_STR_MEDIA_TYPE"
+    MEDIA_TYPE=--image-manifest-media-type "$AWS_ECR_STR_MEDIA_TYPE"
 fi
 
 for tag in "${ECR_TAGS[@]}"; do

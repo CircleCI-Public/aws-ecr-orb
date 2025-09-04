@@ -27,7 +27,7 @@ parameters:
     type: string
 
   media_type:
-    default: ""
+    default: "application/vnd.oci.image.manifest.v1+json"
     description: Image manifest media type
     type: string
 

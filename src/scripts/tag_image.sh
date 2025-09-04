@@ -15,6 +15,7 @@ IFS="," read -ra ECR_TAGS <<<"${AWS_ECR_EVAL_TARGET_TAG}"
 
 extra_args=()
 if [ -n "$AWS_ECR_STR_EXTRA_ARGS" ]; then
+# shellcheck disable=SC2086
   eval 'for p in '$AWS_ECR_STR_EXTRA_ARGS'; do extra_args+=("$p"); done'
 fi
 

@@ -26,11 +26,13 @@ parameters:
     description: AWS profile to use
     type: string
 
-  media_type:
-    default: "application/vnd.oci.image.manifest.v1+json"
-    description: Image manifest media type
+  extra_args:
     type: string
-
+    default: ""
+    description: >
+      Extra flags to pass to AWS CLI.
+      Pass the desired args using an equal sign (=) instead of an space.
+      For example, --arg=ARG1, instead of --arg ARG1.
 steps:
   - run:
       name: <<parameters.target_tag>> tag to <<parameters.repo>>:<<parameters.source_tag>>
@@ -40,5 +42,5 @@ steps:
         AWS_ECR_STR_TARGET_TAG: <<parameters.target_tag>>
         AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
         AWS_ECR_STR_AWS_PROFILE: <<parameters.profile_name>>
-        AWS_ECR_STR_MEDIA_TYPE: <<parameters.media_type>>
+        AWS_ECR_STR_EXTRA_ARGS: <<parameters.extra_args>>
       command: <<include(scripts/tag_image.sh)>>

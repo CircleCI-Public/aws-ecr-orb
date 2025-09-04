@@ -26,6 +26,11 @@ parameters:
     description: AWS profile to use
     type: string
 
+  medida_type:
+    default: ""
+    description: Image manifest media type
+    type: string
+
 steps:
   - run:
       name: <<parameters.target_tag>> tag to <<parameters.repo>>:<<parameters.source_tag>>
@@ -35,4 +40,5 @@ steps:
         AWS_ECR_STR_TARGET_TAG: <<parameters.target_tag>>
         AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
         AWS_ECR_STR_AWS_PROFILE: <<parameters.profile_name>>
+        AWS_ECR_STR_MEDIA_TYPE: <<parameters.profile_name>>
       command: <<include(scripts/tag_image.sh)>>

@@ -13,18 +13,24 @@ if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq 1 ]; then
 fi
 IFS="," read -ra ECR_TAGS <<<"${AWS_ECR_EVAL_TARGET_TAG}"
 
+extra_args=()
+if [ -n "$AWS_ECR_STR_EXTRA_ARGS" ]; then
+# shellcheck disable=SC2086
+  eval 'for p in '$AWS_ECR_STR_EXTRA_ARGS'; do extra_args+=("$p"); done'
+fi
+
 for tag in "${ECR_TAGS[@]}"; do
     # if skip_when_tags_exist is true
     if [ "${AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST}" -eq 1 ]; then
         # tag image if tag does not exist
         if ! echo "${EXISTING_TAGS}" | grep "${tag}"; then
-            aws ecr put-image --repository-name "${AWS_ECR_EVAL_REPO}" --image-tag "${tag}" --image-manifest "${MANIFEST}" --profile "${AWS_ECR_EVAL_AWS_PROFILE}"
+            aws ecr put-image --repository-name "${AWS_ECR_EVAL_REPO}" --image-tag "${tag}" --image-manifest "${MANIFEST}" "${extra_args[@]}" --profile "${AWS_ECR_EVAL_AWS_PROFILE}"
         else
             echo "Tag \"${tag}\" already exists and will be skipped."
         fi
     # tag image when skip_when_tags_exist is false
     else
-        aws ecr put-image --repository-name "${AWS_ECR_EVAL_REPO}" --image-tag "${tag}" --image-manifest "${MANIFEST}" --profile "${AWS_ECR_EVAL_AWS_PROFILE}"
+        aws ecr put-image --repository-name "${AWS_ECR_EVAL_REPO}" --image-tag "${tag}" --image-manifest "${MANIFEST}" "${extra_args[@]}" --profile "${AWS_ECR_EVAL_AWS_PROFILE}"
     fi
 done
 set +x

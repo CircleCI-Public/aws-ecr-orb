@@ -92,6 +92,7 @@ parameters:
     description: >
       Enable Docker layer caching if using remote Docker engine.
       Requires setup_remote_docker to be set to true. Defaults to false.
+      For more information https://circleci.com/docs/guides/optimize/docker-layer-caching/
 
   container_registry_login:
     description:  >-

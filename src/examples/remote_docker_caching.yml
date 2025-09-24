@@ -1,0 +1,25 @@
+description: >
+  This example shows how to build and push an image using the remote docker and layer caching
+usage:
+  version: 2.1
+
+  orbs:
+    aws-ecr: circleci/aws-ecr@9.0
+    # importing aws-cli orb is required for authentication
+    aws-cli: circleci/aws-cli@5.1
+  workflows:
+    build-with-cache:
+      jobs:
+      - aws-ecr/build_and_push_image:
+          # The job will run in a docker container
+          docker:
+            - image: cimg/python:3.10.4
+          # As the job is running in a container a remote docker needs to be set to use docker build
+          setup_remote_docker: true
+          # This will use the remote docker caching layer
+          remote_docker_layer_caching: true
+          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+          tag: "${CIRCLE_SHA1},latest"
+          auth:
+            - aws-cli/setup
+

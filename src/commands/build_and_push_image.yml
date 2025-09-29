@@ -77,8 +77,9 @@ parameters:
   remote_docker_layer_caching:
     default: false
     description: >
-      Enable Docker layer caching if using remote Docker engine. Defaults to
-      false.
+      Enable Docker layer caching if using remote Docker engine.
+      Defaults to false.
+      For more information about docker_layer_caching go to https://circleci.com/docs/guides/optimize/docker-layer-caching/
     type: boolean
 
   dockerfile:

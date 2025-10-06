@@ -3,6 +3,12 @@ description: >
   NOTE: Some commands may not work with AWS CLI Version 1.
 
 parameters:
+  account_id:
+    type: string
+    default: ""
+    description: >
+      The 12 digit AWS Account ID associated with the ECR account.
+
   repo:
     type: string
     description: Name of an Amazon ECR repository
@@ -42,5 +48,6 @@ steps:
         AWS_ECR_STR_TARGET_TAG: <<parameters.target_tag>>
         AWS_ECR_BOOL_SKIP_WHEN_TAGS_EXIST: <<parameters.skip_when_tags_exist>>
         AWS_ECR_STR_AWS_PROFILE: <<parameters.profile_name>>
+        AWS_ECR_STR_ACCOUNT_ID: <<parameters.account_id>>
         AWS_ECR_STR_EXTRA_ARGS: <<parameters.extra_args>>
       command: <<include(scripts/tag_image.sh)>>

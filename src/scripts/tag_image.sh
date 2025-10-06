@@ -2,6 +2,7 @@
 AWS_ECR_EVAL_REPO="$(eval echo "${AWS_ECR_STR_REPO}")"
 AWS_ECR_EVAL_SOURCE_TAG="$(eval echo "${AWS_ECR_STR_SOURCE_TAG}")"
 AWS_ECR_EVAL_TARGET_TAG="$(eval echo "${AWS_ECR_STR_TARGET_TAG}")"
+AWS_ECR_EVAL_ACCOUNT_ID="$(eval echo "${AWS_ECR_STR_ACCOUNT_ID}")"
 AWS_ECR_EVAL_AWS_PROFILE="$(eval echo "${AWS_ECR_STR_AWS_PROFILE}")"
 
 # pull the image manifest from ECR
@@ -17,6 +18,10 @@ extra_args=()
 if [ -n "$AWS_ECR_STR_EXTRA_ARGS" ]; then
 # shellcheck disable=SC2086
   eval 'for p in '$AWS_ECR_STR_EXTRA_ARGS'; do extra_args+=("$p"); done'
+fi
+
+if [ -n "${AWS_ECR_EVAL_ACCOUNT_ID}" ]; then
+    extra_args+=("--registry-id \"${AWS_ECR_EVAL_ACCOUNT_ID}\"")
 fi
 
 for tag in "${ECR_TAGS[@]}"; do

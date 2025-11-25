@@ -40,16 +40,26 @@ parameters:
       If you use the KMS encryption type, specify the KMS key to use for encryption.
       The alias, key ID, or full ARN of the KMS key can be specified.
     default: ""
-
+  
   image_tag_mutability:
     type: enum
-    enum: ["MUTABLE", "IMMUTABLE"]
+    enum: ["MUTABLE", "IMMUTABLE", "IMMUTABLE_WITH_EXCLUSION"]
     description: >
       The tag mutability setting for the repository. If this parameter is omitted,
       the default setting of MUTABLE will be used which will allow image tags to be
       overwritten. If IMMUTABLE is specified, all image tags within the repository will
-      be immutable which will prevent them from being overwritten.
+      be immutable which will prevent them from being overwritten. If
+      IMMUTABLE_WITH_EXCLUSION is specified, all tags within the repository will be
+      immutable except for tags matching the filters specified in image_tag_exclusion_filters.
     default: "MUTABLE"
+  
+  image_tag_exclusion_filters:
+    type: string
+    description: >
+      Comma-separated list of tag filters to exclude from the mutability setting
+      (e.g., 'latest,dev-*'). Only used with IMMUTABLE_WITH_EXCLUSION.
+      Each filter will be applied as a WILDCARD type filter.
+    default: ""
 
   repo_tag:
     type: string
@@ -70,5 +80,6 @@ steps:
         AWS_ECR_ENUM_ENCRYPTION_TYPE: <<parameters.repo_encryption_type>>
         AWS_ECR_STR_ENCRYPTION_KMS_KEY: <<parameters.encryption_kms_key>>
         AWS_ECR_STR_IMAGE_TAG_MUTABILITY: <<parameters.image_tag_mutability>>
+        AWS_ECR_STR_IMAGE_TAG_EXCLUSION_FILTERS: <<parameters.image_tag_exclusion_filters>>
         AWS_ECR_STR_REPO_TAG: <<parameters.repo_tag>>
       command: <<include(scripts/create_repo.sh)>>

@@ -40,7 +40,7 @@ parameters:
       If you use the KMS encryption type, specify the KMS key to use for encryption.
       The alias, key ID, or full ARN of the KMS key can be specified.
     default: ""
-  
+
   image_tag_mutability:
     type: enum
     enum: ["MUTABLE", "IMMUTABLE", "IMMUTABLE_WITH_EXCLUSION"]
@@ -52,7 +52,7 @@ parameters:
       IMMUTABLE_WITH_EXCLUSION is specified, all tags within the repository will be
       immutable except for tags matching the filters specified in image_tag_exclusion_filters.
     default: "MUTABLE"
-  
+
   image_tag_exclusion_filters:
     type: string
     description: >

@@ -204,13 +204,23 @@ parameters:
 
   repo_image_tag_mutability:
     type: enum
-    enum: ["MUTABLE", "IMMUTABLE"]
+    enum: ["MUTABLE", "IMMUTABLE", "IMMUTABLE_WITH_EXCLUSION"]
     description: >
       The tag mutability setting for the repository. If this parameter is omitted,
       the default setting of MUTABLE will be used which will allow image tags to be
       overwritten. If IMMUTABLE is specified, all image tags within the repository will
-      be immutable which will prevent them from being overwritten.
+      be immutable which will prevent them from being overwritten. If
+      IMMUTABLE_WITH_EXCLUSION is specified, all tags within the repository will be
+      immutable except for tags matching the filters specified in image_tag_exclusion_filters.
     default: "MUTABLE"
+
+  repo_image_tag_exclusion_filters:
+    type: string
+    description: >
+      Comma-separated list of tag filters to exclude from the mutability setting
+      (e.g., 'latest,dev-*'). Only used with IMMUTABLE_WITH_EXCLUSION.
+      Each filter will be applied as a WILDCARD type filter.
+    default: ""
 
   use_credentials_helper:
     type: boolean
@@ -277,6 +287,7 @@ steps:
             repo_encryption_type: <<parameters.repo_encryption_type>>
             encryption_kms_key: <<parameters.repo_encryption_kms_key>>
             image_tag_mutability: <<parameters.repo_image_tag_mutability>>
+            image_tag_exclusion_filters: <<parameters.repo_image_tag_exclusion_filters>>
             repo_tag: <<parameters.repo_tag>>
   - when:
       condition: <<parameters.set_repo_policy>>

@@ -28,9 +28,9 @@ else
     fi
 
     if [ "${AWS_ECR_EVAL_IMAGE_TAG_MUTABILITY}" == "IMMUTABLE_WITH_EXCLUSION" ] && [ -n "${AWS_ECR_EVAL_IMAGE_TAG_EXCLUSION_FILTERS}" ]; then
+      set -- "$@" --image-tag-mutability-exclusion-filters
       IFS=',' read -ra FILTERS <<< "${AWS_ECR_EVAL_IMAGE_TAG_EXCLUSION_FILTERS}"
       for filter in "${FILTERS[@]}"; do
-        set -- "$@" --image-tag-mutability-exclusion-filters
         set -- "$@" "filterType=WILDCARD,filter=${filter}"
       done
     fi

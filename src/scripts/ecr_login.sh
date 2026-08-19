@@ -50,8 +50,11 @@ install_aws_ecr_credential_helper(){
     if [[ "$SYS_ENV_PLATFORM" = "linux" && "$AWS_ECR_BOOL_HELPER" = "1" ]]; then
         HELPER_INSTALLED=$(dpkg --get-selections | (grep amazon-ecr-credential-helper || test $?) | awk '{print $2}')
         if [[ "$HELPER_INSTALLED" != "install" ]]; then
-            $SUDO apt update
-            $SUDO apt -y install amazon-ecr-credential-helper
+            export DEBIAN_FRONTEND=noninteractive
+            $SUDO timeout "${AWS_ECR_STR_APT_TIMEOUT}" apt-get -q update \
+              || { echo "apt-get update timed out or failed after ${AWS_ECR_STR_APT_TIMEOUT}"; exit 1; }
+            $SUDO timeout "${AWS_ECR_STR_APT_TIMEOUT}" apt-get -q -y install amazon-ecr-credential-helper \
+              || { echo "apt-get install timed out or failed after ${AWS_ECR_STR_APT_TIMEOUT}"; exit 1; }
         fi
         configure_config_json
     elif [[ "$SYS_ENV_PLATFORM" = "macos" && "$AWS_ECR_BOOL_HELPER" = "1" ]]; then

@@ -24,8 +24,8 @@ usage:
             region: ${AWS_DEFAULT_REGION}
             account_id: ${AWS_ACCOUNT_ID}
             # Raise this if your apt mirror is slow, to avoid apt-get failing before it can finish.
-            # Defaults to "2m".
-            apt_timeout: 5m
+            # Defaults to "10m".
+            apt_timeout: 15m
         - run:
             name: Build and push with a custom Docker workflow
             command: |

@@ -43,11 +43,12 @@ parameters:
 
   apt_timeout:
     type: string
-    default: "2m"
+    default: "10m"
     description: >
       Maximum time to allow each apt-get call (update/install) to run before timing out, when installing the ECR
-      credential helper via apt on Linux. Accepts values understood by the `timeout` command (e.g. "2m", "120").
-      Increase this if your environment has a legitimately slow apt mirror.
+      credential helper via apt on Linux. Accepts values understood by the `timeout` command (e.g. "10m", "600").
+      apt-get update can legitimately take several minutes on images with many configured repos (e.g. Docker,
+      third-party PPAs); lower this if you want to fail faster, or raise it if your environment is slower still.
 
 steps:
   - run:

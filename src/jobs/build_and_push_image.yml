@@ -224,6 +224,14 @@ parameters:
       When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
       the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 
+  apt_timeout:
+    type: string
+    default: "2m"
+    description: >
+      Maximum time to allow each apt-get call (update/install) to run before timing out, when installing the ECR
+      credential helper via apt on Linux. Accepts values understood by the `timeout` command (e.g. "2m", "120").
+      Increase this if your environment has a legitimately slow apt mirror.
+
   binfmt_version:
     type: string
     default: qemu-v7.0.0-28
@@ -275,6 +283,7 @@ steps:
       repo_encryption_kms_key: <<parameters.repo_encryption_kms_key>>
       repo_image_tag_mutability: <<parameters.repo_image_tag_mutability>>
       use_credentials_helper: <<parameters.use_credentials_helper>>
+      apt_timeout: <<parameters.apt_timeout>>
       aws_domain: <<parameters.aws_domain>>
       binfmt_version: <<parameters.binfmt_version>>
       repo_tag: <<parameters.repo_tag>>

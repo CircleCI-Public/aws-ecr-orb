@@ -1,0 +1,39 @@
+description: >
+  This is an example of using the ecr_login command on its own, outside of the build_and_push_image job,
+  for example to authenticate docker before running your own custom build/push steps.
+  It also shows overriding apt_timeout, which caps how long the credential helper's apt-get calls are
+  allowed to run before failing fast, useful if your environment has a slow or unreliable apt mirror.
+
+usage:
+  version: 2.1
+
+  orbs:
+    aws-ecr: circleci/aws-ecr@9.0
+    # importing aws-cli orb is required for authentication
+    aws-cli: circleci/aws-cli@5.1
+
+  jobs:
+    login-and-build:
+      machine:
+        image: ubuntu-2204:current
+      steps:
+        - aws-cli/setup:
+            role_arn: arn:aws:iam::123456789012:role/VALID_OIDC_ECR_ROLE
+        - aws-ecr/ecr_login:
+            profile_name: "OIDC-User"
+            region: ${AWS_DEFAULT_REGION}
+            account_id: ${AWS_ACCOUNT_ID}
+            # Raise this if your apt mirror is slow, to avoid apt-get failing before it can finish.
+            # Defaults to "2m".
+            apt_timeout: 5m
+        - run:
+            name: Build and push with a custom Docker workflow
+            command: |
+              docker build -t 123456789012.dkr.ecr.us-west-2.amazonaws.com/my-sample-repo:latest .
+              docker push 123456789012.dkr.ecr.us-west-2.amazonaws.com/my-sample-repo:latest
+
+  workflows:
+    login-and-build:
+      jobs:
+        - login-and-build:
+            context: CircleCI_OIDC_Token

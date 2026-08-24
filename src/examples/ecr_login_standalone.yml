@@ -1,8 +1,8 @@
 description: >
   This is an example of using the ecr_login command on its own, outside of the build_and_push_image job,
   for example to authenticate docker before running your own custom build/push steps.
-  It also shows overriding apt_timeout, which caps how long the credential helper's apt-get calls are
-  allowed to run before failing fast, useful if your environment has a slow or unreliable apt mirror.
+  It also shows overriding apt_connect_timeout, which caps how long each apt-get download attempt is
+  allowed to run before apt retries or fails, useful if your environment has a slow or unreliable apt mirror.
 
 usage:
   version: 2.1
@@ -23,9 +23,9 @@ usage:
             profile_name: "OIDC-User"
             region: ${AWS_DEFAULT_REGION}
             account_id: ${AWS_ACCOUNT_ID}
-            # Raise this if your apt mirror is slow, to avoid apt-get failing before it can finish.
-            # Defaults to "10m".
-            apt_timeout: 15m
+            # Per-connection timeout (seconds) for each apt-get download attempt, before apt retries or
+            # fails the call. Raise this if your apt mirror is slow. Defaults to "30".
+            apt_connect_timeout: "45"
         - run:
             name: Build and push with a custom Docker workflow
             command: |

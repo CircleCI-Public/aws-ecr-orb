@@ -224,14 +224,13 @@ parameters:
       When true the authentication to docker registry will be done using the ecr-credential-helper. This avoids having
       the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
 
-  apt_timeout:
+  apt_connect_timeout:
     type: string
-    default: "10m"
+    default: "30"
     description: >
-      Maximum time to allow each apt-get call (update/install) to run before timing out, when installing the ECR
-      credential helper via apt on Linux. Accepts values understood by the `timeout` command (e.g. "10m", "600").
-      apt-get update can legitimately take several minutes on images with many configured repos (e.g. Docker,
-      third-party PPAs); lower this if you want to fail faster, or raise it if your environment is slower still.
+      Per-connection timeout in seconds (apt's Acquire::http::Timeout / Acquire::https::Timeout) for each apt-get
+      download attempt, when installing the ECR credential helper via apt on Linux. apt retries up to 3 times before
+      failing the call, so raise this if your apt mirror is slow, or lower it to fail faster.
 
   binfmt_version:
     type: string
@@ -284,7 +283,7 @@ steps:
       repo_encryption_kms_key: <<parameters.repo_encryption_kms_key>>
       repo_image_tag_mutability: <<parameters.repo_image_tag_mutability>>
       use_credentials_helper: <<parameters.use_credentials_helper>>
-      apt_timeout: <<parameters.apt_timeout>>
+      apt_connect_timeout: <<parameters.apt_connect_timeout>>
       aws_domain: <<parameters.aws_domain>>
       binfmt_version: <<parameters.binfmt_version>>
       repo_tag: <<parameters.repo_tag>>

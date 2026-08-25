@@ -41,14 +41,13 @@ parameters:
       the password saved in plain text. Otherwise it will use the classic docker login command which is more compatible.
       If you are having issues with credentials helper login, set this to false.
 
-  apt_timeout:
+  apt_connect_timeout:
     type: string
-    default: "10m"
+    default: "30"
     description: >
-      Maximum time to allow each apt-get call (update/install) to run before timing out, when installing the ECR
-      credential helper via apt on Linux. Accepts values understood by the `timeout` command (e.g. "10m", "600").
-      apt-get update can legitimately take several minutes on images with many configured repos (e.g. Docker,
-      third-party PPAs); lower this if you want to fail faster, or raise it if your environment is slower still.
+      Per-connection timeout in seconds (apt's Acquire::http::Timeout / Acquire::https::Timeout) for each apt-get
+      download attempt, when installing the ECR credential helper via apt on Linux. apt retries up to 3 times before
+      failing the call, so raise this if your apt mirror is slow, or lower it to fail faster.
 
 steps:
   - run:
@@ -60,6 +59,6 @@ steps:
         AWS_ECR_BOOL_PUBLIC_REGISTRY: <<parameters.public_registry>>
         AWS_ECR_STR_AWS_DOMAIN: <<parameters.aws_domain>>
         AWS_ECR_BOOL_HELPER: <<parameters.use_credentials_helper>>
-        AWS_ECR_STR_APT_TIMEOUT: <<parameters.apt_timeout>>
+        AWS_ECR_STR_APT_CONNECT_TIMEOUT: <<parameters.apt_connect_timeout>>
         SCRIPT_UTILS: << include(scripts/utils.sh) >>
       command: <<include(scripts/ecr_login.sh)>>
